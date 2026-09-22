@@ -1,517 +1,629 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sumit Anand | CCTV Operator & Security Systems Specialist</title>
-    <meta name="description" content="Portfolio of Sumit Anand - CCTV Operator and Security Systems Specialist experienced in CP Plus multi-channel surveillance, GIGO gate control, and loss prevention.">
-    
-    <!-- Google Fonts & FontAwesome Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sumit Anand | CCTV Operator & Security Systems Specialist</title>
+  <meta name="description" content="Portfolio of Sumit Anand — CCTV Operator and Security Systems Specialist experienced in CP Plus multi-channel surveillance, GIGO gate control, and loss prevention." />
+  <meta name="theme-color" content="#09090b" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <style>
+    :root {
+      --bg: #09090b;
+      --fg: #f4f4f5;
+      --card: #121214;
+      --secondary: #1c1c20;
+      --muted: #a1a1aa;
+      --steel: #c5cdd6;
+      --primary: #eceef2;
+      --primary-fg: #09090b;
+      --success: #34d399;
+      --border: rgba(244, 244, 245, 0.1);
+      --shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+      --shadow-hover: 0 0 0 1px rgba(255, 255, 255, 0.14);
+      --radius: 12px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
 
-    <style>
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: rgba(22, 31, 49, 0.7);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --accent-cyan: #00f2fe;
-            --accent-blue: #4facfe;
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
-            --success-glow: #10b981;
-        }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: "Barlow", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.5;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, [role="button"] { cursor: pointer; font-family: inherit; }
+    img, svg { display: block; }
+    h1, h2, h3 { text-wrap: balance; font-weight: 600; }
+    p { text-wrap: pretty; }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+    .progress {
+      position: fixed; top: 0; left: 0; height: 2px; width: 0;
+      background: var(--steel); z-index: 80; pointer-events: none;
+    }
+    .nav {
+      position: sticky; top: 0; z-index: 40;
+      background: rgba(9, 9, 11, 0.92);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 1px 0 0 var(--border);
+    }
+    .nav-inner {
+      max-width: 1152px; margin: 0 auto; padding: 0 16px;
+      height: 64px; display: flex; align-items: center; gap: 12px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px; color: var(--fg);
+    }
+    .mark {
+      width: 32px; height: 32px; border-radius: 6px;
+      background: var(--primary); color: var(--primary-fg);
+      display: grid; place-items: center;
+      font-family: "Barlow Condensed", sans-serif; font-weight: 700; font-size: 14px;
+    }
+    .brand-name { font-family: "Barlow Condensed", sans-serif; font-size: 18px; letter-spacing: -0.02em; }
+    .nav-links { display: none; gap: 4px; margin-left: 16px; }
+    .nav-links a {
+      padding: 8px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--muted);
+      transition: color 150ms ease-out, background-color 150ms ease-out;
+    }
+    .nav-links a:hover, .nav-links a.active { background: var(--secondary); color: var(--fg); }
+    .nav-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .clock { display: none; font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.08em; color: var(--muted); }
+    .badge {
+      display: none; align-items: center; gap: 8px;
+      border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 500;
+      border: 1px solid rgba(52, 211, 153, 0.3); background: rgba(52, 211, 153, 0.1); color: var(--success);
+    }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            padding: 40px 20px;
-            background-image: 
-                radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 85% 85%, rgba(79, 172, 254, 0.05) 0%, transparent 40%);
-            background-attachment: fixed;
-        }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      min-height: 44px; padding: 0 16px; border-radius: 8px; border: 0;
+      font-size: 14px; font-weight: 500; transition: transform 150ms ease-out, background-color 150ms ease-out, box-shadow 150ms ease-out, color 150ms ease-out;
+    }
+    .btn:active { transform: scale(0.96); }
+    .btn i { font-size: 14px; }
+    .btn-primary { background: var(--primary); color: var(--primary-fg); }
+    .btn-primary:hover { background: #d4d7de; }
+    .btn-secondary { background: var(--secondary); color: var(--fg); box-shadow: var(--shadow); }
+    .btn-outline { background: transparent; color: var(--fg); box-shadow: var(--shadow); }
+    .btn-outline:hover, .btn-secondary:hover { background: #26262b; }
+    .btn-ghost { background: transparent; color: var(--fg); }
+    .btn-ghost:hover { background: var(--secondary); }
+    .btn-sm { min-height: 36px; padding: 0 12px; }
+    .icon-btn { width: 44px; padding: 0; }
+    .hire-desktop { display: none; }
 
-        .container {
-            max-width: 950px;
-            margin: 0 auto;
-        }
+    .wrap { max-width: 1152px; margin: 0 auto; padding: 0 16px; }
+    .hero { position: relative; overflow: hidden; padding: 40px 16px 16px; }
+    .grid-veil {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(to right, rgba(244,244,245,0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(244,244,245,0.035) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .hero-grid { position: relative; max-width: 1152px; margin: 0 auto; display: grid; gap: 32px; }
+    .kicker { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--steel); }
+    h1 {
+      margin-top: 16px;
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: clamp(3.5rem, 12vw, 6rem);
+      line-height: 0.9; letter-spacing: -0.03em;
+    }
+    .role { margin-top: 20px; font-size: 18px; color: var(--steel); max-width: 28rem; }
+    .loc { margin-top: 12px; display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
+    .cta-row { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 8px; }
 
-        /* Hero Header */
-        header {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            backdrop-filter: blur(12px);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-        }
+    .panel { background: var(--card); border-radius: 24px; padding: 12px; box-shadow: var(--shadow); }
+    .panel-inner { background: var(--secondary); border-radius: 12px; padding: 20px; }
+    .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .panel-inner h2 { font-family: "Barlow Condensed", sans-serif; font-size: 24px; margin-top: 16px; letter-spacing: -0.02em; }
+    .muted { color: var(--muted); font-size: 14px; }
+    .steel { color: var(--steel); }
+    .rows { margin-top: 12px; display: grid; gap: 8px; }
+    .row {
+      display: flex; align-items: center; gap: 12px; min-height: 48px;
+      padding: 8px 12px; border-radius: 12px;
+      transition: background-color 150ms ease-out;
+    }
+    .row:hover { background: var(--secondary); }
+    .row-ico {
+      width: 36px; height: 36px; border-radius: 8px; background: var(--secondary);
+      display: grid; place-items: center; color: var(--steel); flex-shrink: 0;
+    }
+    .row small { display: block; font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
 
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 4px;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
-        }
+    .stack { display: flex; flex-direction: column; gap: 24px; padding: 16px 0 32px; }
+    .card { background: var(--card); border-radius: 24px; padding: 24px; box-shadow: var(--shadow); }
+    .card h2 { font-family: "Barlow Condensed", sans-serif; font-size: 32px; margin-top: 8px; letter-spacing: -0.02em; }
+    .card-body { margin-top: 24px; }
 
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: var(--success-glow);
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
+    .stats { display: grid; gap: 12px; }
+    .stat { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
+    .stat b { display: block; font-family: "Barlow Condensed", sans-serif; font-size: 36px; font-variant-numeric: tabular-nums; }
+    .stat span { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--success-glow);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--success-glow);
-            animation: pulse 2s infinite;
-        }
+    .ops { display: grid; gap: 12px; margin-top: 32px; }
+    .ops article { background: var(--secondary); border-radius: 12px; padding: 16px; box-shadow: var(--shadow); }
+    .ops h3 { font-family: "Barlow Condensed", sans-serif; font-size: 18px; }
+    .ops p { margin-top: 6px; font-size: 14px; color: var(--muted); }
 
-        @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
+    .skills { display: grid; gap: 12px; }
+    .skill {
+      text-align: left; width: 100%; background: var(--card); color: var(--fg);
+      border: 0; border-radius: 16px; padding: 16px; box-shadow: var(--shadow);
+      display: flex; gap: 12px; align-items: flex-start;
+      transition: box-shadow 150ms ease-out, background-color 150ms ease-out;
+    }
+    .skill.open, .skill:hover { background: var(--secondary); box-shadow: var(--shadow-hover); }
+    .skill h3 { font-family: "Barlow Condensed", sans-serif; font-size: 20px; }
+    .skill p { margin-top: 4px; font-size: 14px; color: var(--muted); }
+    .skill p.clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-        h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.8rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            background: linear-gradient(90deg, #ffffff, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 8px;
-        }
+    .timeline { position: relative; padding-left: 24px; border-left: 1px solid var(--border); display: flex; flex-direction: column; gap: 24px; }
+    .job { position: relative; }
+    .job::before {
+      content: ""; position: absolute; left: -29px; top: 8px;
+      width: 10px; height: 10px; border-radius: 50%; background: var(--steel);
+    }
+    .job .when { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--steel); }
+    .job h3 { font-family: "Barlow Condensed", sans-serif; font-size: 24px; margin-top: 4px; }
+    .job ul { margin-top: 16px; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .job li { display: flex; gap: 8px; font-size: 14px; color: var(--muted); }
+    .job li::before { content: ""; width: 4px; height: 4px; margin-top: 9px; border-radius: 50%; background: var(--steel); flex-shrink: 0; }
 
-        .subtitle {
-            font-size: 1.2rem;
-            color: var(--accent-cyan);
-            font-weight: 600;
-            margin-bottom: 25px;
-        }
+    .creds { display: grid; gap: 12px; }
+    .cred { display: flex; gap: 12px; background: var(--card); border-radius: 16px; padding: 16px; box-shadow: var(--shadow); }
+    .cred h3 { font-size: 16px; font-weight: 500; }
+    .cred p { margin-top: 4px; font-size: 14px; color: var(--muted); }
 
-        .contact-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px 25px;
-            font-size: 0.95rem;
-            color: var(--text-muted);
-            border-top: 1px solid var(--card-border);
-            padding-top: 20px;
-        }
+    .hr { height: 1px; background: var(--border); margin: 24px 0; border: 0; }
+    footer { max-width: 1152px; margin: 0 auto; padding: 16px 16px 120px; color: var(--muted); font-size: 14px; }
+    footer .bar { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); padding: 24px 0; }
+    footer a { color: var(--steel); }
 
-        .contact-bar a {
-            color: var(--text-main);
-            text-decoration: none;
-            transition: color 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
+    .dock {
+      position: fixed; left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom));
+      z-index: 40; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px;
+      background: rgba(18,18,20,0.95); backdrop-filter: blur(8px); border-radius: 16px; padding: 6px; box-shadow: var(--shadow);
+    }
+    .dock a {
+      min-height: 48px; border-radius: 12px; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2px; font-size: 12px; font-weight: 500;
+    }
+    .dock a.call { background: var(--primary); color: var(--primary-fg); }
 
-        .contact-bar a:hover { color: var(--accent-cyan); }
+    .menu, .modal { display: none; }
+    .menu.open, .modal.open { display: block; }
+    .overlay { position: fixed; inset: 0; background: rgba(9,9,11,0.8); backdrop-filter: blur(4px); z-index: 50; }
+    .sheet {
+      position: fixed; top: 0; right: 0; bottom: 0; width: min(320px, 100%);
+      background: var(--card); z-index: 51; padding: 24px; box-shadow: var(--shadow);
+    }
+    .sheet nav { margin-top: 32px; display: flex; flex-direction: column; gap: 4px; }
+    .sheet a { padding: 12px; border-radius: 12px; font-size: 16px; }
+    .sheet a:hover { background: var(--secondary); }
+    .dialog {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: min(32rem, calc(100% - 2rem)); background: var(--card); z-index: 51;
+      border-radius: 24px; padding: 24px; box-shadow: var(--shadow);
+    }
+    .dialog h2 { font-family: "Barlow Condensed", sans-serif; font-size: 24px; }
+    .close {
+      position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
+      border: 0; border-radius: 8px; background: transparent; color: var(--muted);
+    }
+    .close:hover { background: var(--secondary); color: var(--fg); }
+    form { margin-top: 20px; display: grid; gap: 16px; }
+    label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+    input, textarea {
+      width: 100%; min-height: 44px; border: 0; border-radius: 12px;
+      background: var(--secondary); color: var(--fg); padding: 0 12px;
+      box-shadow: var(--shadow); font: inherit; outline: none;
+    }
+    textarea { min-height: 112px; padding: 10px 12px; resize: vertical; }
+    input:focus, textarea:focus { box-shadow: 0 0 0 1px var(--steel); }
+    .form-row { display: grid; gap: 16px; }
+    .form-actions { display: flex; flex-direction: column-reverse; gap: 8px; }
+    .toast {
+      position: fixed; right: 16px; bottom: 88px; z-index: 60;
+      background: var(--card); color: var(--fg); padding: 12px 16px; border-radius: 12px;
+      box-shadow: var(--shadow); font-size: 14px; display: none;
+    }
+    .toast.show { display: block; }
+    .reveal { opacity: 0; transform: translateY(12px); filter: blur(4px); }
+    .reveal.in { animation: fade-up 500ms var(--ease) forwards; }
+    @keyframes fade-up {
+      to { opacity: 1; transform: none; filter: none; }
+    }
 
-        /* Stats Section */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-            backdrop-filter: blur(8px);
-        }
-
-        .stat-number {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--accent-cyan);
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 5px;
-        }
-
-        /* Generic Section Card */
-        section {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            backdrop-filter: blur(12px);
-            padding: 35px;
-            border-radius: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
-            color: var(--text-main);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        h2 i { color: var(--accent-cyan); font-size: 1.2rem; }
-
-        p.summary-text {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            line-height: 1.8;
-        }
-
-        /* Skills Grid */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-        }
-
-        .skill-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--card-border);
-            padding: 22px;
-            border-radius: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .skill-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent-cyan);
-            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.1);
-        }
-
-        .skill-card h3 {
-            font-size: 1.05rem;
-            color: var(--accent-cyan);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .skill-card p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        /* Timeline / Experience */
-        .timeline {
-            position: relative;
-            padding-left: 20px;
-            border-left: 2px solid var(--card-border);
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 30px;
-            padding-left: 20px;
-        }
-
-        .timeline-item:last-child { margin-bottom: 0; }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -27px;
-            top: 5px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--accent-cyan);
-            box-shadow: 0 0 10px var(--accent-cyan);
-        }
-
-        .job-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .job-meta {
-            font-size: 0.85rem;
-            color: var(--accent-blue);
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-
-        ul.job-bullets {
-            list-style: none;
-        }
-
-        ul.job-bullets li {
-            position: relative;
-            padding-left: 20px;
-            margin-bottom: 10px;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        ul.job-bullets li::before {
-            content: '▹';
-            position: absolute;
-            left: 0;
-            color: var(--accent-cyan);
-        }
-
-        /* Certifications List */
-        .cert-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-        }
-
-        .cert-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--card-border);
-            padding: 16px;
-            border-radius: 12px;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .cert-item i {
-            color: var(--accent-cyan);
-            font-size: 1.2rem;
-            margin-top: 3px;
-        }
-
-        .cert-item strong {
-            display: block;
-            color: var(--text-main);
-            font-size: 0.95rem;
-        }
-
-        .cert-item span {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        /* Footer CTA Buttons */
-        .cta-buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 20px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 0.95rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
-            color: #0b0f19;
-        }
-
-        .btn-primary:hover {
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-main);
-            border: 1px solid var(--card-border);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-        }
-
-        @media (max-width: 600px) {
-            h1 { font-size: 2.1rem; }
-            section { padding: 25px 20px; }
-            header { padding: 25px 20px; }
-        }
-    </style>
+    @media (min-width: 640px) {
+      .badge { display: inline-flex; }
+      .stats { grid-template-columns: repeat(3, 1fr); }
+      .form-row { grid-template-columns: 1fr 1fr; }
+      .form-actions { flex-direction: row; justify-content: flex-end; }
+    }
+    @media (min-width: 768px) {
+      .clock { display: inline; }
+      .hire-desktop { display: inline-flex; }
+      .dock { display: none; }
+      .menu-btn { display: none; }
+      footer { padding-bottom: 40px; }
+      footer .bar { flex-direction: row; justify-content: space-between; }
+      .ops { grid-template-columns: 1fr 1fr; }
+      .creds { grid-template-columns: 1fr 1fr; }
+      .toast { bottom: 16px; }
+    }
+    @media (min-width: 1024px) {
+      .nav-links { display: flex; }
+      .brand-name { display: block; }
+      .hero-grid { grid-template-columns: 1.15fr 0.85fr; gap: 48px; padding-top: 24px; }
+      .skills { grid-template-columns: 1fr 1fr; }
+      .ops { grid-template-columns: repeat(4, 1fr); }
+      .menu-btn { display: none; }
+    }
+    @media (max-width: 1023px) {
+      .brand-name { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .dot, .reveal, .reveal.in { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
+    }
+    @media print {
+      .nav, .progress, .dock, .menu, .modal, .toast, .cta-row, .no-print { display: none !important; }
+      body { background: #fff; color: #18181b; }
+      .card, .panel, .stat, .skill, .cred { box-shadow: none; background: #fff; color: #18181b; }
+    }
+  </style>
 </head>
 <body>
+  <div class="progress" id="progress"></div>
 
-    <div class="container">
-        <!-- Hero Header -->
-        <header>
-            <div class="status-badge">
-                <span class="status-dot"></span> Available for Operational Roles
-            </div>
-            <h1>Sumit Anand</h1>
-            <div class="subtitle">CCTV Operator & Security Systems Control Specialist</div>
-            
-            <div class="contact-bar">
-                <span><i class="fa-solid fa-location-dot"></i> Rohtak, Haryana, India</span>
-                <a href="tel:+917206185384"><i class="fa-solid fa-phone"></i> +91 7206185384</a>
-                <a href="mailto:sa8518430@gmail.com"><i class="fa-solid fa-envelope"></i> sa8518430@gmail.com</a>
-            </div>
-        </header>
-
-        <!-- Stats Bar -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number">2+ Years</div>
-                <div class="stat-label">Core Experience</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">100%</div>
-                <div class="stat-label">Data Entry Accuracy</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">Zero</div>
-                <div class="stat-label">Incident Target Record</div>
-            </div>
-        </div>
-
-        <!-- Professional Summary -->
-        <section>
-            <h2><i class="fa-solid fa-user-shield"></i> Professional Summary</h2>
-            <p class="summary-text">
-                Vigilant and detail-oriented CCTV Operator & Security Systems Specialist with 2+ years of core experience managing security operations, digital entry/exit verification, and surveillance systems in large-scale logistics hub environments. Proven expertise in real-time camera monitoring (CP Plus systems), high-volume vehicle/inbound-outbound data logging, loss prevention, and access control compliance. Proficient in MS Excel data entry, emergency response coordination, and PSARA security guidelines.
-            </p>
-        </section>
-
-        <!-- Technical Skills Grid -->
-        <section>
-            <h2><i class="fa-solid fa-microchip"></i> Core Competencies & Skills</h2>
-            <div class="skills-grid">
-                <div class="skill-card">
-                    <h3><i class="fa-solid fa-video"></i> Surveillance & CCTV</h3>
-                    <p>CP Plus Equipment Setup, Live Multi-Channel Monitoring, Footage Playback/Archiving, Incident Flagging.</p>
-                </div>
-                <div class="skill-card">
-                    <h3><i class="fa-solid fa-laptop-code"></i> Systems & Software</h3>
-                    <p>MS Office (Excel, Word, PowerPoint), Security Management Software, GIGO Verification Tools.</p>
-                </div>
-                <div class="skill-card">
-                    <h3><i class="fa-solid fa-id-card-clip"></i> Gate & Access Control</h3>
-                    <p>Vehicle Log Management, Material & Dock Verification, Visitor Authorization, Badge Inspection.</p>
-                </div>
-                <div class="skill-card">
-                    <h3><i class="fa-solid fa-shield-halved"></i> Compliance & Safety</h3>
-                    <p>PSARA Act Guidelines, Loss Prevention Protocols, Fire Safety & Evacuation Drills, Emergency Escalation.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Experience Timeline -->
-        <section>
-            <h2><i class="fa-solid fa-briefcase"></i> Professional Experience</h2>
-            <div class="timeline">
-                
-                <div class="timeline-item">
-                    <div class="job-title">Security Systems & Gate Control Operator</div>
-                    <div class="job-meta">Innovision Limited (Flipkart Kalash Warehouse - Mega Hub) | Patli, Haryana | 2025 – Present</div>
-                    <ul class="job-bullets">
-                        <li>Manage end-to-end gate security operations and digital GIGO systems for India's largest Flipkart hub, accurately processing high-density vehicle and personnel movement logs daily.</li>
-                        <li>Execute real-time data entry in MS Excel and logistics systems for inbound/outbound commercial vehicles, delivery fleets, and inventory transfers with 100% accuracy.</li>
-                        <li>Conduct physical and digital verification for dock movement, driver credentials, material gate passes, and employee access badges.</li>
-                        <li>Perform active surveillance and perimeter monitoring to prevent stock shrinkage and safety policy violations across high-throughput warehouse zones.</li>
-                    </ul>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="job-title">Security Guard & Surveillance Operator</div>
-                    <div class="job-meta">A.P. Securitas Pvt. Ltd. (Ekart Logistics Pvt. Ltd.) | Haryana, India | 2023 – 2024</div>
-                    <ul class="job-bullets">
-                        <li>Monitored multi-camera CCTV feeds, identifying suspicious activities and enforcing facility safety standards in accordance with PSARA regulations.</li>
-                        <li>Conducted regular floor patrols, inventory spot checks, and fire safety inspections to safeguard company assets and personnel.</li>
-                        <li>Operated emergency response equipment, assisted in scheduled fire drills, and maintained daily shift reports for management review.</li>
-                    </ul>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Certifications & Education -->
-        <section>
-            <h2><i class="fa-solid fa-graduation-cap"></i> Certifications & Education</h2>
-            <div class="cert-list">
-                <div class="cert-item">
-                    <i class="fa-solid fa-certificate"></i>
-                    <div>
-                        <strong>CCTV & Technical Systems Training</strong>
-                        <span>Practical hands-on setup in CP Plus equipment configuration & playback analysis.</span>
-                    </div>
-                </div>
-                <div class="cert-item">
-                    <i class="fa-solid fa-scale-balanced"></i>
-                    <div>
-                        <strong>PSARA Certification</strong>
-                        <span>Trained per Private Security Agencies Regulation Act standards.</span>
-                    </div>
-                </div>
-                <div class="cert-item">
-                    <i class="fa-solid fa-fire-extinguisher"></i>
-                    <div>
-                        <strong>Fire Safety & First Aid Training</strong>
-                        <span>Certified basic training in evacuation procedures and workplace CPR.</span>
-                    </div>
-                </div>
-                <div class="cert-item">
-                    <i class="fa-solid fa-building-columns"></i>
-                    <div>
-                        <strong>Bachelor of Commerce (B.Com)</strong>
-                        <span>Distance Education University (Final Year).</span>
-                    </div>
-                </div>
-                <div class="cert-item">
-                    <i class="fa-solid fa-school"></i>
-                    <div>
-                        <strong>Senior Secondary (12th CBSE)</strong>
-                        <span>B.S.A.M. Panchtirthi Sr. Sec. School (Scored 79% Marks).</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section>
-            <h2><i class="fa-solid fa-paper-plane"></i> Get In Touch</h2>
-            <p class="summary-text">I am currently available for Security Systems Operations, CCTV Control Room Supervision, and Logistics Loss Prevention roles.</p>
-            <div class="cta-buttons">
-                <a href="mailto:sa8518430@gmail.com" class="btn btn-primary"><i class="fa-solid fa-envelope"></i> Send Email</a>
-                <a href="tel:+917206185384" class="btn btn-secondary"><i class="fa-solid fa-phone"></i> Call Direct</a>
-            </div>
-        </section>
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top">
+        <span class="mark">SA</span>
+        <span class="brand-name">Sumit Anand</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#briefing">Briefing</a>
+        <a href="#skills">Capabilities</a>
+        <a href="#experience">Log</a>
+        <a href="#credentials">Credentials</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="nav-right">
+        <span class="clock" id="clock"></span>
+        <span class="badge"><span class="dot"></span> Available</span>
+        <button class="btn btn-primary btn-sm hire-desktop" type="button" onclick="openModal()">Hire</button>
+        <button class="btn btn-outline icon-btn menu-btn" type="button" aria-label="Open menu" onclick="openMenu()">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
     </div>
+  </header>
 
+  <div class="menu" id="menu">
+    <div class="overlay" onclick="closeMenu()"></div>
+    <aside class="sheet">
+      <button class="close" type="button" onclick="closeMenu()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      <p class="kicker">Navigate</p>
+      <nav>
+        <a href="#briefing" onclick="closeMenu()">Briefing</a>
+        <a href="#skills" onclick="closeMenu()">Capabilities</a>
+        <a href="#experience" onclick="closeMenu()">Log</a>
+        <a href="#credentials" onclick="closeMenu()">Credentials</a>
+        <a href="#contact" onclick="closeMenu()">Contact</a>
+      </nav>
+      <button class="btn btn-primary" style="width:100%;margin-top:32px" type="button" onclick="closeMenu();openModal()">Hire Sumit</button>
+    </aside>
+  </div>
+
+  <main id="top">
+    <section class="hero">
+      <div class="grid-veil"></div>
+      <div class="hero-grid">
+        <div>
+          <p class="kicker reveal">01 — Operations profile</p>
+          <h1 class="reveal">Sumit<br />Anand</h1>
+          <p class="role reveal">CCTV Operator & Security Systems Specialist</p>
+          <p class="loc reveal"><i class="fa-solid fa-location-dot"></i> Rohtak, Haryana, India</p>
+          <div class="cta-row reveal">
+            <button class="btn btn-primary" type="button" onclick="openModal()">Send a briefing <i class="fa-solid fa-arrow-up-right-from-square"></i></button>
+            <a class="btn btn-secondary" href="tel:+917206185384"><i class="fa-solid fa-phone"></i> Call</a>
+            <a class="btn btn-outline" href="https://wa.me/917206185384?text=Hello%20Sumit%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20discuss%20an%20operational%20role." target="_blank" rel="noreferrer"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+            <button class="btn btn-ghost" type="button" onclick="window.print()"><i class="fa-solid fa-print"></i> Print CV</button>
+          </div>
+        </div>
+        <aside class="panel reveal">
+          <div class="panel-inner">
+            <div class="panel-head">
+              <p class="kicker" style="letter-spacing:0.18em">Current posting</p>
+              <span class="badge" style="display:inline-flex"><span class="dot"></span> Live</span>
+            </div>
+            <h2>Innovision Limited</h2>
+            <p class="steel" style="margin-top:4px;font-size:14px">Flipkart Kalash Warehouse — Mega Hub</p>
+            <p class="muted" style="margin-top:16px">Patli, Haryana <span style="opacity:.4"> / </span> 2025 – Present</p>
+          </div>
+          <div class="rows">
+            <a class="row" href="mailto:sa8518430@gmail.com">
+              <span class="row-ico"><i class="fa-solid fa-envelope"></i></span>
+              <span><small>Email</small>sa8518430@gmail.com</span>
+            </a>
+            <a class="row" href="tel:+917206185384">
+              <span class="row-ico"><i class="fa-solid fa-phone"></i></span>
+              <span><small>Phone</small>+91 7206185384</span>
+            </a>
+            <a class="row" href="#" onclick="saveVCard(event)">
+              <span class="row-ico"><i class="fa-solid fa-download"></i></span>
+              <span><small>vCard</small>Save contact</span>
+            </a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <div class="wrap stack">
+      <div class="stats reveal">
+        <div class="stat"><b data-count="2" data-suffix="+">0+</b><span>Years core experience</span></div>
+        <div class="stat"><b data-count="100" data-suffix="%">0%</b><span>Data-entry accuracy</span></div>
+        <div class="stat"><b>Zero</b><span>Incident target record</span></div>
+      </div>
+
+      <section class="card reveal" id="briefing">
+        <p class="kicker">02 — Briefing</p>
+        <h2>Professional summary</h2>
+        <div class="card-body">
+          <p class="muted" style="font-size:16px;line-height:1.7;max-width:48rem">
+            Vigilant, detail-oriented operator with 2+ years managing security operations, digital entry/exit verification, and surveillance in large-scale logistics hubs. Proven in real-time CP Plus camera monitoring, high-volume vehicle logging, loss prevention, and access-control compliance. Proficient in MS Excel data entry, emergency coordination, and PSARA guidelines.
+          </p>
+          <div class="ops">
+            <article><h3>Watch</h3><p>Multi-channel live feeds, perimeter awareness, exception flagging.</p></article>
+            <article><h3>Verify</h3><p>GIGO logs, dock movement, credentials, and badge control.</p></article>
+            <article><h3>Record</h3><p>Accurate Excel and logistics-system entries, shift reports.</p></article>
+            <article><h3>Escalate</h3><p>Incident protocol, emergency coordination, PSARA compliance.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section class="card reveal" id="skills">
+        <p class="kicker">03 — Capabilities</p>
+        <h2>Core competencies</h2>
+        <div class="card-body skills">
+          <button class="skill open" type="button" onclick="toggleSkill(this)" aria-expanded="true">
+            <span class="row-ico"><i class="fa-solid fa-video"></i></span>
+            <span><h3>Surveillance & CCTV</h3><p>CP Plus equipment setup, live multi-channel monitoring, footage playback and archiving, incident flagging.</p></span>
+          </button>
+          <button class="skill" type="button" onclick="toggleSkill(this)" aria-expanded="false">
+            <span class="row-ico"><i class="fa-solid fa-laptop"></i></span>
+            <span><h3>Systems & Software</h3><p class="clamp">MS Office (Excel, Word, PowerPoint), security management software, GIGO verification tools.</p></span>
+          </button>
+          <button class="skill" type="button" onclick="toggleSkill(this)" aria-expanded="false">
+            <span class="row-ico"><i class="fa-solid fa-id-card"></i></span>
+            <span><h3>Gate & Access Control</h3><p class="clamp">Vehicle log management, material and dock verification, visitor authorization, badge inspection.</p></span>
+          </button>
+          <button class="skill" type="button" onclick="toggleSkill(this)" aria-expanded="false">
+            <span class="row-ico"><i class="fa-solid fa-shield-halved"></i></span>
+            <span><h3>Compliance & Safety</h3><p class="clamp">PSARA Act guidelines, loss-prevention protocols, fire safety and evacuation drills, emergency escalation.</p></span>
+          </button>
+        </div>
+      </section>
+
+      <section class="card reveal" id="experience">
+        <p class="kicker">04 — Duty log</p>
+        <h2>Professional experience</h2>
+        <div class="card-body">
+          <ol class="timeline">
+            <li class="job">
+              <p class="when">2025 – Present</p>
+              <h3>Security Systems & Gate Control Operator</h3>
+              <p class="muted" style="margin-top:4px">Innovision Limited (Flipkart Kalash Warehouse — Mega Hub) / Patli, Haryana</p>
+              <ul>
+                <li>Manage end-to-end gate security and digital GIGO systems for India’s largest Flipkart hub, logging high-density vehicle and personnel movement daily.</li>
+                <li>Execute real-time data entry in MS Excel and logistics systems for inbound/outbound commercial vehicles, delivery fleets, and inventory transfers with 100% accuracy.</li>
+                <li>Conduct physical and digital verification for dock movement, driver credentials, material gate passes, and employee access badges.</li>
+                <li>Perform active surveillance and perimeter monitoring to prevent stock shrinkage and safety-policy violations across high-throughput warehouse zones.</li>
+              </ul>
+            </li>
+            <li class="job">
+              <p class="when">2023 – 2024</p>
+              <h3>Security Guard & Surveillance Operator</h3>
+              <p class="muted" style="margin-top:4px">A.P. Securitas Pvt. Ltd. (Ekart Logistics Pvt. Ltd.) / Haryana, India</p>
+              <ul>
+                <li>Monitored multi-camera CCTV feeds, identifying suspicious activity and enforcing facility safety standards in accordance with PSARA regulations.</li>
+                <li>Conducted floor patrols, inventory spot checks, and fire-safety inspections to safeguard company assets and personnel.</li>
+                <li>Operated emergency-response equipment, assisted in scheduled fire drills, and maintained daily shift reports for management review.</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="card reveal" id="credentials">
+        <p class="kicker">05 — File</p>
+        <h2>Certifications & education</h2>
+        <div class="card-body creds">
+          <div class="cred"><span class="row-ico"><i class="fa-solid fa-certificate"></i></span><div><h3>CCTV & Technical Systems Training</h3><p>Hands-on CP Plus equipment configuration and playback analysis.</p></div></div>
+          <div class="cred"><span class="row-ico"><i class="fa-solid fa-scale-balanced"></i></span><div><h3>PSARA Certification</h3><p>Trained to Private Security Agencies Regulation Act standards.</p></div></div>
+          <div class="cred"><span class="row-ico"><i class="fa-solid fa-fire-extinguisher"></i></span><div><h3>Fire Safety & First Aid Training</h3><p>Evacuation procedures and workplace CPR basics.</p></div></div>
+          <div class="cred"><span class="row-ico"><i class="fa-solid fa-graduation-cap"></i></span><div><h3>Bachelor of Commerce (B.Com)</h3><p>Distance Education University — Final Year.</p></div></div>
+          <div class="cred"><span class="row-ico"><i class="fa-solid fa-school"></i></span><div><h3>Senior Secondary (12th CBSE)</h3><p>B.S.A.M. Panchtirthi Sr. Sec. School — 79%.</p></div></div>
+        </div>
+      </section>
+
+      <section class="card reveal" id="contact">
+        <p class="kicker">06 — Channel</p>
+        <h2>Get in touch</h2>
+        <div class="card-body">
+          <p class="muted" style="max-width:40rem">Available for security systems operations, CCTV control-room supervision, and logistics loss-prevention roles.</p>
+          <div class="cta-row" style="margin-top:24px">
+            <button class="btn btn-primary" type="button" onclick="openModal()"><i class="fa-solid fa-envelope"></i> Write a briefing</button>
+            <a class="btn btn-secondary" href="tel:+917206185384"><i class="fa-solid fa-phone"></i> +91 7206185384</a>
+            <a class="btn btn-outline" href="https://wa.me/917206185384?text=Hello%20Sumit%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20discuss%20an%20operational%20role." target="_blank" rel="noreferrer"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+          </div>
+          <hr class="hr" />
+          <div class="cta-row" style="margin-top:0">
+            <button class="btn btn-ghost" type="button" onclick="copyText('sa8518430@gmail.com', this)"><i class="fa-solid fa-copy"></i> Copy email</button>
+            <button class="btn btn-ghost" type="button" onclick="copyText('+91 7206185384', this)"><i class="fa-solid fa-copy"></i> Copy phone</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="bar">
+      <p>Sumit Anand · CCTV Operator & Security Systems Specialist</p>
+      <a class="no-print" href="#" onclick="window.print();return false;">Printable CV</a>
+    </div>
+  </footer>
+
+  <nav class="dock" aria-label="Quick contact">
+    <a href="mailto:sa8518430@gmail.com"><i class="fa-solid fa-envelope"></i> Email</a>
+    <a class="call" href="tel:+917206185384"><i class="fa-solid fa-phone"></i> Call</a>
+    <a href="https://wa.me/917206185384?text=Hello%20Sumit%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20discuss%20an%20operational%20role." target="_blank" rel="noreferrer"><i class="fa-brands fa-whatsapp"></i> Chat</a>
+  </nav>
+
+  <div class="modal" id="modal">
+    <div class="overlay" onclick="closeModal()"></div>
+    <div class="dialog" role="dialog" aria-labelledby="modal-title">
+      <button class="close" type="button" onclick="closeModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+      <h2 id="modal-title">Open a briefing</h2>
+      <p class="muted" style="margin-top:6px">Share the role and a short note. This opens your email client with a pre-filled message to Sumit Anand.</p>
+      <form onsubmit="sendBrief(event)">
+        <div class="form-row">
+          <div><label for="c-name">Your name</label><input id="c-name" required minlength="2" autocomplete="name" /></div>
+          <div><label for="c-email">Work email</label><input id="c-email" type="email" required autocomplete="email" /></div>
+        </div>
+        <div><label for="c-role">Role / site (optional)</label><input id="c-role" placeholder="CCTV control room, gate operations…" /></div>
+        <div><label for="c-message">Message</label><textarea id="c-message" required minlength="10" placeholder="Shift pattern, location, and start date."></textarea></div>
+        <div class="form-actions">
+          <button class="btn btn-ghost" type="button" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" type="submit">Send email <i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function tickClock() {
+      const el = document.getElementById("clock");
+      el.textContent = "IST " + new Intl.DateTimeFormat("en-IN", {
+        timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
+      }).format(new Date());
+    }
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    window.addEventListener("scroll", () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      document.getElementById("progress").style.width = (max > 0 ? (scrollY / max) * 100 : 0) + "%";
+    }, { passive: true });
+
+    const reveals = document.querySelectorAll(".reveal");
+    if (reduce) reveals.forEach((el) => el.classList.add("in"));
+    else {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
+      }, { threshold: 0.14 });
+      reveals.forEach((el) => io.observe(el));
+    }
+
+    document.querySelectorAll("[data-count]").forEach((el, i) => {
+      const value = Number(el.dataset.count);
+      const suffix = el.dataset.suffix || "";
+      if (reduce) { el.textContent = value + suffix; return; }
+      const startAt = performance.now() + i * 80;
+      const dur = 900;
+      const tick = (now) => {
+        if (now < startAt) return requestAnimationFrame(tick);
+        const t = Math.min(1, (now - startAt) / dur);
+        el.textContent = Math.round(value * (1 - Math.pow(1 - t, 3))) + suffix;
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+
+    function toggleSkill(btn) {
+      document.querySelectorAll(".skill").forEach((el) => {
+        const on = el === btn && !el.classList.contains("open");
+        el.classList.toggle("open", on);
+        el.setAttribute("aria-expanded", on ? "true" : "false");
+        const p = el.querySelector("p");
+        if (p) p.classList.toggle("clamp", !on);
+      });
+    }
+
+    function openMenu() { document.getElementById("menu").classList.add("open"); }
+    function closeMenu() { document.getElementById("menu").classList.remove("open"); }
+    function openModal() { document.getElementById("modal").classList.add("open"); document.getElementById("c-name").focus(); }
+    function closeModal() { document.getElementById("modal").classList.remove("open"); }
+
+    function sendBrief(e) {
+      e.preventDefault();
+      const name = document.getElementById("c-name").value.trim();
+      const email = document.getElementById("c-email").value.trim();
+      const role = document.getElementById("c-role").value.trim();
+      const message = document.getElementById("c-message").value.trim();
+      const subject = encodeURIComponent(role ? "Role enquiry: " + role + " — " + name : "Portfolio enquiry from " + name);
+      const body = encodeURIComponent("Name: " + name + "\nEmail: " + email + "\nRole: " + (role || "—") + "\n\n" + message);
+      location.href = "mailto:sa8518430@gmail.com?subject=" + subject + "&body=" + body;
+      toast("Opening your email client…");
+      closeModal();
+    }
+
+    function copyText(value, btn) {
+      const done = () => {
+        const old = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+        toast("Copied");
+        setTimeout(() => { btn.innerHTML = old; }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(value).then(done).catch(() => fallbackCopy(value, done));
+      } else fallbackCopy(value, done);
+    }
+    function fallbackCopy(value, done) {
+      const t = document.createElement("textarea");
+      t.value = value; document.body.appendChild(t); t.select();
+      document.execCommand("copy"); t.remove(); done();
+    }
+    function toast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg; el.classList.add("show");
+      setTimeout(() => el.classList.remove("show"), 1800);
+    }
+    function saveVCard(e) {
+      e.preventDefault();
+      const vcf = "BEGIN:VCARD\nVERSION:3.0\nFN:Sumit Anand\nN:Anand;Sumit;;;\nTITLE:CCTV Operator & Security Systems Specialist\nTEL;TYPE=CELL:+917206185384\nEMAIL:sa8518430@gmail.com\nADR;TYPE=HOME:;;Rohtak;Haryana;;India\nEND:VCARD";
+      const blob = new Blob([vcf], { type: "text/vcard" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "sumit-anand.vcf";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    const spy = document.querySelectorAll(".nav-links a");
+    const sections = [...spy].map((a) => document.querySelector(a.getAttribute("href")));
+    const spyObs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        spy.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + entry.target.id));
+      });
+    }, { rootMargin: "-42% 0px -48% 0px" });
+    sections.forEach((s) => s && spyObs.observe(s));
+  </script>
 </body>
 </html>
