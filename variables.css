@@ -1,0 +1,23 @@
+    :root {
+      --bg-void: #020205;
+      --bg-card: rgba(8, 10, 18, 0.75);
+      --bg-card-hover: rgba(14, 18, 32, 0.9);
+      --border-cyan: rgba(0, 243, 255, 0.22);
+      --border-purple: rgba(176, 38, 255, 0.25);
+      
+      --neon-cyan: #00f3ff;
+      --neon-cyan-glow: rgba(0, 243, 255, 0.45);
+      --neon-purple: #b026ff;
+      --neon-purple-glow: rgba(176, 38, 255, 0.45);
+      --neon-green: #00ff88;
+      --neon-green-glow: rgba(0, 255, 136, 0.45);
+      --neon-amber: #ffb703;
+
+      --text-main: #f0f4ff;
+      --text-muted: #838dae;
+      
+      --font-heading: 'Syne', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
