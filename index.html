@@ -1,782 +1,729 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sumit Anand | CCTV Operator & Security Systems Specialist</title>
-  <meta name="description" content="Portfolio of Sumit Anand — CCTV Operator and Security Systems Specialist experienced in CP Plus multi-channel surveillance, GIGO gate control, and loss prevention." />
-  <meta name="theme-color" content="#09090b" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Security & Logistics Command Center</title>
+  
+  <!-- FontAwesome for Premium Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts (Inter) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
+    /* ==========================================================================
+       1. CSS VARIABLES & THEME SETUP
+       ========================================================================== */
     :root {
-      --bg: #09090b;
-      --fg: #f4f4f5;
-      --card: #121214;
-      --secondary: #1c1c20;
-      --muted: #a1a1aa;
-      --steel: #c5cdd6;
-      --primary: #eceef2;
-      --primary-fg: #09090b;
-      --success: #34d399;
-      --danger: #ef4444;
-      --border: rgba(244, 244, 245, 0.1);
-      --shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
-      --shadow-hover: 0 0 0 1px rgba(255, 255, 255, 0.18);
-      --radius: 12px;
-      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --bg-main: #0b0f19;
+      --bg-card: rgba(22, 31, 49, 0.7);
+      --bg-card-hover: rgba(30, 41, 67, 0.85);
+      --primary: #3b82f6;
+      --primary-glow: rgba(59, 130, 246, 0.4);
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --accent-yellow: #f59e0b;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --modal-bg: rgba(15, 23, 42, 0.95);
+      --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    /* ==========================================================================
+       2. GLOBAL RESET & BASE STYLES
+       ========================================================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+      user-select: none;
+    }
+
     body {
-      font-family: "Barlow", system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--fg);
-      line-height: 1.5;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
       overflow-x: hidden;
-    }
-    a { color: inherit; text-decoration: none; }
-    button, [role="button"] { cursor: pointer; font-family: inherit; }
-    img, svg { display: block; }
-    h1, h2, h3 { text-wrap: balance; font-weight: 600; }
-    p { text-wrap: pretty; }
-
-    /* CCTV Global CRT Overlay Effect */
-    body::before {
-      content: "";
-      position: fixed; inset: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
-      background-size: 100% 4px;
-      z-index: 99;
-      pointer-events: none;
-      opacity: 0.35;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
+      background-attachment: fixed;
     }
 
-    .progress {
-      position: fixed; top: 0; left: 0; height: 2px; width: 0;
-      background: var(--steel); z-index: 80; pointer-events: none;
-      will-change: width;
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-main);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary);
     }
 
-    .nav {
-      position: sticky; top: 0; z-index: 40;
-      background: rgba(9, 9, 11, 0.92);
-      backdrop-filter: blur(8px);
-      box-shadow: 0 1px 0 0 var(--border);
+    /* ==========================================================================
+       3. HEADER & NAVBAR SECTION
+       ========================================================================== */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: rgba(11, 15, 25, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    .nav-inner {
-      max-width: 1152px; margin: 0 auto; padding: 0 16px;
-      height: 64px; display: flex; align-items: center; gap: 12px;
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #fff;
     }
-    .brand {
-      display: flex; align-items: center; gap: 10px; color: var(--fg);
+
+    .brand-logo i {
+      color: var(--primary);
+      font-size: 24px;
+      filter: drop-shadow(0 0 8px var(--primary-glow));
     }
-    .mark {
-      width: 32px; height: 32px; border-radius: 6px;
-      background: var(--primary); color: var(--primary-fg);
-      display: grid; place-items: center;
-      font-family: "Barlow Condensed", sans-serif; font-weight: 700; font-size: 14px;
+
+    .nav-stats {
+      display: flex;
+      gap: 25px;
+    }
+
+    .stat-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      font-size: 13px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 10px var(--accent-green);
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    /* ==========================================================================
+       4. CONTAINER & GRID LAYOUT
+       ========================================================================== */
+    .dashboard-container {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 30px;
+    }
+
+    .section-header {
+      margin-bottom: 30px;
+    }
+
+    .section-header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #ffffff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 25px;
+    }
+
+    /* ==========================================================================
+       5. ADVANCED FEATURE CARDS (GLASSMORPHISM)
+       ========================================================================== */
+    .feature-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 25px;
       position: relative;
-    }
-    .mark::after {
-      content: ""; position: absolute; inset: -2px; border-radius: 8px;
-      border: 1px solid var(--steel); opacity: 0.4;
-    }
-    .brand-name { font-family: "Barlow Condensed", sans-serif; font-size: 18px; letter-spacing: -0.02em; }
-    .nav-links { display: none; gap: 4px; margin-left: 16px; }
-    .nav-links a {
-      padding: 8px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--muted);
-      transition: color 150ms ease-out, background-color 150ms ease-out;
-    }
-    .nav-links a:hover, .nav-links a.active { background: var(--secondary); color: var(--fg); }
-    .nav-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-    
-    /* Control Room Status Header Pill */
-    .cctv-hud-status {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: #0f172a; border: 1px solid rgba(52, 211, 153, 0.2);
-      padding: 4px 10px; border-radius: 6px; font-family: "IBM Plex Mono", monospace;
-      font-size: 11px; color: var(--steel);
-    }
-    .rec-dot {
-      width: 8px; height: 8px; border-radius: 50%; background: var(--danger);
-      animation: recPulse 1.2s infinite ease-in-out;
-    }
-    @keyframes recPulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.25; transform: scale(0.85); }
+      overflow: hidden;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
-    .clock { display: none; font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.08em; color: var(--muted); }
-    .badge {
-      display: none; align-items: center; gap: 8px;
-      border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 500;
-      border: 1px solid rgba(52, 211, 153, 0.3); background: rgba(52, 211, 153, 0.1); color: var(--success);
-    }
-    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse 2s ease-in-out infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
-    .btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-      min-height: 44px; padding: 0 16px; border-radius: 8px; border: 0;
-      font-size: 14px; font-weight: 500; transition: transform 150ms ease-out, background-color 150ms ease-out, box-shadow 150ms ease-out, color 150ms ease-out;
-    }
-    .btn:active { transform: scale(0.96); }
-    .btn i { font-size: 14px; }
-    .btn-primary { background: var(--primary); color: var(--primary-fg); }
-    .btn-primary:hover { background: #d4d7de; }
-    .btn-secondary { background: var(--secondary); color: var(--fg); box-shadow: var(--shadow); }
-    .btn-outline { background: transparent; color: var(--fg); box-shadow: var(--shadow); }
-    .btn-outline:hover, .btn-secondary:hover { background: #26262b; }
-    .btn-ghost { background: transparent; color: var(--fg); }
-    .btn-ghost:hover { background: var(--secondary); }
-    .btn-sm { min-height: 36px; padding: 0 12px; }
-    .icon-btn { width: 44px; padding: 0; }
-    .hire-desktop { display: none; }
-
-    .wrap { max-width: 1152px; margin: 0 auto; padding: 0 16px; }
-    .hero { position: relative; overflow: hidden; padding: 40px 16px 16px; }
-    .grid-veil {
-      position: absolute; inset: 0; pointer-events: none;
-      background-image:
-        linear-gradient(to right, rgba(244,244,245,0.035) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(244,244,245,0.035) 1px, transparent 1px);
-      background-size: 48px 48px;
-    }
-    .hero-grid { position: relative; max-width: 1152px; margin: 0 auto; display: grid; gap: 32px; }
-    .kicker { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--steel); }
-    h1 {
-      margin-top: 16px;
-      font-family: "Barlow Condensed", sans-serif;
-      font-size: clamp(3.5rem, 12vw, 6rem);
-      line-height: 0.9; letter-spacing: -0.03em;
-    }
-    .role { margin-top: 20px; font-size: 18px; color: var(--steel); max-width: 28rem; }
-    .loc { margin-top: 12px; display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
-    .cta-row { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 8px; }
-
-    /* CCTV Video Feed Feed Component */
-    .cctv-monitor {
-      background: #000; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px;
-      padding: 12px; position: relative; overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 20px rgba(255,255,255,0.02);
-    }
-    .cctv-screen {
-      background: #0a0c10; border-radius: 8px; padding: 16px; height: 260px;
-      display: flex; flex-direction: column; justify-space-between; position: relative;
-      border: 1px solid rgba(255,255,255,0.05); overflow: hidden;
-    }
-    .cctv-scanline {
-      position: absolute; inset: 0;
-      background: linear-gradient(to bottom, transparent, rgba(52,211,153,0.06), transparent);
-      height: 40px; width: 100%; animation: scan 4s linear infinite; pointer-events: none;
-    }
-    @keyframes scan { 0% { top: -40px; } 100% { top: 100%; } }
-    .cctv-header { display: flex; justify-content: space-between; align-items: center; z-index: 2; }
-    .cctv-tag {
-      font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--success);
-      display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 4px;
-    }
-    .cctv-crosshair {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 80px; height: 80px; border: 1px solid rgba(255,255,255,0.15); border-radius: 50%;
-      pointer-events: none; display: grid; place-items: center;
-    }
-    .cctv-crosshair::before { content: ""; position: absolute; width: 100%; height: 1px; background: rgba(255,255,255,0.1); }
-    .cctv-crosshair::after { content: ""; position: absolute; height: 100%; width: 1px; background: rgba(255,255,255,0.1); }
-    .cctv-footer { z-index: 2; margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; }
-    .cctv-cam-select { display: flex; gap: 4px; margin-top: 8px; }
-    .cctv-cam-btn {
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-      color: var(--muted); padding: 4px 8px; border-radius: 4px; font-family: "IBM Plex Mono", monospace; font-size: 10px;
-    }
-    .cctv-cam-btn.active { background: var(--primary); color: var(--primary-fg); font-weight: 600; }
-
-    .panel { background: var(--card); border-radius: 24px; padding: 12px; box-shadow: var(--shadow); }
-    .panel-inner { background: var(--secondary); border-radius: 12px; padding: 20px; }
-    .panel-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-    .panel-inner h2 { font-family: "Barlow Condensed", sans-serif; font-size: 24px; margin-top: 16px; letter-spacing: -0.02em; }
-    .muted { color: var(--muted); font-size: 14px; }
-    .steel { color: var(--steel); }
-    .rows { margin-top: 12px; display: grid; gap: 8px; }
-    .row {
-      display: flex; align-items: center; gap: 12px; min-height: 48px;
-      padding: 8px 12px; border-radius: 12px;
-      transition: background-color 150ms ease-out, transform 150ms ease-out;
-    }
-    .row:hover { background: var(--secondary); transform: translateX(4px); }
-    .row-ico {
-      width: 36px; height: 36px; border-radius: 8px; background: var(--secondary);
-      display: grid; place-items: center; color: var(--steel); flex-shrink: 0;
-    }
-    .row small { display: block; font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
-
-    .stack { display: flex; flex-direction: column; gap: 24px; padding: 16px 0 32px; }
-    .card { background: var(--card); border-radius: 24px; padding: 24px; box-shadow: var(--shadow); }
-    .card h2 { font-family: "Barlow Condensed", sans-serif; font-size: 32px; margin-top: 8px; letter-spacing: -0.02em; }
-    .card-body { margin-top: 24px; }
-
-    .stats { display: grid; gap: 12px; }
-    .stat { background: var(--card); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
-    .stat::before {
-      content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--steel); opacity: 0.3;
-    }
-    .stat b { display: block; font-family: "Barlow Condensed", sans-serif; font-size: 36px; font-variant-numeric: tabular-nums; }
-    .stat span { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
-
-    .ops { display: grid; gap: 12px; margin-top: 32px; }
-    .ops article {
-      background: var(--secondary); border-radius: 12px; padding: 16px; box-shadow: var(--shadow);
-      transition: transform 150ms ease-out;
-    }
-    .ops article:hover { transform: translateY(-2px); }
-    .ops h3 { font-family: "Barlow Condensed", sans-serif; font-size: 18px; display: flex; align-items: center; gap: 8px; }
-    .ops h3::before { content: "//"; color: var(--steel); font-family: "IBM Plex Mono", monospace; font-size: 14px; }
-    .ops p { margin-top: 6px; font-size: 14px; color: var(--muted); }
-
-    .skills { display: grid; gap: 12px; }
-    .skill {
-      text-align: left; width: 100%; background: var(--card); color: var(--fg);
-      border: 0; border-radius: 16px; padding: 16px; box-shadow: var(--shadow);
-      display: flex; gap: 12px; align-items: flex-start;
-      transition: box-shadow 150ms ease-out, background-color 150ms ease-out, transform 150ms ease-out;
-    }
-    .skill.open, .skill:hover { background: var(--secondary); box-shadow: var(--shadow-hover); transform: translateY(-1px); }
-    .skill h3 { font-family: "Barlow Condensed", sans-serif; font-size: 20px; }
-    .skill p { margin-top: 4px; font-size: 14px; color: var(--muted); }
-    .skill p.clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-
-    .timeline { position: relative; padding-left: 24px; border-left: 1px solid var(--border); display: flex; flex-direction: column; gap: 24px; }
-    .job { position: relative; }
-    .job::before {
-      content: ""; position: absolute; left: -29px; top: 8px;
-      width: 10px; height: 10px; border-radius: 50%; background: var(--steel);
-      box-shadow: 0 0 8px rgba(197, 205, 214, 0.6);
-    }
-    .job .when { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--steel); }
-    .job h3 { font-family: "Barlow Condensed", sans-serif; font-size: 24px; margin-top: 4px; }
-    .job ul { margin-top: 16px; list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    .job li { display: flex; gap: 8px; font-size: 14px; color: var(--muted); }
-    .job li::before { content: ""; width: 4px; height: 4px; margin-top: 9px; border-radius: 50%; background: var(--steel); flex-shrink: 0; }
-
-    .creds { display: grid; gap: 12px; }
-    .cred {
-      display: flex; gap: 12px; background: var(--card); border-radius: 16px; padding: 16px; box-shadow: var(--shadow);
-      transition: transform 150ms ease-out;
-    }
-    .cred:hover { transform: translateX(4px); }
-    .cred h3 { font-size: 16px; font-weight: 500; }
-    .cred p { margin-top: 4px; font-size: 14px; color: var(--muted); }
-
-    .hr { height: 1px; background: var(--border); margin: 24px 0; border: 0; }
-    footer { max-width: 1152px; margin: 0 auto; padding: 16px 16px 120px; color: var(--muted); font-size: 14px; }
-    footer .bar { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border); padding: 24px 0; }
-    footer a { color: var(--steel); }
-
-    .dock {
-      position: fixed; left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom));
-      z-index: 40; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px;
-      background: rgba(18,18,20,0.95); backdrop-filter: blur(8px); border-radius: 16px; padding: 6px; box-shadow: var(--shadow);
-    }
-    .dock a {
-      min-height: 48px; border-radius: 12px; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 2px; font-size: 12px; font-weight: 500;
-    }
-    .dock a.call { background: var(--primary); color: var(--primary-fg); }
-
-    .menu, .modal { display: none; }
-    .menu.open, .modal.open { display: block; }
-    .overlay { position: fixed; inset: 0; background: rgba(9,9,11,0.8); backdrop-filter: blur(4px); z-index: 50; }
-    .sheet {
-      position: fixed; top: 0; right: 0; bottom: 0; width: min(320px, 100%);
-      background: var(--card); z-index: 51; padding: 24px; box-shadow: var(--shadow);
-    }
-    .sheet nav { margin-top: 32px; display: flex; flex-direction: column; gap: 4px; }
-    .sheet a { padding: 12px; border-radius: 12px; font-size: 16px; }
-    .sheet a:hover { background: var(--secondary); }
-    .dialog {
-      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: min(32rem, calc(100% - 2rem)); background: var(--card); z-index: 51;
-      border-radius: 24px; padding: 24px; box-shadow: var(--shadow);
-    }
-    .dialog h2 { font-family: "Barlow Condensed", sans-serif; font-size: 24px; }
-    .close {
-      position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
-      border: 0; border-radius: 8px; background: transparent; color: var(--muted);
-    }
-    .close:hover { background: var(--secondary); color: var(--fg); }
-    form { margin-top: 20px; display: grid; gap: 16px; }
-    label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; }
-    input, textarea {
-      width: 100%; min-height: 44px; border: 0; border-radius: 12px;
-      background: var(--secondary); color: var(--fg); padding: 0 12px;
-      box-shadow: var(--shadow); font: inherit; outline: none;
-    }
-    textarea { min-height: 112px; padding: 10px 12px; resize: vertical; }
-    input:focus, textarea:focus { box-shadow: 0 0 0 1px var(--steel); }
-    .form-row { display: grid; gap: 16px; }
-    .form-actions { display: flex; flex-direction: column-reverse; gap: 8px; }
-    .toast {
-      position: fixed; right: 16px; bottom: 88px; z-index: 60;
-      background: var(--card); color: var(--fg); padding: 12px 16px; border-radius: 12px;
-      box-shadow: var(--shadow); font-size: 14px; display: none;
-    }
-    .toast.show { display: block; }
-    
-    /* Optimized Low-Latency Scroll Reveal */
-    .reveal { opacity: 0; transform: translateY(12px); filter: blur(2px); }
-    .reveal.in { animation: fade-up 350ms var(--ease) forwards; }
-    @keyframes fade-up {
-      to { opacity: 1; transform: none; filter: none; }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+      transition: 0.6s;
     }
 
-    @media (min-width: 640px) {
-      .badge { display: inline-flex; }
-      .stats { grid-template-columns: repeat(3, 1fr); }
-      .form-row { grid-template-columns: 1fr 1fr; }
-      .form-actions { flex-direction: row; justify-content: flex-end; }
+    .feature-card:hover::before {
+      left: 100%;
     }
-    @media (min-width: 768px) {
-      .clock { display: inline; }
-      .hire-desktop { display: inline-flex; }
-      .dock { display: none; }
-      .menu-btn { display: none; }
-      footer { padding-bottom: 40px; }
-      footer .bar { flex-direction: row; justify-content: space-between; }
-      .ops { grid-template-columns: 1fr 1fr; }
-      .creds { grid-template-columns: 1fr 1fr; }
-      .toast { bottom: 16px; }
+
+    .feature-card:hover {
+      transform: translateY(-8px) scale(1.01);
+      background: var(--bg-card-hover);
+      border-color: rgba(59, 130, 246, 0.4);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-glow);
     }
-    @media (min-width: 1024px) {
-      .nav-links { display: flex; }
-      .brand-name { display: block; }
-      .hero-grid { grid-template-columns: 1.1fr 0.9fr; gap: 40px; padding-top: 16px; }
-      .skills { grid-template-columns: 1fr 1fr; }
-      .ops { grid-template-columns: repeat(4, 1fr); }
-      .menu-btn { display: none; }
+
+    .card-icon-wrapper {
+      width: 55px;
+      height: 55px;
+      border-radius: 14px;
+      background: rgba(59, 130, 246, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 22px;
+      color: var(--primary);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      transition: var(--transition-smooth);
     }
-    @media (max-width: 1023px) {
-      .brand-name { display: none; }
+
+    .feature-card:hover .card-icon-wrapper {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 0 15px var(--primary-glow);
+      transform: rotate(5deg) scale(1.05);
     }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      body::before, .cctv-scanline { display: none; }
-      .dot, .rec-dot, .reveal, .reveal.in { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #fff;
     }
-    @media print {
-      body::before { display: none; }
-      .nav, .progress, .dock, .menu, .modal, .toast, .cta-row, .cctv-monitor, .no-print { display: none !important; }
-      body { background: #fff; color: #18181b; }
-      .card, .panel, .stat, .skill, .cred { box-shadow: none; background: #fff; color: #18181b; }
+
+    .card-description {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 15px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .card-tag {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-muted);
+    }
+
+    .action-link {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .feature-card:hover .action-link {
+      gap: 10px;
+      color: #60a5fa;
+    }
+
+    /* ==========================================================================
+       6. ULTRA-SMOOTH ANIMATED MODAL (POPUP)
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition-smooth);
+      z-index: 1000;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-box {
+      background: var(--modal-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      width: 90%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(59, 130, 246, 0.15);
+      position: relative;
+      transform: translateY(-80px) scale(0.85);
+      transition: var(--transition-bounce);
+      opacity: 0;
+    }
+
+    .modal-overlay.active .modal-box {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .modal-image-container {
+      position: relative;
+      width: 100%;
+      height: 260px;
+      overflow: hidden;
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+    }
+
+    .modal-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .modal-box:hover .modal-image {
+      transform: scale(1.03);
+    }
+
+    .modal-image-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      background: linear-gradient(to top, var(--modal-bg), transparent);
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      z-index: 10;
+    }
+
+    .modal-close-btn:hover {
+      background: var(--accent-red);
+      transform: rotate(90deg);
+      border-color: var(--accent-red);
+    }
+
+    .modal-body {
+      padding: 25px 30px 30px 30px;
+    }
+
+    .modal-badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 20px;
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .modal-description {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 25px;
+    }
+
+    /* Modal Specs Detail Grid */
+    .modal-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .spec-label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .spec-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .modal-action-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 4px 15px var(--primary-glow);
+    }
+
+    .modal-action-btn:hover {
+      background: #2563eb;
+      box-shadow: 0 6px 20px var(--primary-glow);
+    }
+
+    /* ==========================================================================
+       7. RESPONSIVE DESIGN ADJUSTMENTS
+       ========================================================================== */
+    @media (max-width: 768px) {
+      .navbar {
+        padding: 15px 20px;
+      }
+      .nav-stats {
+        display: none;
+      }
+      .dashboard-container {
+        padding: 0 15px;
+        margin: 20px auto;
+      }
+      .modal-specs-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="progress" id="progress"></div>
 
-  <header class="nav">
-    <div class="nav-inner">
-      <a class="brand" href="#top">
-        <span class="mark">SA</span>
-        <span class="brand-name">Sumit Anand</span>
-      </a>
-      <div class="cctv-hud-status">
-        <span class="rec-dot"></span>
-        <span id="cctv-hud-text">SYS ONLINE · 64 CAM FEEDS</span>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="brand-logo">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>SECURE-OPS v3.0</span>
+    </div>
+    <div class="nav-stats">
+      <div class="stat-badge">
+        <div class="status-dot"></div>
+        <span>AI Surveillance: Active</span>
       </div>
-      <nav class="nav-links" aria-label="Primary">
-        <a href="#briefing">Briefing</a>
-        <a href="#skills">Capabilities</a>
-        <a href="#experience">Log</a>
-        <a href="#credentials">Credentials</a>
-        <a href="#contact">Contact</a>
-      </nav>
-      <div class="nav-right">
-        <span class="clock" id="clock"></span>
-        <span class="badge"><span class="dot"></span> Available</span>
-        <button class="btn btn-primary btn-sm hire-desktop" type="button" onclick="openModal()">Hire</button>
-        <button class="btn btn-outline icon-btn menu-btn" type="button" aria-label="Open menu" onclick="openMenu()">
-          <i class="fa-solid fa-bars"></i>
-        </button>
+      <div class="stat-badge">
+        <i class="fa-solid fa-truck" style="color: var(--primary);"></i>
+        <span>Gate Sync: 100%</span>
       </div>
     </div>
   </header>
 
-  <div class="menu" id="menu">
-    <div class="overlay" onclick="closeMenu()"></div>
-    <aside class="sheet">
-      <button class="close" type="button" onclick="closeMenu()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-      <p class="kicker">Navigate</p>
-      <nav>
-        <a href="#briefing" onclick="closeMenu()">Briefing</a>
-        <a href="#skills" onclick="closeMenu()">Capabilities</a>
-        <a href="#experience" onclick="closeMenu()">Log</a>
-        <a href="#credentials" onclick="closeMenu()">Credentials</a>
-        <a href="#contact" onclick="closeMenu()">Contact</a>
-      </nav>
-      <button class="btn btn-primary" style="width:100%;margin-top:32px" type="button" onclick="closeMenu();openModal()">Hire Sumit</button>
-    </aside>
-  </div>
+  <!-- MAIN DASHBOARD CONTENT -->
+  <main class="dashboard-container">
+    
+    <div class="section-header">
+      <h1>System Capabilities & Operations</h1>
+      <p>Click on any operational module to inspect real-time AI feeds, hardware statuses, and logs.</p>
+    </div>
 
-  <main id="top">
-    <section class="hero">
-      <div class="grid-veil"></div>
-      <div class="hero-grid">
+    <!-- CARDS GRID -->
+    <div class="grid-layout">
+      
+      <!-- Card 1: Multi-Camera -->
+      <div class="feature-card" onclick="openModal('multiCam')">
         <div>
-          <p class="kicker reveal">01 — Operations profile</p>
-          <h1 class="reveal">Sumit<br />Anand</h1>
-          <p class="role reveal">CCTV Operator & Security Systems Specialist</p>
-          <p class="loc reveal"><i class="fa-solid fa-location-dot"></i> Rohtak, Haryana, India</p>
-          <div class="cta-row reveal">
-            <button class="btn btn-primary" type="button" onclick="openModal()">Send a briefing <i class="fa-solid fa-arrow-up-right-from-square"></i></button>
-            <a class="btn btn-secondary" href="tel:+917206185384"><i class="fa-solid fa-phone"></i> Call</a>
-            <a class="btn btn-outline" href="https://wa.me/917206185384?text=Hello%20Sumit%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20discuss%20an%20operational%20role." target="_blank" rel="noreferrer"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-            <button class="btn btn-ghost" type="button" onclick="window.print()"><i class="fa-solid fa-print"></i> Print CV</button>
+          <div class="card-icon-wrapper">
+            <i class="fa-solid fa-video"></i>
           </div>
+          <h2 class="card-title">Multi-Camera Surveillance</h2>
+          <p class="card-description">High-Definition multi-angle CCTV coverage featuring real-time AI motion tracking, thermal vision, and night optic feeds.</p>
         </div>
-
-        <div>
-          <!-- Live Interactive CCTV Visual Feed Monitor -->
-          <div class="cctv-monitor reveal" style="margin-bottom: 16px;">
-            <div class="cctv-screen">
-              <div class="cctv-scanline"></div>
-              <div class="cctv-header">
-                <span class="cctv-tag"><span class="rec-dot"></span> LIVE // <span id="cam-id">CAM 01 - MAIN GATE GIGO</span></span>
-                <span class="cctv-tag" style="color:var(--steel)" id="cam-fps">30.0 FPS</span>
-              </div>
-              <div class="cctv-crosshair"></div>
-              <div class="cctv-footer">
-                <div>
-                  <p style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--steel)" id="cam-loc">PATLI MEGA HUB · DOCK ZONE</p>
-                  <p style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--muted)">CP PLUS NVR SYSTEM · ENCRYPTED</p>
-                </div>
-                <span class="cctv-tag" style="color:var(--success)">CLEAR</span>
-              </div>
-            </div>
-            <div class="cctv-cam-select">
-              <button class="cctv-cam-btn active" onclick="switchCam('01', 'MAIN GATE GIGO', 'PATLI MEGA HUB · DOCK ZONE', this)">CAM 01</button>
-              <button class="cctv-cam-btn" onclick="switchCam('02', 'PERIMETER NORTH', 'PATLI MEGA HUB · FENCE LINE', this)">CAM 02</button>
-              <button class="cctv-cam-btn" onclick="switchCam('03', 'INVENTORY BAY 4', 'FLIPKART KALASH · HIGH VALUE', this)">CAM 03</button>
-              <button class="cctv-cam-btn" onclick="switchCam('04', 'DISPATCH CONTROL', 'FLIPKART KALASH · OUTBOUND', this)">CAM 04</button>
-            </div>
-          </div>
-
-          <aside class="panel reveal">
-            <div class="panel-inner">
-              <div class="panel-head">
-                <p class="kicker" style="letter-spacing:0.18em">Current posting</p>
-                <span class="badge" style="display:inline-flex"><span class="dot"></span> Live</span>
-              </div>
-              <h2>Innovision Limited</h2>
-              <p class="steel" style="margin-top:4px;font-size:14px">Flipkart Kalash Warehouse — Mega Hub</p>
-              <p class="muted" style="margin-top:16px">Patli, Haryana <span style="opacity:.4"> / </span> 2025 – Present</p>
-            </div>
-            <div class="rows">
-              <a class="row" href="mailto:sa8518430@gmail.com">
-                <span class="row-ico"><i class="fa-solid fa-envelope"></i></span>
-                <span><small>Email</small>sa8518430@gmail.com</span>
-              </a>
-              <a class="row" href="tel:+917206185384">
-                <span class="row-ico"><i class="fa-solid fa-phone"></i></span>
-                <span><small>Phone</small>+91 7206185384</span>
-              </a>
-              <a class="row" href="#" onclick="saveVCard(event)">
-                <span class="row-ico"><i class="fa-solid fa-download"></i></span>
-                <span><small>vCard</small>Save contact</span>
-              </a>
-            </div>
-          </aside>
+        <div class="card-footer">
+          <span class="card-tag">32 Cameras Active</span>
+          <span class="action-link">View Stream <i class="fa-solid fa-arrow-right"></i></span>
         </div>
       </div>
-    </section>
 
-    <div class="wrap stack">
-      <div class="stats reveal">
-        <div class="stat"><b data-count="2" data-suffix="+">0+</b><span>Years core experience</span></div>
-        <div class="stat"><b data-count="100" data-suffix="%">0%</b><span>Data-entry accuracy</span></div>
-        <div class="stat"><b>Zero</b><span>Incident target record</span></div>
+      <!-- Card 2: Gate Entry 100% -->
+      <div class="feature-card" onclick="openModal('gateEntry')">
+        <div>
+          <div class="card-icon-wrapper" style="color: var(--accent-green); background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2);">
+            <i class="fa-solid fa-id-card"></i>
+          </div>
+          <h2 class="card-title">100% Automated Gate Entry</h2>
+          <p class="card-description">Automatic driver credential verification, license plate recognition (ANPR), and barrier control with zero delay.</p>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag">Zero Manual Errors</span>
+          <span class="action-link" style="color: var(--accent-green);">Access Logs <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
       </div>
 
-      <section class="card reveal" id="briefing">
-        <p class="kicker">02 — Briefing</p>
-        <h2>Professional summary</h2>
-        <div class="card-body">
-          <p class="muted" style="font-size:16px;line-height:1.7;max-width:48rem">
-            Vigilant, detail-oriented operator with 2+ years managing security operations, digital entry/exit verification, and surveillance in large-scale logistics hubs. Proven in real-time CP Plus camera monitoring, high-volume vehicle logging, loss prevention, and access-control compliance. Proficient in MS Excel data entry, emergency coordination, and PSARA guidelines.
-          </p>
-          <div class="ops">
-            <article><h3>Watch</h3><p>Multi-channel live feeds, perimeter awareness, exception flagging.</p></article>
-            <article><h3>Verify</h3><p>GIGO logs, dock movement, credentials, and badge control.</p></article>
-            <article><h3>Record</h3><p>Accurate Excel and logistics-system entries, shift reports.</p></article>
-            <article><h3>Escalate</h3><p>Incident protocol, emergency coordination, PSARA compliance.</p></article>
+      <!-- Card 3: Driver & Fleet Management -->
+      <div class="feature-card" onclick="openModal('fleetMgmt')">
+        <div>
+          <div class="card-icon-wrapper" style="color: var(--accent-yellow); background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2);">
+            <i class="fa-solid fa-truck-ramp-box"></i>
           </div>
+          <h2 class="card-title">Driver & Vehicle Systems</h2>
+          <p class="card-description">Comprehensive logging of inbound/outbound drivers, docking bay allocations, and automated biometric verifications.</p>
         </div>
-      </section>
-
-      <section class="card reveal" id="skills">
-        <p class="kicker">03 — Capabilities</p>
-        <h2>Core competencies</h2>
-        <div class="card-body skills">
-          <button class="skill open" type="button" onclick="toggleSkill(this)" aria-expanded="true">
-            <span class="row-ico"><i class="fa-solid fa-video"></i></span>
-            <span><h3>Surveillance & CCTV</h3><p>CP Plus equipment setup, live multi-channel monitoring, footage playback and archiving, incident flagging.</p></span>
-          </button>
-          <button class="skill" type="button" onclick="toggleSkill(this)" aria-expanded="false">
-            <span class="row-ico"><i class="fa-solid fa-laptop"></i></span>
-            <span><h3>Systems & Software</h3><p class="clamp">MS Office (Excel, Word, PowerPoint), security management software, GIGO verification tools.</p></span>
-          </button>
-          <button class="skill" type="button" onclick="toggleSkill(this)" aria-expanded="false">
-            <span class="row-ico"><i class="fa-solid fa-id-card"></i></span>
-            <span><h3>Gate & Access Control</h3><p class="clamp">Vehicle log management, material and dock verification, visitor authorization, badge inspection.</p></span>
-          </button>
-          <button class="skill" type="button" onclick="toggleSkill(this)" aria-expanded="false">
-            <span class="row-ico"><i class="fa-solid fa-shield-halved"></i></span>
-            <span><h3>Compliance & Safety</h3><p class="clamp">PSARA Act guidelines, loss-prevention protocols, fire safety and evacuation drills, emergency escalation.</p></span>
-          </button>
+        <div class="card-footer">
+          <span class="card-tag">Live Docking Status</span>
+          <span class="action-link" style="color: var(--accent-yellow);">Check Fleet <i class="fa-solid fa-arrow-right"></i></span>
         </div>
-      </section>
+      </div>
 
-      <section class="card reveal" id="experience">
-        <p class="kicker">04 — Duty log</p>
-        <h2>Professional experience</h2>
-        <div class="card-body">
-          <ol class="timeline">
-            <li class="job">
-              <p class="when">2025 – Present</p>
-              <h3>Security Systems & Gate Control Operator</h3>
-              <p class="muted" style="margin-top:4px">Innovision Limited (Flipkart Kalash Warehouse — Mega Hub) / Patli, Haryana</p>
-              <ul>
-                <li>Manage end-to-end gate security and digital GIGO systems for India’s largest Flipkart hub, logging high-density vehicle and personnel movement daily.</li>
-                <li>Execute real-time data entry in MS Excel and logistics systems for inbound/outbound commercial vehicles, delivery fleets, and inventory transfers with 100% accuracy.</li>
-                <li>Conduct physical and digital verification for dock movement, driver credentials, material gate passes, and employee access badges.</li>
-                <li>Perform active surveillance and perimeter monitoring to prevent stock shrinkage and safety-policy violations across high-throughput warehouse zones.</li>
-              </ul>
-            </li>
-            <li class="job">
-              <p class="when">2023 – 2024</p>
-              <h3>Security Guard & Surveillance Operator</h3>
-              <p class="muted" style="margin-top:4px">A.P. Securitas Pvt. Ltd. (Ekart Logistics Pvt. Ltd.) / Haryana, India</p>
-              <ul>
-                <li>Monitored multi-camera CCTV feeds, identifying suspicious activity and enforcing facility safety standards in accordance with PSARA regulations.</li>
-                <li>Conducted floor patrols, inventory spot checks, and fire-safety inspections to safeguard company assets and personnel.</li>
-                <li>Operated emergency-response equipment, assisted in scheduled fire drills, and maintained daily shift reports for management review.</li>
-              </ul>
-            </li>
-          </ol>
-        </div>
-      </section>
-
-      <section class="card reveal" id="credentials">
-        <p class="kicker">05 — File</p>
-        <h2>Certifications & education</h2>
-        <div class="card-body creds">
-          <div class="cred"><span class="row-ico"><i class="fa-solid fa-certificate"></i></span><div><h3>CCTV & Technical Systems Training</h3><p>Hands-on CP Plus equipment configuration and playback analysis.</p></div></div>
-          <div class="cred"><span class="row-ico"><i class="fa-solid fa-scale-balanced"></i></span><div><h3>PSARA Certification</h3><p>Trained to Private Security Agencies Regulation Act standards.</p></div></div>
-          <div class="cred"><span class="row-ico"><i class="fa-solid fa-fire-extinguisher"></i></span><div><h3>Fire Safety & First Aid Training</h3><p>Evacuation procedures and workplace CPR basics.</p></div></div>
-          <div class="cred"><span class="row-ico"><i class="fa-solid fa-graduation-cap"></i></span><div><h3>Bachelor of Commerce (B.Com)</h3><p>Distance Education University — Final Year.</p></div></div>
-          <div class="cred"><span class="row-ico"><i class="fa-solid fa-school"></i></span><div><h3>Senior Secondary (12th CBSE)</h3><p>B.S.A.M. Panchtirthi Sr. Sec. School — 79%.</p></div></div>
-        </div>
-      </section>
-
-      <section class="card reveal" id="contact">
-        <p class="kicker">06 — Channel</p>
-        <h2>Get in touch</h2>
-        <div class="card-body">
-          <p class="muted" style="max-width:40rem">Available for security systems operations, CCTV control-room supervision, and logistics loss-prevention roles.</p>
-          <div class="cta-row" style="margin-top:24px">
-            <button class="btn btn-primary" type="button" onclick="openModal()"><i class="fa-solid fa-envelope"></i> Write a briefing</button>
-            <a class="btn btn-secondary" href="tel:+917206185384"><i class="fa-solid fa-phone"></i> +91 7206185384</a>
-            <a class="btn btn-outline" href="https://wa.me/917206185384?text=Hello%20Sumit%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20discuss%20an%20operational%20role." target="_blank" rel="noreferrer"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+      <!-- Card 4: Perimeter Motion Security -->
+      <div class="feature-card" onclick="openModal('perimeter')">
+        <div>
+          <div class="card-icon-wrapper" style="color: var(--accent-red); background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2);">
+            <i class="fa-solid fa-triangle-exclamation"></i>
           </div>
-          <hr class="hr" />
-          <div class="cta-row" style="margin-top:0">
-            <button class="btn btn-ghost" type="button" onclick="copyText('sa8518430@gmail.com', this)"><i class="fa-solid fa-copy"></i> Copy email</button>
-            <button class="btn btn-ghost" type="button" onclick="copyText('+91 7206185384', this)"><i class="fa-solid fa-copy"></i> Copy phone</button>
-          </div>
+          <h2 class="card-title">Perimeter Intrusion Alerts</h2>
+          <p class="card-description">Smart boundary sensors connected to instant alert dispatch. Detects unauthorized physical intrusions along boundary walls.</p>
         </div>
-      </section>
+        <div class="card-footer">
+          <span class="card-tag">Real-time Alarms</span>
+          <span class="action-link" style="color: var(--accent-red);">Inspect Zones <i class="fa-solid fa-arrow-right"></i></span>
+        </div>
+      </div>
+
     </div>
   </main>
 
-  <footer>
-    <div class="bar">
-      <p>Sumit Anand · CCTV Operator & Security Systems Specialist</p>
-      <a class="no-print" href="#" onclick="window.print();return false;">Printable CV</a>
-    </div>
-  </footer>
+  <!-- DYNAMIC ANIMATED MODAL (POPUP) -->
+  <div id="dynamicModal" class="modal-overlay" onclick="handleOverlayClick(event)">
+    <div class="modal-box">
+      
+      <button class="modal-close-btn" onclick="closeModal()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
 
-  <nav class="dock" aria-label="Quick contact">
-    <a href="mailto:sa8518430@gmail.com"><i class="fa-solid fa-envelope"></i> Email</a>
-    <a class="call" href="tel:+917206185384"><i class="fa-solid fa-phone"></i> Call</a>
-    <a href="https://wa.me/917206185384?text=Hello%20Sumit%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20discuss%20an%20operational%20role." target="_blank" rel="noreferrer"><i class="fa-brands fa-whatsapp"></i> Chat</a>
-  </nav>
+      <div class="modal-image-container">
+        <img id="modalImg" src="" alt="Detail Preview" class="modal-image">
+        <div class="modal-image-overlay"></div>
+      </div>
 
-  <div class="modal" id="modal">
-    <div class="overlay" onclick="closeModal()"></div>
-    <div class="dialog" role="dialog" aria-labelledby="modal-title">
-      <button class="close" type="button" onclick="closeModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-      <h2 id="modal-title">Open a briefing</h2>
-      <p class="muted" style="margin-top:6px">Share the role and a short note. This opens your email client with a pre-filled message to Sumit Anand.</p>
-      <form onsubmit="sendBrief(event)">
-        <div class="form-row">
-          <div><label for="c-name">Your name</label><input id="c-name" required minlength="2" autocomplete="name" /></div>
-          <div><label for="c-email">Work email</label><input id="c-email" type="email" required autocomplete="email" /></div>
+      <div class="modal-body">
+        <span id="modalCategory" class="modal-badge">SECURITY MODULE</span>
+        <h2 id="modalHeading" class="modal-title">Module Details</h2>
+        <p id="modalDesc" class="modal-description">Detailed descriptive text goes here dynamically.</p>
+
+        <!-- Technical Specification Matrix -->
+        <div class="modal-specs-grid">
+          <div class="spec-item">
+            <span class="spec-label">System Integrity</span>
+            <span id="specIntegrity" class="spec-value">100% Operational</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Response Time</span>
+            <span id="specResponse" class="spec-value">&lt; 120ms</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">AI Processing Engine</span>
+            <span id="specEngine" class="spec-value">v4.2 Vision Neural</span>
+          </div>
+          <div class="spec-item">
+            <span class="spec-label">Primary Node</span>
+            <span id="specNode" class="spec-value">Main Gate Controller</span>
+          </div>
         </div>
-        <div><label for="c-role">Role / site (optional)</label><input id="c-role" placeholder="CCTV control room, gate operations…" /></div>
-        <div><label for="c-message">Message</label><textarea id="c-message" required minlength="10" placeholder="Shift pattern, location, and start date."></textarea></div>
-        <div class="form-actions">
-          <button class="btn btn-ghost" type="button" onclick="closeModal()">Cancel</button>
-          <button class="btn btn-primary" type="submit">Send email <i class="fa-solid fa-paper-plane"></i></button>
-        </div>
-      </form>
+
+        <button class="modal-action-btn" onclick="closeModal()">
+          <i class="fa-solid fa-check"></i> Acknowledge & Close
+        </button>
+      </div>
+
     </div>
   </div>
 
-  <div class="toast" id="toast"></div>
-
+  <!-- JAVASCRIPT LOGIC -->
   <script>
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    /* ==========================================================================
+       CENTRAL DATA ARCHITECTURE FOR MODAL CONTENT
+       ========================================================================== */
+    const moduleDatabase = {
+      multiCam: {
+        category: "CCTV & SURVEILLANCE",
+        title: "Multi-Camera Live Control",
+        image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=1000&q=80",
+        description: "Direct feed integration across all CP Plus & Hikvision 4K IP cameras. Equipped with automated object classification, facial recognition at entry points, and continuous 60-day cloud backup storage.",
+        integrity: "99.9% Uptime",
+        responseTime: "45ms",
+        engine: "Vision-AI v4.2",
+        node: "NVR Channel 01-32"
+      },
+      gateEntry: {
+        category: "LOGISTICS ACCESS",
+        title: "100% Automated Gate Entry",
+        image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1000&q=80",
+        description: "Seamless barrier clearance system utilizing Optical Character Recognition (OCR) for commercial truck license plates. Validates driver entry permits against internal ERP systems automatically.",
+        integrity: "100% Verified",
+        responseTime: "110ms",
+        engine: "ANPR Engine",
+        node: "Inbound Gate 01"
+      },
+      fleetMgmt: {
+        category: "DRIVER & VEHICLE LOGS",
+        title: "Driver Entry & Dock System",
+        image: "https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1000&q=80",
+        description: "Monitors driver identity credentials, vehicle weight checks, and docking bay allocation. Keeps real-time timestamps of vehicle entry, unloading duration, and gate clearance.",
+        integrity: "Active Sync",
+        responseTime: "80ms",
+        engine: "Biometric-Log v2",
+        node: "Docking Area Alpha"
+      },
+      perimeter: {
+        category: "INTRUSION DETECTION",
+        title: "Perimeter Motion Security",
+        image: "https://images.unsplash.com/photo-1508873696983-2df515122519?w=1000&q=80",
+        description: "Infrared thermal sensors combined with tripwire AI logic along the boundary wall. Instantly alerts control room officers if perimeter breaches occur during shift hours.",
+        integrity: "Active Defense",
+        responseTime: "15ms",
+        engine: "Thermal Sensor Grid",
+        node: "Boundary Zone 04"
+      }
+    };
 
-    // Real-time IST Clock
-    function tickClock() {
-      const el = document.getElementById("clock");
-      if (el) {
-        el.textContent = "IST " + new Intl.DateTimeFormat("en-IN", {
-          timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
-        }).format(new Date());
+    /* ==========================================================================
+       ANIMATION & INTERACTION CONTROLLERS
+       ========================================================================== */
+    const modalOverlay = document.getElementById('dynamicModal');
+    const modalImg = document.getElementById('modalImg');
+    const modalCategory = document.getElementById('modalCategory');
+    const modalHeading = document.getElementById('modalHeading');
+    const modalDesc = document.getElementById('modalDesc');
+
+    // Spec Nodes
+    const specIntegrity = document.getElementById('specIntegrity');
+    const specResponse = document.getElementById('specResponse');
+    const specEngine = document.getElementById('specEngine');
+    const specNode = document.getElementById('specNode');
+
+    /**
+     * Opens Modal with smooth animation and populates data dynamically
+     * @param {string} key - The data key matching moduleDatabase
+     */
+    function openModal(key) {
+      const data = moduleDatabase[key];
+      if (!data) return;
+
+      // Populate Data
+      modalImg.src = data.image;
+      modalCategory.innerText = data.category;
+      modalHeading.innerText = data.title;
+      modalDesc.innerText = data.description;
+      
+      specIntegrity.innerText = data.integrity;
+      specResponse.innerText = data.responseTime;
+      specEngine.innerText = data.engine;
+      specNode.innerText = data.node;
+
+      // Activate Class for CSS Transition
+      modalOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    /**
+     * Closes Modal with reverse smooth transition
+     */
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      document.body.style.overflow = 'auto'; // Restore background scrolling
+    }
+
+    /**
+     * Closes modal when clicking outside the main dialog box
+     */
+    function handleOverlayClick(event) {
+      if (event.target === modalOverlay) {
+        closeModal();
       }
     }
-    tickClock();
-    setInterval(tickClock, 1000);
 
-    // Passive Throttle Scroll Progress Bar
-    let ticking = false;
-    window.addEventListener("scroll", () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const max = document.documentElement.scrollHeight - innerHeight;
-          document.getElementById("progress").style.width = (max > 0 ? (scrollY / max) * 100 : 0) + "%";
-          ticking = false;
-        });
-        ticking = true;
+    // Keyboard Accessibility (ESC key to close modal)
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape' && modalOverlay.classList.contains('active')) {
+        closeModal();
       }
-    }, { passive: true });
-
-    // High Performance Intersection Observer for animations
-    const reveals = document.querySelectorAll(".reveal");
-    if (reduce) {
-      reveals.forEach((el) => el.classList.add("in"));
-    } else {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("in");
-            io.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.1 });
-      reveals.forEach((el) => io.observe(el));
-    }
-
-    // Interactive Camera Switcher
-    function switchCam(num, name, loc, btn) {
-      document.querySelectorAll(".cctv-cam-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      document.getElementById("cam-id").textContent = "CAM " + num + " - " + name;
-      document.getElementById("cam-loc").textContent = loc;
-      const fps = document.getElementById("cam-fps");
-      fps.textContent = (29.5 + Math.random() * 1).toFixed(1) + " FPS";
-    }
-
-    // Counter Animation
-    document.querySelectorAll("[data-count]").forEach((el, i) => {
-      const value = Number(el.dataset.count);
-      const suffix = el.dataset.suffix || "";
-      if (reduce) { el.textContent = value + suffix; return; }
-      const startAt = performance.now() + i * 80;
-      const dur = 800;
-      const tick = (now) => {
-        if (now < startAt) return requestAnimationFrame(tick);
-        const t = Math.min(1, (now - startAt) / dur);
-        el.textContent = Math.round(value * (1 - Math.pow(1 - t, 3))) + suffix;
-        if (t < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
     });
-
-    function toggleSkill(btn) {
-      document.querySelectorAll(".skill").forEach((el) => {
-        const on = el === btn && !el.classList.contains("open");
-        el.classList.toggle("open", on);
-        el.setAttribute("aria-expanded", on ? "true" : "false");
-        const p = el.querySelector("p");
-        if (p) p.classList.toggle("clamp", !on);
-      });
-    }
-
-    function openMenu() { document.getElementById("menu").classList.add("open"); }
-    function closeMenu() { document.getElementById("menu").classList.remove("open"); }
-    function openModal() { document.getElementById("modal").classList.add("open"); document.getElementById("c-name").focus(); }
-    function closeModal() { document.getElementById("modal").classList.remove("open"); }
-
-    function sendBrief(e) {
-      e.preventDefault();
-      const name = document.getElementById("c-name").value.trim();
-      const email = document.getElementById("c-email").value.trim();
-      const role = document.getElementById("c-role").value.trim();
-      const message = document.getElementById("c-message").value.trim();
-      const subject = encodeURIComponent(role ? "Role enquiry: " + role + " — " + name : "Portfolio enquiry from " + name);
-      const body = encodeURIComponent("Name: " + name + "\nEmail: " + email + "\nRole: " + (role || "—") + "\n\n" + message);
-      location.href = "mailto:sa8518430@gmail.com?subject=" + subject + "&body=" + body;
-      toast("Opening your email client…");
-      closeModal();
-    }
-
-    function copyText(value, btn) {
-      const done = () => {
-        const old = btn.innerHTML;
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
-        toast("Copied");
-        setTimeout(() => { btn.innerHTML = old; }, 1600);
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(value).then(done).catch(() => fallbackCopy(value, done));
-      } else fallbackCopy(value, done);
-    }
-    function fallbackCopy(value, done) {
-      const t = document.createElement("textarea");
-      t.value = value; document.body.appendChild(t); t.select();
-      document.execCommand("copy"); t.remove(); done();
-    }
-    function toast(msg) {
-      const el = document.getElementById("toast");
-      el.textContent = msg; el.classList.add("show");
-      setTimeout(() => el.classList.remove("show"), 1800);
-    }
-    function saveVCard(e) {
-      e.preventDefault();
-      const vcf = "BEGIN:VCARD\nVERSION:3.0\nFN:Sumit Anand\nN:Anand;Sumit;;;\nTITLE:CCTV Operator & Security Systems Specialist\nTEL;TYPE=CELL:+917206185384\nEMAIL:sa8518430@gmail.com\nADR;TYPE=HOME:;;Rohtak;Haryana;;India\nEND:VCARD";
-      const blob = new Blob([vcf], { type: "text/vcard" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "sumit-anand.vcf";
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }
-
-    // Scroll Spy Navigation Setup
-    const spy = document.querySelectorAll(".nav-links a");
-    const sections = [...spy].map((a) => document.querySelector(a.getAttribute("href")));
-    const spyObs = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        spy.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + entry.target.id));
-      });
-    }, { rootMargin: "-40% 0px -40% 0px" });
-    sections.forEach((s) => s && spyObs.observe(s));
   </script>
 </body>
 </html>
