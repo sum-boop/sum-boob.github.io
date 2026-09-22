@@ -1,57 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enterprise Security & Logistics Command Center</title>
-  
-  <!-- FontAwesome for Premium Icons -->
+  <title>Developer & Security Operations Portfolio</title>
+
+  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Google Fonts (Inter) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    /* ==========================================================================
-       1. CSS VARIABLES & THEME SETUP
-       ========================================================================== */
+    /* ==========================================
+       1. VARS & RESET
+       ========================================== */
     :root {
-      --bg-main: #0b0f19;
-      --bg-card: rgba(22, 31, 49, 0.7);
-      --bg-card-hover: rgba(30, 41, 67, 0.85);
+      --bg-dark: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --bg-card-hover: rgba(51, 65, 85, 0.8);
       --primary: #3b82f6;
       --primary-glow: rgba(59, 130, 246, 0.4);
-      --accent-green: #10b981;
-      --accent-red: #ef4444;
-      --accent-yellow: #f59e0b;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --border-color: rgba(255, 255, 255, 0.08);
-      --glass-border: rgba(255, 255, 255, 0.12);
-      --modal-bg: rgba(15, 23, 42, 0.95);
-      --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --accent: #10b981;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* ==========================================================================
-       2. GLOBAL RESET & BASE STYLES
-       ========================================================================== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       font-family: 'Inter', sans-serif;
-      user-select: none;
     }
 
     body {
-      background-color: var(--bg-main);
+      background-color: var(--bg-dark);
       color: var(--text-main);
-      min-height: 100vh;
+      line-height: 1.6;
       overflow-x: hidden;
-      background-image: 
-        radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.12) 0%, transparent 40%),
-        radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 40%);
-      background-attachment: fixed;
     }
 
     /* Custom Scrollbar */
@@ -59,185 +47,186 @@
       width: 8px;
     }
     ::-webkit-scrollbar-track {
-      background: var(--bg-main);
+      background: var(--bg-dark);
     }
     ::-webkit-scrollbar-thumb {
-      background: #1e293b;
+      background: #334155;
       border-radius: 4px;
     }
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--primary);
-    }
 
-    /* ==========================================================================
-       3. HEADER & NAVBAR SECTION
-       ========================================================================== */
+    /* ==========================================
+       2. HEADER / NAVBAR
+       ========================================== */
     .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 40px;
-      background: rgba(11, 15, 25, 0.8);
+      padding: 18px 8%;
+      background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border-color);
-      position: sticky;
-      top: 0;
       z-index: 100;
     }
 
-    .brand-logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 20px;
-      font-weight: 700;
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
       letter-spacing: 0.5px;
-      color: #fff;
-    }
-
-    .brand-logo i {
-      color: var(--primary);
-      font-size: 24px;
-      filter: drop-shadow(0 0 8px var(--primary-glow));
-    }
-
-    .nav-stats {
-      display: flex;
-      gap: 25px;
-    }
-
-    .stat-badge {
+      color: var(--text-main);
       display: flex;
       align-items: center;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.03);
-      padding: 8px 16px;
+      gap: 10px;
+    }
+
+    .logo span {
+      color: var(--primary);
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 30px;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    /* ==========================================
+       3. HERO SECTION
+       ========================================== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 120px 8% 60px 8%;
+      background: radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.15) 0%, transparent 50%);
+    }
+
+    .hero-text {
+      max-width: 600px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
       border-radius: 20px;
-      border: 1px solid var(--border-color);
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: var(--primary);
       font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 20px;
     }
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent-green);
-      box-shadow: 0 0 10px var(--accent-green);
-      animation: pulse-dot 2s infinite;
+    .hero-text h1 {
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 15px;
     }
 
-    @keyframes pulse-dot {
-      0% { transform: scale(0.95); opacity: 0.8; }
-      50% { transform: scale(1.2); opacity: 1; }
-      100% { transform: scale(0.95); opacity: 0.8; }
-    }
-
-    /* ==========================================================================
-       4. CONTAINER & GRID LAYOUT
-       ========================================================================== */
-    .dashboard-container {
-      max-width: 1400px;
-      margin: 40px auto;
-      padding: 0 30px;
-    }
-
-    .section-header {
+    .hero-text p {
+      color: var(--text-muted);
+      font-size: 16px;
       margin-bottom: 30px;
     }
 
-    .section-header h1 {
-      font-size: 28px;
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: var(--primary);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px var(--primary-glow);
+      transition: var(--transition);
+    }
+
+    .cta-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px var(--primary-glow);
+    }
+
+    /* ==========================================
+       4. PORTFOLIO GRID & CARDS
+       ========================================== */
+    .section-title {
+      text-align: center;
+      margin: 80px 0 40px 0;
+    }
+
+    .section-title h2 {
+      font-size: 32px;
       font-weight: 700;
-      margin-bottom: 8px;
-      background: linear-gradient(90deg, #ffffff, #94a3b8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
     }
 
-    .section-header p {
+    .section-title p {
       color: var(--text-muted);
-      font-size: 15px;
+      margin-top: 8px;
     }
 
-    .grid-layout {
+    .grid-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 25px;
+      padding: 0 8% 80px 8%;
     }
 
-    /* ==========================================================================
-       5. ADVANCED FEATURE CARDS (GLASSMORPHISM)
-       ========================================================================== */
-    .feature-card {
+    .card {
       background: var(--bg-card);
       backdrop-filter: blur(10px);
       border: 1px solid var(--glass-border);
-      border-radius: 18px;
+      border-radius: 16px;
       padding: 25px;
-      position: relative;
-      overflow: hidden;
       cursor: pointer;
-      transition: var(--transition-smooth);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+      transition: var(--transition);
+      position: relative;
     }
 
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-      transition: 0.6s;
-    }
-
-    .feature-card:hover::before {
-      left: 100%;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-8px) scale(1.01);
+    .card:hover {
+      transform: translateY(-8px);
       background: var(--bg-card-hover);
-      border-color: rgba(59, 130, 246, 0.4);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--primary-glow);
+      border-color: var(--primary);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 15px var(--primary-glow);
     }
 
-    .card-icon-wrapper {
-      width: 55px;
-      height: 55px;
-      border-radius: 14px;
+    .card-icon {
+      width: 50px;
+      height: 50px;
       background: rgba(59, 130, 246, 0.1);
+      color: var(--primary);
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 20px;
       margin-bottom: 20px;
-      font-size: 22px;
-      color: var(--primary);
-      border: 1px solid rgba(59, 130, 246, 0.2);
-      transition: var(--transition-smooth);
     }
 
-    .feature-card:hover .card-icon-wrapper {
-      background: var(--primary);
-      color: #fff;
-      box-shadow: 0 0 15px var(--primary-glow);
-      transform: rotate(5deg) scale(1.05);
-    }
-
-    .card-title {
+    .card h3 {
       font-size: 18px;
-      font-weight: 600;
       margin-bottom: 10px;
-      color: #fff;
     }
 
-    .card-description {
-      font-size: 14px;
+    .card p {
       color: var(--text-muted);
-      line-height: 1.6;
+      font-size: 14px;
       margin-bottom: 20px;
     }
 
@@ -245,51 +234,28 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 15px;
-      border-top: 1px solid var(--border-color);
-    }
-
-    .card-tag {
       font-size: 12px;
       font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-muted);
-    }
-
-    .action-link {
-      font-size: 13px;
-      font-weight: 600;
       color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: var(--transition-smooth);
     }
 
-    .feature-card:hover .action-link {
-      gap: 10px;
-      color: #60a5fa;
-    }
-
-    /* ==========================================================================
-       6. ULTRA-SMOOTH ANIMATED MODAL (POPUP)
-       ========================================================================== */
+    /* ==========================================
+       5. POPUP / MODAL ANIMATION
+       ========================================== */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(3, 7, 18, 0.85);
-      backdrop-filter: blur(12px);
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(10px);
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       opacity: 0;
       visibility: hidden;
-      transition: var(--transition-smooth);
+      transition: var(--transition);
       z-index: 1000;
     }
 
@@ -299,177 +265,66 @@
     }
 
     .modal-box {
-      background: var(--modal-bg);
+      background: #1e293b;
       border: 1px solid var(--glass-border);
-      border-radius: 24px;
+      border-radius: 20px;
       width: 90%;
-      max-width: 650px;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(59, 130, 246, 0.15);
+      max-width: 550px;
+      padding: 30px;
       position: relative;
-      transform: translateY(-80px) scale(0.85);
-      transition: var(--transition-bounce);
-      opacity: 0;
+      transform: translateY(-50px) scale(0.9);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .modal-overlay.active .modal-box {
       transform: translateY(0) scale(1);
-      opacity: 1;
     }
 
-    .modal-image-container {
-      position: relative;
-      width: 100%;
-      height: 260px;
-      overflow: hidden;
-      border-top-left-radius: 24px;
-      border-top-right-radius: 24px;
-    }
-
-    .modal-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-
-    .modal-box:hover .modal-image {
-      transform: scale(1.03);
-    }
-
-    .modal-image-overlay {
+    .close-btn {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 50%;
-      background: linear-gradient(to top, var(--modal-bg), transparent);
-    }
-
-    .modal-close-btn {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: var(--transition-smooth);
-      z-index: 10;
-    }
-
-    .modal-close-btn:hover {
-      background: var(--accent-red);
-      transform: rotate(90deg);
-      border-color: var(--accent-red);
-    }
-
-    .modal-body {
-      padding: 25px 30px 30px 30px;
-    }
-
-    .modal-badge {
-      display: inline-block;
-      padding: 5px 12px;
-      border-radius: 20px;
-      background: rgba(59, 130, 246, 0.15);
-      color: var(--primary);
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 12px;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-    }
-
-    .modal-title {
-      font-size: 24px;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 12px;
-    }
-
-    .modal-description {
+      top: 20px;
+      right: 20px;
       color: var(--text-muted);
-      font-size: 15px;
-      line-height: 1.7;
-      margin-bottom: 25px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: var(--transition);
     }
 
-    /* Modal Specs Detail Grid */
-    .modal-specs-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-      background: rgba(255, 255, 255, 0.02);
-      padding: 15px;
+    .close-btn:hover {
+      color: #ef4444;
+    }
+
+    .modal-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
       border-radius: 12px;
-      border: 1px solid var(--border-color);
       margin-bottom: 20px;
     }
 
-    .spec-item {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+    .modal-title {
+      font-size: 22px;
+      margin-bottom: 10px;
     }
 
-    .spec-label {
-      font-size: 12px;
+    .modal-desc {
       color: var(--text-muted);
-    }
-
-    .spec-value {
       font-size: 14px;
-      font-weight: 600;
-      color: #fff;
+      line-height: 1.6;
     }
 
-    .modal-action-btn {
-      width: 100%;
-      padding: 14px;
-      border-radius: 12px;
-      border: none;
-      background: var(--primary);
-      color: #fff;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      transition: var(--transition-smooth);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      box-shadow: 0 4px 15px var(--primary-glow);
-    }
-
-    .modal-action-btn:hover {
-      background: #2563eb;
-      box-shadow: 0 6px 20px var(--primary-glow);
-    }
-
-    /* ==========================================================================
-       7. RESPONSIVE DESIGN ADJUSTMENTS
-       ========================================================================== */
+    /* Responsive */
     @media (max-width: 768px) {
-      .navbar {
-        padding: 15px 20px;
+      .hero {
+        flex-direction: column;
+        text-align: center;
+        padding-top: 100px;
       }
-      .nav-stats {
+      .hero-text h1 {
+        font-size: 34px;
+      }
+      .nav-links {
         display: none;
-      }
-      .dashboard-container {
-        padding: 0 15px;
-        margin: 20px auto;
-      }
-      .modal-specs-grid {
-        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -477,253 +332,129 @@
 <body>
 
   <!-- NAVBAR -->
-  <header class="navbar">
-    <div class="brand-logo">
-      <i class="fa-solid fa-shield-halved"></i>
-      <span>SECURE-OPS v3.0</span>
+  <nav class="navbar">
+    <div class="logo">
+      <i class="fa-solid fa-code"></i> PORTFOLIO<span>.</span>
     </div>
-    <div class="nav-stats">
-      <div class="stat-badge">
-        <div class="status-dot"></div>
-        <span>AI Surveillance: Active</span>
-      </div>
-      <div class="stat-badge">
-        <i class="fa-solid fa-truck" style="color: var(--primary);"></i>
-        <span>Gate Sync: 100%</span>
-      </div>
-    </div>
-  </header>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
 
-  <!-- MAIN DASHBOARD CONTENT -->
-  <main class="dashboard-container">
-    
-    <div class="section-header">
-      <h1>System Capabilities & Operations</h1>
-      <p>Click on any operational module to inspect real-time AI feeds, hardware statuses, and logs.</p>
+  <!-- HERO SECTION -->
+  <section class="hero" id="about">
+    <div class="hero-text">
+      <span class="badge">Operational Tech & Development</span>
+      <h1>Creative Developer & Systems Specialist</h1>
+      <p>Aapke digital workflow, web applications, aur monitoring systems ko intuitive aur smart visual design me convert karta hoon.</p>
+      <a href="#projects" class="cta-btn">View My Work <i class="fa-solid fa-arrow-right"></i></a>
+    </div>
+  </section>
+
+  <!-- PROJECTS SECTION -->
+  <section id="projects">
+    <div class="section-title">
+      <h2>Featured Projects & Work</h2>
+      <p>Card par click karke detailed view aur interactive animation dekhein</p>
     </div>
 
-    <!-- CARDS GRID -->
-    <div class="grid-layout">
+    <div class="grid-container">
       
-      <!-- Card 1: Multi-Camera -->
-      <div class="feature-card" onclick="openModal('multiCam')">
-        <div>
-          <div class="card-icon-wrapper">
-            <i class="fa-solid fa-video"></i>
-          </div>
-          <h2 class="card-title">Multi-Camera Surveillance</h2>
-          <p class="card-description">High-Definition multi-angle CCTV coverage featuring real-time AI motion tracking, thermal vision, and night optic feeds.</p>
+      <!-- Card 1 -->
+      <div class="card" onclick="openModal('cctv')">
+        <div class="card-icon">
+          <i class="fa-solid fa-video"></i>
         </div>
+        <h3>Multi-Camera Surveillance Platform</h3>
+        <p>Real-time surveillance control panel built for multi-angle CCTV monitoring with alert triggers.</p>
         <div class="card-footer">
-          <span class="card-tag">32 Cameras Active</span>
-          <span class="action-link">View Stream <i class="fa-solid fa-arrow-right"></i></span>
+          <span>Click to View Detail</span>
+          <i class="fa-solid fa-chevron-right"></i>
         </div>
       </div>
 
-      <!-- Card 2: Gate Entry 100% -->
-      <div class="feature-card" onclick="openModal('gateEntry')">
-        <div>
-          <div class="card-icon-wrapper" style="color: var(--accent-green); background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2);">
-            <i class="fa-solid fa-id-card"></i>
-          </div>
-          <h2 class="card-title">100% Automated Gate Entry</h2>
-          <p class="card-description">Automatic driver credential verification, license plate recognition (ANPR), and barrier control with zero delay.</p>
+      <!-- Card 2 -->
+      <div class="card" onclick="openModal('gate')">
+        <div class="card-icon" style="color: var(--accent); background: rgba(16, 185, 129, 0.1);">
+          <i class="fa-solid fa-truck-fast"></i>
         </div>
-        <div class="card-footer">
-          <span class="card-tag">Zero Manual Errors</span>
-          <span class="action-link" style="color: var(--accent-green);">Access Logs <i class="fa-solid fa-arrow-right"></i></span>
+        <h3>Automated Gate Entry System</h3>
+        <p>Smart logging dashboard verifying driver credentials and vehicle license plate recognition.</p>
+        <div class="card-footer" style="color: var(--accent);">
+          <span>Click to View Detail</span>
+          <i class="fa-solid fa-chevron-right"></i>
         </div>
       </div>
 
-      <!-- Card 3: Driver & Fleet Management -->
-      <div class="feature-card" onclick="openModal('fleetMgmt')">
-        <div>
-          <div class="card-icon-wrapper" style="color: var(--accent-yellow); background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2);">
-            <i class="fa-solid fa-truck-ramp-box"></i>
-          </div>
-          <h2 class="card-title">Driver & Vehicle Systems</h2>
-          <p class="card-description">Comprehensive logging of inbound/outbound drivers, docking bay allocations, and automated biometric verifications.</p>
+      <!-- Card 3 -->
+      <div class="card" onclick="openModal('webApp')">
+        <div class="card-icon" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1);">
+          <i class="fa-solid fa-laptop-code"></i>
         </div>
-        <div class="card-footer">
-          <span class="card-tag">Live Docking Status</span>
-          <span class="action-link" style="color: var(--accent-yellow);">Check Fleet <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </div>
-
-      <!-- Card 4: Perimeter Motion Security -->
-      <div class="feature-card" onclick="openModal('perimeter')">
-        <div>
-          <div class="card-icon-wrapper" style="color: var(--accent-red); background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2);">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-          </div>
-          <h2 class="card-title">Perimeter Intrusion Alerts</h2>
-          <p class="card-description">Smart boundary sensors connected to instant alert dispatch. Detects unauthorized physical intrusions along boundary walls.</p>
-        </div>
-        <div class="card-footer">
-          <span class="card-tag">Real-time Alarms</span>
-          <span class="action-link" style="color: var(--accent-red);">Inspect Zones <i class="fa-solid fa-arrow-right"></i></span>
+        <h3>Interactive Dashboard UI</h3>
+        <p>High-performance web dashboard featuring dark-mode, animated modals, and responsive grid structures.</p>
+        <div class="card-footer" style="color: #f59e0b;">
+          <span>Click to View Detail</span>
+          <i class="fa-solid fa-chevron-right"></i>
         </div>
       </div>
 
     </div>
-  </main>
+  </section>
 
-  <!-- DYNAMIC ANIMATED MODAL (POPUP) -->
-  <div id="dynamicModal" class="modal-overlay" onclick="handleOverlayClick(event)">
+  <!-- ANIMATED MODAL / POPUP -->
+  <div class="modal-overlay" id="portfolioModal" onclick="closeModalOnOverlay(event)">
     <div class="modal-box">
-      
-      <button class="modal-close-btn" onclick="closeModal()">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-
-      <div class="modal-image-container">
-        <img id="modalImg" src="" alt="Detail Preview" class="modal-image">
-        <div class="modal-image-overlay"></div>
-      </div>
-
-      <div class="modal-body">
-        <span id="modalCategory" class="modal-badge">SECURITY MODULE</span>
-        <h2 id="modalHeading" class="modal-title">Module Details</h2>
-        <p id="modalDesc" class="modal-description">Detailed descriptive text goes here dynamically.</p>
-
-        <!-- Technical Specification Matrix -->
-        <div class="modal-specs-grid">
-          <div class="spec-item">
-            <span class="spec-label">System Integrity</span>
-            <span id="specIntegrity" class="spec-value">100% Operational</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Response Time</span>
-            <span id="specResponse" class="spec-value">&lt; 120ms</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">AI Processing Engine</span>
-            <span id="specEngine" class="spec-value">v4.2 Vision Neural</span>
-          </div>
-          <div class="spec-item">
-            <span class="spec-label">Primary Node</span>
-            <span id="specNode" class="spec-value">Main Gate Controller</span>
-          </div>
-        </div>
-
-        <button class="modal-action-btn" onclick="closeModal()">
-          <i class="fa-solid fa-check"></i> Acknowledge & Close
-        </button>
-      </div>
-
+      <i class="fa-solid fa-xmark close-btn" onclick="closeModal()"></i>
+      <img src="" id="modalImage" alt="Preview" class="modal-img">
+      <h3 id="modalTitle" class="modal-title">Project Title</h3>
+      <p id="modalDesc" class="modal-desc">Detailed info about the project...</p>
     </div>
   </div>
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    /* ==========================================================================
-       CENTRAL DATA ARCHITECTURE FOR MODAL CONTENT
-       ========================================================================== */
-    const moduleDatabase = {
-      multiCam: {
-        category: "CCTV & SURVEILLANCE",
-        title: "Multi-Camera Live Control",
-        image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=1000&q=80",
-        description: "Direct feed integration across all CP Plus & Hikvision 4K IP cameras. Equipped with automated object classification, facial recognition at entry points, and continuous 60-day cloud backup storage.",
-        integrity: "99.9% Uptime",
-        responseTime: "45ms",
-        engine: "Vision-AI v4.2",
-        node: "NVR Channel 01-32"
+    const modalData = {
+      cctv: {
+        title: "Multi-Camera Surveillance System",
+        img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?w=800",
+        desc: "Ye system continuous video monitoring, AI motion tracking, night vision visibility, aur multiple camera live streaming support karta hai."
       },
-      gateEntry: {
-        category: "LOGISTICS ACCESS",
-        title: "100% Automated Gate Entry",
-        image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1000&q=80",
-        description: "Seamless barrier clearance system utilizing Optical Character Recognition (OCR) for commercial truck license plates. Validates driver entry permits against internal ERP systems automatically.",
-        integrity: "100% Verified",
-        responseTime: "110ms",
-        engine: "ANPR Engine",
-        node: "Inbound Gate 01"
+      gate: {
+        title: "100% Automated Gate Entry Log",
+        img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800",
+        desc: "Automated gate barrier system jo drivers ke details, vehicle registration, entry-exit timestamp ko digital database me 100% accuracy ke saath save karta hai."
       },
-      fleetMgmt: {
-        category: "DRIVER & VEHICLE LOGS",
-        title: "Driver Entry & Dock System",
-        image: "https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=1000&q=80",
-        description: "Monitors driver identity credentials, vehicle weight checks, and docking bay allocation. Keeps real-time timestamps of vehicle entry, unloading duration, and gate clearance.",
-        integrity: "Active Sync",
-        responseTime: "80ms",
-        engine: "Biometric-Log v2",
-        node: "Docking Area Alpha"
-      },
-      perimeter: {
-        category: "INTRUSION DETECTION",
-        title: "Perimeter Motion Security",
-        image: "https://images.unsplash.com/photo-1508873696983-2df515122519?w=1000&q=80",
-        description: "Infrared thermal sensors combined with tripwire AI logic along the boundary wall. Instantly alerts control room officers if perimeter breaches occur during shift hours.",
-        integrity: "Active Defense",
-        responseTime: "15ms",
-        engine: "Thermal Sensor Grid",
-        node: "Boundary Zone 04"
+      webApp: {
+        title: "Modern Web Dashboard & Glassmorphism UI",
+        img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800",
+        desc: "Smooth animations, responsive CSS grids, dark theme, aur interactive modal dialogs ke sath taiyar kiya gaya customized web framework."
       }
     };
 
-    /* ==========================================================================
-       ANIMATION & INTERACTION CONTROLLERS
-       ========================================================================== */
-    const modalOverlay = document.getElementById('dynamicModal');
-    const modalImg = document.getElementById('modalImg');
-    const modalCategory = document.getElementById('modalCategory');
-    const modalHeading = document.getElementById('modalHeading');
-    const modalDesc = document.getElementById('modalDesc');
-
-    // Spec Nodes
-    const specIntegrity = document.getElementById('specIntegrity');
-    const specResponse = document.getElementById('specResponse');
-    const specEngine = document.getElementById('specEngine');
-    const specNode = document.getElementById('specNode');
-
-    /**
-     * Opens Modal with smooth animation and populates data dynamically
-     * @param {string} key - The data key matching moduleDatabase
-     */
     function openModal(key) {
-      const data = moduleDatabase[key];
-      if (!data) return;
+      const item = modalData[key];
+      if (!item) return;
 
-      // Populate Data
-      modalImg.src = data.image;
-      modalCategory.innerText = data.category;
-      modalHeading.innerText = data.title;
-      modalDesc.innerText = data.description;
-      
-      specIntegrity.innerText = data.integrity;
-      specResponse.innerText = data.responseTime;
-      specEngine.innerText = data.engine;
-      specNode.innerText = data.node;
+      document.getElementById('modalTitle').innerText = item.title;
+      document.getElementById('modalImage').src = item.img;
+      document.getElementById('modalDesc').innerText = item.desc;
 
-      // Activate Class for CSS Transition
-      modalOverlay.classList.add('active');
-      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+      document.getElementById('portfolioModal').classList.add('active');
     }
 
-    /**
-     * Closes Modal with reverse smooth transition
-     */
     function closeModal() {
-      modalOverlay.classList.remove('active');
-      document.body.style.overflow = 'auto'; // Restore background scrolling
+      document.getElementById('portfolioModal').classList.remove('active');
     }
 
-    /**
-     * Closes modal when clicking outside the main dialog box
-     */
-    function handleOverlayClick(event) {
-      if (event.target === modalOverlay) {
+    function closeModalOnOverlay(event) {
+      if (event.target.id === 'portfolioModal') {
         closeModal();
       }
     }
-
-    // Keyboard Accessibility (ESC key to close modal)
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape' && modalOverlay.classList.contains('active')) {
-        closeModal();
-      }
-    });
   </script>
 </body>
 </html>
