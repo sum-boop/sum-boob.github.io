@@ -1,35 +1,44 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sumit Anand | CCTV Operator & Security Systems Specialist</title>
+  <title>Sumit Anand | Cyber Security & CCTV Systems Specialist</title>
 
-  <!-- Google Fonts: Inter & Playfair Display -->
+  <!-- Google Fonts: Syne (Futuristic Headings) & Space Grotesk (Tech Body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
 
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
   <style>
     /* ==========================================================================
-       1. CSS VARIABLES & RESET
+       1. FUTURE-NEON VARIABLES & CORE RESET
        ========================================================================== */
     :root {
-      --bg-dark: #07070d;
-      --card-bg: rgba(18, 18, 30, 0.65);
-      --card-border: rgba(168, 85, 247, 0.18);
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --accent-purple: #a855f7;
-      --accent-purple-glow: rgba(168, 85, 247, 0.4);
-      --accent-blue: #3b82f6;
-      --accent-cyan: #38bdf8;
-      --font-heading: 'Playfair Display', serif;
-      --font-body: 'Inter', sans-serif;
-      --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      --bg-void: #030308;
+      --bg-card: rgba(13, 13, 24, 0.65);
+      --bg-card-hover: rgba(22, 22, 42, 0.85);
+      --border-neon: rgba(176, 38, 255, 0.25);
+      --border-cyan: rgba(0, 243, 255, 0.25);
+      
+      --neon-purple: #b026ff;
+      --neon-purple-glow: rgba(176, 38, 255, 0.5);
+      --neon-cyan: #00f3ff;
+      --neon-cyan-glow: rgba(0, 243, 255, 0.4);
+      --neon-green: #00ff88;
+      --neon-green-glow: rgba(0, 255, 136, 0.4);
+      
+      --text-main: #f0f3ff;
+      --text-muted: #8c93b0;
+      
+      --font-heading: 'Syne', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * {
@@ -40,81 +49,115 @@
     }
 
     body {
-      background-color: var(--bg-dark);
+      background-color: var(--bg-void);
       color: var(--text-main);
       font-family: var(--font-body);
       overflow-x: hidden;
       line-height: 1.6;
-      cursor: none; /* Custom cursor active */
+      cursor: none; /* Custom interactive pointer active */
     }
 
-    /* Selection Color */
+    /* Ambient Background Glow Orbs */
+    .ambient-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.35;
+      animation: floatOrb 18s ease-in-out infinite alternate;
+    }
+    .orb-1 {
+      width: 500px;
+      height: 500px;
+      background: var(--neon-purple);
+      top: -10%;
+      left: -10%;
+    }
+    .orb-2 {
+      width: 600px;
+      height: 600px;
+      background: var(--neon-cyan);
+      bottom: 10%;
+      right: -10%;
+      animation-delay: -9s;
+    }
+
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(80px, 60px) scale(1.15); }
+    }
+
+    /* Selection & Scrollbar */
     ::selection {
-      background: var(--accent-purple);
-      color: #ffffff;
+      background: var(--neon-purple);
+      color: #fff;
     }
-
-    /* Scrollbar Styling */
     ::-webkit-scrollbar {
-      width: 8px;
+      width: 6px;
     }
     ::-webkit-scrollbar-track {
-      background: var(--bg-dark);
+      background: var(--bg-void);
     }
     ::-webkit-scrollbar-thumb {
-      background: #1f1f33;
-      border-radius: 4px;
+      background: #1a1a33;
+      border-radius: 3px;
     }
     ::-webkit-scrollbar-thumb:hover {
-      background: var(--accent-purple);
+      background: var(--neon-purple);
+      box-shadow: 0 0 10px var(--neon-purple);
     }
 
     /* ==========================================================================
-       2. CUSTOM CURSOR
+       2. ADVANCED TRAILING CURSOR WITH MAGNET EFFECT
        ========================================================================== */
     .cursor-dot,
-    .cursor-outline {
+    .cursor-ring {
       pointer-events: none;
       position: fixed;
       top: 0;
       left: 0;
       transform: translate(-50%, -50%);
       border-radius: 50%;
-      z-index: 9999;
-      transition: opacity 0.3s ease-in-out, transform 0.15s ease-out;
+      z-index: 99999;
+      transition: opacity 0.3s ease;
     }
 
     .cursor-dot {
       width: 8px;
       height: 8px;
-      background-color: var(--accent-cyan);
-      box-shadow: 0 0 10px var(--accent-cyan);
+      background-color: var(--neon-cyan);
+      box-shadow: 0 0 12px var(--neon-cyan), 0 0 20px var(--neon-cyan);
     }
 
-    .cursor-outline {
-      width: 36px;
-      height: 36px;
-      border: 1.5px solid var(--accent-purple);
-      box-shadow: 0 0 15px var(--accent-purple-glow);
+    .cursor-ring {
+      width: 42px;
+      height: 42px;
+      border: 1.5px solid var(--neon-purple);
+      box-shadow: 0 0 15px var(--neon-purple-glow);
+      transition: width 0.25s var(--ease-out-back), height 0.25s var(--ease-out-back), border-color 0.25s ease, background-color 0.25s ease;
     }
 
-    body:hover .cursor-dot,
-    body:hover .cursor-outline {
-      opacity: 1;
+    body.cursor-hover .cursor-ring {
+      width: 65px;
+      height: 65px;
+      border-color: var(--neon-cyan);
+      background-color: rgba(0, 243, 255, 0.06);
+      box-shadow: 0 0 25px var(--neon-cyan-glow);
     }
 
     /* ==========================================================================
-       3. SCROLL PROGRESS BAR & NAVBAR
+       3. NAVIGATION & PROGRESS BAR
        ========================================================================== */
-    #scroll-progress {
+    #progress-bar {
       position: fixed;
       top: 0;
       left: 0;
       height: 3px;
       width: 0%;
-      background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+      background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan), var(--neon-green));
       z-index: 10000;
-      box-shadow: 0 0 10px var(--accent-purple);
+      box-shadow: 0 0 12px var(--neon-cyan);
     }
 
     nav {
@@ -126,55 +169,63 @@
       justify-content: space-between;
       align-items: center;
       z-index: 1000;
-      background: rgba(7, 7, 13, 0.7);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      transition: var(--transition-smooth);
+      background: rgba(3, 3, 8, 0.75);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    .logo {
+    .brand-logo {
       font-family: var(--font-heading);
       font-size: 1.6rem;
-      font-weight: 700;
+      font-weight: 800;
       color: #fff;
       text-decoration: none;
-      letter-spacing: 0.5px;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .logo span {
-      color: var(--accent-purple);
-      text-shadow: 0 0 10px var(--accent-purple-glow);
+    .brand-logo .dot {
+      width: 10px;
+      height: 10px;
+      background: var(--neon-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--neon-cyan);
     }
 
     .nav-links {
       display: flex;
       gap: 2.2rem;
       list-style: none;
+      align-items: center;
     }
 
     .nav-links a {
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 500;
-      transition: var(--transition-smooth);
+      transition: var(--ease-smooth);
       position: relative;
     }
 
     .nav-links a:hover {
-      color: #fff;
+      color: var(--neon-cyan);
+      text-shadow: 0 0 8px var(--neon-cyan-glow);
     }
 
     .nav-links a::after {
       content: '';
       position: absolute;
-      bottom: -4px;
-      left: 0;
+      bottom: -6px;
+      left: 50%;
+      transform: translateX(-50%);
       width: 0%;
       height: 2px;
-      background: var(--accent-purple);
-      box-shadow: 0 0 8px var(--accent-purple);
-      transition: var(--transition-smooth);
+      background: var(--neon-purple);
+      box-shadow: 0 0 8px var(--neon-purple);
+      transition: var(--ease-smooth);
     }
 
     .nav-links a:hover::after {
@@ -182,34 +233,94 @@
     }
 
     /* ==========================================================================
-       4. HERO SECTION WITH PARTICLES & OVERLAY
+       4. ADVANCED BUTTONS (PRIMARY HIRE ME & GLASS)
+       ========================================================================== */
+    .btn {
+      position: relative;
+      padding: 0.85rem 2.2rem;
+      border-radius: 50px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      border: none;
+      outline: none;
+      overflow: hidden;
+      transition: transform 0.3s var(--ease-out-back), box-shadow 0.3s ease;
+      z-index: 1;
+    }
+
+    /* THE ULTRA "HIRE ME" BUTTON */
+    .btn-hire {
+      background: linear-gradient(135deg, var(--neon-purple), #6366f1, var(--neon-cyan));
+      background-size: 200% 200%;
+      color: #fff;
+      box-shadow: 0 0 25px var(--neon-purple-glow), 0 0 10px rgba(0, 243, 255, 0.3);
+      animation: gradientShift 6s ease infinite;
+    }
+
+    .btn-hire::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50px;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .btn-hire:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 0 35px var(--neon-purple-glow), 0 0 20px var(--neon-cyan-glow);
+    }
+
+    .btn-hire:hover::before {
+      opacity: 1;
+    }
+
+    .btn-glass {
+      background: rgba(255, 255, 255, 0.04);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+    }
+
+    .btn-glass:hover {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: var(--neon-cyan);
+      transform: translateY(-4px);
+      box-shadow: 0 0 20px rgba(0, 243, 255, 0.25);
+      color: var(--neon-cyan);
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ==========================================================================
+       5. HERO SECTION WITH CANVAS CONSTELLATION & HUD BADGE
        ========================================================================== */
     .hero {
       position: relative;
-      height: 100vh;
-      width: 100%;
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 8%;
-      overflow: hidden;
-      background: radial-gradient(circle at 50% 50%, rgba(20, 15, 35, 0.8), var(--bg-dark));
-    }
-
-    /* Soft Background Image Overlay */
-    .hero-bg-overlay {
-      position: absolute;
-      inset: 0;
-      background: url('https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
-      opacity: 0.08;
-      filter: blur(2px);
-      z-index: 1;
+      padding: 8rem 8% 4rem;
+      z-index: 2;
     }
 
     #particles-canvas {
       position: absolute;
       inset: 0;
-      z-index: 2;
+      z-index: 1;
       pointer-events: none;
     }
 
@@ -217,93 +328,79 @@
       position: relative;
       z-index: 3;
       text-align: center;
-      max-width: 850px;
+      max-width: 900px;
     }
 
-    .hero-subtitle {
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      color: var(--accent-cyan);
-      margin-bottom: 1.2rem;
+    /* Cyberpunk Status HUD Badge */
+    .hud-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.45rem 1.2rem;
+      border-radius: 50px;
+      background: rgba(0, 255, 136, 0.06);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      color: var(--neon-green);
+      font-size: 0.82rem;
       font-weight: 600;
-      text-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 1.8rem;
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
+    }
+
+    .hud-pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--neon-green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--neon-green);
+      animation: pulseGreen 1.8s infinite;
+    }
+
+    @keyframes pulseGreen {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.4); }
     }
 
     .hero-title {
       font-family: var(--font-heading);
-      font-size: clamp(3rem, 6vw, 5rem);
-      line-height: 1.1;
+      font-size: clamp(3.2rem, 7vw, 5.8rem);
+      font-weight: 800;
+      line-height: 1.05;
       margin-bottom: 1.5rem;
-      background: linear-gradient(135deg, #ffffff 30%, var(--accent-purple) 80%, var(--accent-cyan) 100%);
+      letter-spacing: -1.5px;
+      background: linear-gradient(135deg, #ffffff 20%, #c4b5fd 50%, var(--neon-cyan) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 25px rgba(168, 85, 247, 0.2));
+      filter: drop-shadow(0 0 30px rgba(176, 38, 255, 0.25));
     }
 
-    .hero-description {
-      font-size: 1.15rem;
+    .hero-subtitle {
+      font-size: 1.2rem;
       color: var(--text-muted);
-      margin-bottom: 2.5rem;
-      font-weight: 300;
-      max-width: 680px;
+      margin-bottom: 2.8rem;
+      max-width: 720px;
       margin-left: auto;
       margin-right: auto;
+      font-weight: 400;
     }
 
-    /* GLOW BUTTONS */
-    .btn-group {
+    .hero-btn-group {
       display: flex;
       gap: 1.5rem;
       justify-content: center;
       align-items: center;
-    }
-
-    .btn {
-      padding: 0.9rem 2.2rem;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-decoration: none;
-      transition: var(--transition-smooth);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      border: 1px solid transparent;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
-      color: #fff;
-      box-shadow: 0 0 20px var(--accent-purple-glow);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 0 30px rgba(168, 85, 247, 0.7);
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.03);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: var(--accent-cyan);
-      transform: translateY(-3px);
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+      flex-wrap: wrap;
     }
 
     /* ==========================================================================
-       5. GENERAL SECTION STYLING & GLASSMORPHISM
+       6. GLASS CARDS & SECTION LAYOUTS
        ========================================================================== */
     section {
       padding: 7rem 8%;
       position: relative;
+      z-index: 2;
     }
 
     .section-header {
@@ -311,259 +408,358 @@
       margin-bottom: 4.5rem;
     }
 
-    .section-title {
-      font-family: var(--font-heading);
-      font-size: 2.8rem;
-      color: #fff;
-      margin-bottom: 0.8rem;
+    .section-tag {
+      color: var(--neon-cyan);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 0.6rem;
+      display: block;
+      text-shadow: 0 0 10px var(--neon-cyan-glow);
     }
 
-    .section-subtitle {
-      color: var(--accent-purple);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-size: 0.85rem;
-      font-weight: 600;
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      color: #fff;
     }
 
     .glass-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-neon);
+      border-radius: 24px;
       padding: 2.5rem;
-      transition: var(--transition-smooth);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      transition: all 0.4s var(--ease-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+      transition: 0.6s;
+    }
+
+    .glass-card:hover::before {
+      left: 100%;
     }
 
     .glass-card:hover {
-      border-color: rgba(168, 85, 247, 0.4);
-      box-shadow: 0 15px 35px rgba(168, 85, 247, 0.15);
+      border-color: rgba(0, 243, 255, 0.5);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 243, 255, 0.15);
+      transform: translateY(-6px);
     }
 
     /* ==========================================================================
-       6. ABOUT SECTION
+       7. ABOUT & CAPABILITIES SECTION
        ========================================================================== */
     .about-grid {
       display: grid;
-      grid-template-columns: 1fr 1.3fr;
+      grid-template-columns: 1fr 1.2fr;
       gap: 4rem;
       align-items: center;
     }
 
-    .about-img-container {
+    .about-image-wrapper {
       position: relative;
-      border-radius: 20px;
+      border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--border-cyan);
+      box-shadow: 0 0 30px var(--neon-cyan-glow);
     }
 
-    .about-img-container img {
+    .about-image-wrapper img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: var(--transition-smooth);
+      transition: transform 0.6s var(--ease-smooth);
     }
 
-    .about-img-container:hover img {
-      transform: scale(1.04);
+    .about-image-wrapper:hover img {
+      transform: scale(1.06);
     }
 
-    .about-text h3 {
+    .about-info h3 {
       font-family: var(--font-heading);
       font-size: 2.2rem;
-      margin-bottom: 1.2rem;
       color: #fff;
+      margin-bottom: 1.2rem;
     }
 
-    .about-text p {
+    .about-info p {
       color: var(--text-muted);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.4rem;
       font-size: 1.05rem;
     }
 
-    .skill-tags {
+    .tech-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 0.8rem;
-      margin-top: 1.8rem;
+      margin-top: 2rem;
     }
 
-    .tag {
-      background: rgba(168, 85, 247, 0.1);
-      color: var(--accent-cyan);
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      padding: 0.4rem 1.1rem;
+    .tech-tag {
+      background: rgba(176, 38, 255, 0.08);
+      color: var(--neon-cyan);
+      border: 1px solid rgba(0, 243, 255, 0.25);
+      padding: 0.45rem 1.1rem;
       border-radius: 50px;
       font-size: 0.88rem;
       font-weight: 500;
-      transition: var(--transition-smooth);
+      transition: all 0.3s ease;
     }
 
-    .tag:hover {
-      background: rgba(168, 85, 247, 0.25);
-      border-color: var(--accent-purple);
+    .tech-tag:hover {
+      background: var(--neon-purple);
       color: #fff;
+      border-color: var(--neon-purple);
+      box-shadow: 0 0 15px var(--neon-purple-glow);
       transform: translateY(-2px);
-      box-shadow: 0 0 12px var(--accent-purple-glow);
     }
 
     /* ==========================================================================
-       7. PROJECTS SECTION
+       8. 3D TILT OPERATIONS & PROJECTS CARDS
        ========================================================================== */
-    .projects-grid {
+    .operations-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 2.5rem;
+      perspective: 1000px;
     }
 
-    .project-card {
-      position: relative;
-      border-radius: 20px;
+    .op-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-neon);
+      border-radius: 24px;
       overflow: hidden;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      transition: var(--transition-smooth);
       cursor: pointer;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.1s linear;
+      transform-style: preserve-3d;
     }
 
-    .project-card:hover {
-      transform: translateY(-8px);
-      border-color: var(--accent-purple);
-      box-shadow: 0 15px 35px rgba(168, 85, 247, 0.25);
+    .op-card:hover {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 25px var(--neon-cyan-glow);
     }
 
-    .project-img {
-      height: 220px;
+    .op-card-img {
+      height: 230px;
       width: 100%;
-      overflow: hidden;
       position: relative;
+      overflow: hidden;
     }
 
-    .project-img img {
+    .op-card-img img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: var(--transition-smooth);
+      transition: transform 0.6s var(--ease-smooth);
     }
 
-    .project-card:hover .project-img img {
-      transform: scale(1.08);
+    .op-card:hover .op-card-img img {
+      transform: scale(1.1);
     }
 
-    .project-info {
-      padding: 1.8rem;
+    .op-card-body {
+      padding: 2rem;
     }
 
-    .project-title {
+    .op-card-title {
       font-family: var(--font-heading);
       font-size: 1.5rem;
       color: #fff;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.8rem;
     }
 
-    .project-desc {
+    .op-card-desc {
       color: var(--text-muted);
       font-size: 0.95rem;
-      margin-bottom: 1.2rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+      margin-bottom: 1.4rem;
     }
 
-    .project-link-btn {
-      color: var(--accent-cyan);
+    .op-link-trigger {
+      color: var(--neon-cyan);
       font-weight: 600;
       font-size: 0.9rem;
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.5rem;
     }
 
     /* ==========================================================================
-       8. MODAL / POPUP
+       9. TIMELINE / EXPERIENCE LOG
        ========================================================================== */
-    .modal-overlay {
+    .timeline {
+      position: relative;
+      max-width: 850px;
+      margin: 0 auto;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--neon-purple), var(--neon-cyan));
+      box-shadow: 0 0 10px var(--neon-purple-glow);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 60px;
+      margin-bottom: 3rem;
+    }
+
+    .timeline-node {
+      position: absolute;
+      left: 11px;
+      top: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--bg-void);
+      border: 2px solid var(--neon-cyan);
+      box-shadow: 0 0 12px var(--neon-cyan);
+    }
+
+    .timeline-date {
+      font-size: 0.85rem;
+      color: var(--neon-cyan);
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .timeline-role {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+
+    .timeline-company {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .timeline-details {
+      list-style: none;
+    }
+
+    .timeline-details li {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 0.6rem;
+      position: relative;
+      padding-left: 1.2rem;
+    }
+
+    .timeline-details li::before {
+      content: '▹';
+      position: absolute;
+      left: 0;
+      color: var(--neon-purple);
+    }
+
+    /* ==========================================================================
+       10. ULTRA POPUP / MODAL (FOR OPERATIONS & HIRE ME)
+       ========================================================================== */
+    .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(7, 7, 13, 0.85);
-      backdrop-filter: blur(16px);
-      z-index: 9999;
+      background: rgba(3, 3, 8, 0.88);
+      backdrop-filter: blur(20px);
+      z-index: 99999;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 2rem;
       opacity: 0;
       pointer-events: none;
-      transition: var(--transition-smooth);
+      transition: opacity 0.4s var(--ease-smooth);
     }
 
-    .modal-overlay.active {
+    .modal-backdrop.active {
       opacity: 1;
       pointer-events: all;
     }
 
-    .modal-container {
-      background: #0f0f1a;
-      border: 1px solid var(--accent-purple);
-      border-radius: 24px;
-      max-width: 800px;
+    .modal-window {
+      background: rgba(15, 15, 28, 0.95);
+      border: 1px solid var(--neon-purple);
+      border-radius: 28px;
+      max-width: 750px;
       width: 100%;
-      max-height: 90vh;
+      max-height: 88vh;
       overflow-y: auto;
+      padding: 2.8rem;
       position: relative;
-      padding: 2.5rem;
-      box-shadow: 0 0 50px rgba(168, 85, 247, 0.3);
-      transform: scale(0.9);
-      transition: var(--transition-smooth);
+      box-shadow: 0 0 60px var(--neon-purple-glow);
+      transform: scale(0.85) translateY(30px);
+      transition: transform 0.4s var(--ease-out-back);
     }
 
-    .modal-overlay.active .modal-container {
-      transform: scale(1);
+    .modal-backdrop.active .modal-window {
+      transform: scale(1) translateY(0);
     }
 
-    .modal-close {
+    .modal-close-btn {
       position: absolute;
       top: 1.5rem;
       right: 1.5rem;
-      background: rgba(255, 255, 255, 0.08);
-      border: none;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       color: #fff;
       font-size: 1.2rem;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
       cursor: pointer;
-      transition: var(--transition-smooth);
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.3s ease;
     }
 
-    .modal-close:hover {
-      background: var(--accent-purple);
+    .modal-close-btn:hover {
+      background: var(--neon-purple);
+      border-color: var(--neon-purple);
       transform: rotate(90deg);
+      box-shadow: 0 0 15px var(--neon-purple-glow);
     }
 
     .modal-img {
       width: 100%;
-      height: 320px;
+      height: 280px;
       object-fit: cover;
-      border-radius: 16px;
+      border-radius: 18px;
       margin-bottom: 1.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .modal-title {
       font-family: var(--font-heading);
-      font-size: 2.2rem;
+      font-size: 2rem;
       color: #fff;
       margin-bottom: 1rem;
     }
 
-    .modal-text {
+    .modal-body-text {
       color: var(--text-muted);
       font-size: 1.05rem;
       line-height: 1.8;
@@ -571,53 +767,34 @@
     }
 
     /* ==========================================================================
-       9. CONTACT SECTION & FORM
+       11. STYLED FORM INPUTS FOR HIRE ME & CONTACT
        ========================================================================== */
-    .contact-section {
-      background: radial-gradient(circle at 50% 100%, rgba(25, 15, 45, 0.6), var(--bg-dark));
-    }
-
-    .contact-bg-overlay {
-      position: absolute;
-      inset: 0;
-      background: url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
-      opacity: 0.05;
-      pointer-events: none;
-    }
-
-    .contact-wrapper {
-      max-width: 750px;
-      margin: 0 auto;
+    .form-field {
       position: relative;
-      z-index: 2;
+      margin-bottom: 1.8rem;
     }
 
-    .form-group {
-      position: relative;
-      margin-bottom: 2rem;
-    }
-
-    .form-control {
+    .form-input {
       width: 100%;
       padding: 1.1rem 1.4rem;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 12px;
+      border-radius: 14px;
       color: #fff;
       font-size: 1rem;
       font-family: var(--font-body);
       outline: none;
-      transition: var(--transition-smooth);
+      transition: all 0.3s ease;
     }
 
-    .form-control:focus {
-      border-color: var(--accent-purple);
-      background: rgba(168, 85, 247, 0.05);
-      box-shadow: 0 0 20px var(--accent-purple-glow);
+    .form-input:focus {
+      border-color: var(--neon-cyan);
+      background: rgba(0, 243, 255, 0.04);
+      box-shadow: 0 0 20px var(--neon-cyan-glow);
     }
 
-    textarea.form-control {
-      min-height: 150px;
+    textarea.form-input {
+      min-height: 140px;
       resize: vertical;
     }
 
@@ -627,36 +804,61 @@
       top: 1.1rem;
       color: var(--text-muted);
       pointer-events: none;
-      transition: var(--transition-smooth);
-      font-size: 0.95rem;
+      transition: all 0.3s ease;
     }
 
-    .form-control:focus ~ .form-label,
-    .form-control:not(:placeholder-shown) ~ .form-label {
-      top: -0.7rem;
+    .form-input:focus ~ .form-label,
+    .form-input:not(:placeholder-shown) ~ .form-label {
+      top: -0.6rem;
       left: 1rem;
       font-size: 0.8rem;
       padding: 0 0.5rem;
-      background: #0d0d17;
-      color: var(--accent-cyan);
+      background: #0f0f1c;
+      color: var(--neon-cyan);
       border-radius: 4px;
     }
 
     /* ==========================================================================
-       10. FOOTER & ANIMATIONS
+       12. FOOTER & TOAST NOTIFICATION
        ========================================================================== */
     footer {
       text-align: center;
-      padding: 2.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 3rem 8%;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
       color: var(--text-muted);
       font-size: 0.9rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .toast-popup {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: rgba(15, 15, 28, 0.95);
+      border: 1px solid var(--neon-green);
+      color: #fff;
+      padding: 1rem 1.8rem;
+      border-radius: 16px;
+      box-shadow: 0 0 25px var(--neon-green-glow);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 100000;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.4s var(--ease-out-back);
+    }
+
+    .toast-popup.show {
+      transform: translateY(0);
+      opacity: 1;
     }
 
     .reveal {
       opacity: 0;
       transform: translateY(40px);
-      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-smooth);
     }
 
     .reveal.active {
@@ -664,187 +866,221 @@
       transform: translateY(0);
     }
 
-    /* Mobile Responsive Adjustments */
+    /* Responsive Design */
     @media (max-width: 768px) {
-      body {
-        cursor: default; /* Revert cursor on mobile */
-      }
-      .cursor-dot, .cursor-outline {
-        display: none;
-      }
-      .nav-links {
-        display: none; /* Can be expanded to mobile menu if needed */
-      }
-      .about-grid {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-      }
-      .hero-title {
-        font-size: 2.8rem;
-      }
-      .btn-group {
-        flex-direction: column;
-        width: 100%;
-      }
-      .btn {
-        width: 100%;
-        justify-content: center;
-      }
+      body { cursor: default; }
+      .cursor-dot, .cursor-ring { display: none; }
+      .nav-links { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-title { font-size: 3rem; }
+      .modal-window { padding: 1.8rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Scroll Progress Indicator -->
-  <div id="scroll-progress"></div>
+  <!-- Ambient Glow Orbs -->
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
 
-  <!-- Custom Cursor Elements -->
+  <!-- Scroll Progress Indicator -->
+  <div id="progress-bar"></div>
+
+  <!-- Custom Magnetic Cursor -->
   <div class="cursor-dot"></div>
-  <div class="cursor-outline"></div>
+  <div class="cursor-ring"></div>
 
   <!-- Navigation Bar -->
   <nav>
-    <a href="#hero" class="logo">Sumit <span>Anand</span></a>
+    <a href="#hero" class="brand-logo">
+      <span class="dot"></span> SUMIT ANAND
+    </a>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#projects">Operations</a></li>
+      <li><a href="#operations">Operations</a></li>
+      <li><a href="#experience">Experience</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <!-- High-Impact HIRE ME Button in Header -->
+    <button class="btn btn-hire" onclick="openHireModal()">
+      <i class="fa-solid fa-bolt"></i> Hire Me
+    </button>
   </nav>
 
   <!-- Hero Section -->
   <section id="hero" class="hero">
-    <div class="hero-bg-overlay"></div>
     <canvas id="particles-canvas"></canvas>
     
     <div class="hero-content">
-      <div class="hero-subtitle">CCTV Operator & Security Systems Specialist</div>
-      <h1 class="hero-title">Sumit Anand</h1>
-      <p class="hero-description">
-        Specializing in multi-channel surveillance, CP Plus equipment setup, GIGO gate verification, loss prevention, and real-time security management for large-scale logistics hubs.
+      <div class="hud-badge">
+        <span class="hud-pulse"></span> Active Operations & Surveillance Lead[span_0](start_span)[span_0](end_span)
+      </div>
+
+      <h1 class="hero-title">SUMIT ANAND</h1>
+      
+      <p class="hero-subtitle">
+        CCTV Operator & Security Systems Specialist with 2+ years of core operational experience leading multi-channel CP Plus surveillance, digital GIGO gate control, and loss prevention across mega logistics hubs[span_1](start_span)[span_1](end_span).
       </p>
-      <div class="btn-group">
-        <a href="#projects" class="btn btn-primary">
-          Explore Operations <i class="fa-solid fa-arrow-right"></i>
-        </a>
-        <a href="#contact" class="btn btn-secondary">
-          Get In Touch <i class="fa-solid fa-envelope"></i>
+
+      <div class="hero-btn-group">
+        <!-- Prominent Working Hire Me Button -->
+        <button class="btn btn-hire" onclick="openHireModal()">
+          <i class="fa-solid fa-briefcase"></i> Hire Me Now
+        </button>
+        <a href="#operations" class="btn btn-glass">
+          Explore Operations <i class="fa-solid fa-arrow-down"></i>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- About Section -->
+  <!-- About & Capabilities Section -->
   <section id="about">
     <div class="section-header reveal">
-      <div class="section-subtitle">Background & Profile</div>
-      <h2 class="section-title">About Me</h2>
+      <span class="section-tag">01 / Profile Briefing</span>
+      <h2 class="section-title">Security & Systems Control Specialist</h2>
     </div>
 
     <div class="about-grid">
-      <div class="about-img-container reveal">
-        <img src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?q=80&w=800&auto=format&fit=crop" alt="Sumit Anand - Surveillance Specialist" />
+      <div class="about-image-wrapper reveal">
+        <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=800&auto=format&fit=crop" alt="CCTV Surveillance Operations Room" />
       </div>
 
-      <div class="about-text reveal">
-        <h3>Vigilant & Detail-Oriented Security Specialist</h3>
+      <div class="about-info reveal">
+        <h3>Precision Control & Asset Protection</h3>
         <p>
-          With over 2 years of hands-on experience managing surveillance systems and access control in high-volume warehouse hubs (including Flipkart Kalash Mega Hub and Ekart Logistics), I deliver zero-incident operational accuracy.
+          Specializing in real-time camera monitoring, vehicle & personnel log management, and emergency response coordination for large-scale warehouse hubs including Flipkart Kalash Mega Hub and Ekart Logistics[span_2](start_span)[span_2](end_span).
         </p>
         <p>
-          My expertise spans real-time CP Plus multi-camera feed monitoring, digital Goods-In/Goods-Out (GIGO) gate entry logging in MS Excel, dock verification, PSARA compliance, and rapid emergency escalation.
+          Proven track record maintaining zero-incident operational accuracy, executing physical and digital gate verification, enforcing PSARA compliance, and preventing stock shrinkage in fast-paced logistics environments[span_3](start_span)[span_3](end_span).
         </p>
 
-        <div class="skill-tags" id="skills">
-          <span class="tag">CP Plus CCTV Systems</span>
-          <span class="tag">Multi-Channel Monitoring</span>
-          <span class="tag">GIGO Entry Control</span>
-          <span class="tag">Loss Prevention</span>
-          <span class="tag">MS Excel & Data Entry</span>
-          <span class="tag">PSARA Guidelines</span>
-          <span class="tag">Fire Safety & CPR</span>
-          <span class="tag">Dock & Vehicle Logging</span>
+        <div class="tech-tags">
+          <span class="tech-tag">CP Plus CCTV Setup</span>
+          <span class="tech-tag">GIGO Gate Tools</span>
+          <span class="tech-tag">Multi-Channel Monitoring</span>
+          <span class="tech-tag">MS Excel Data Entry</span>
+          <span class="tech-tag">Loss Prevention</span>
+          <span class="tech-tag">PSARA Regulations</span>
+          <span class="tech-tag">Fire Safety & CPR</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Projects / Key Operations Section -->
-  <section id="projects">
+  <!-- 3D Interactive Operations / Projects Section -->
+  <section id="operations">
     <div class="section-header reveal">
-      <div class="section-subtitle">Key Highlights</div>
-      <h2 class="section-title">Operational Case Studies</h2>
+      <span class="section-tag">02 / Key Operations</span>
+      <h2 class="section-title">Surveillance Case Studies</h2>
     </div>
 
-    <div class="projects-grid">
+    <div class="operations-grid">
       
-      <!-- Card 1 -->
-      <div class="project-card reveal" onclick="openModal('modal1')">
-        <div class="project-img">
-          <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=800&auto=format&fit=crop" alt="Surveillance Control Room" />
+      <!-- Operation Card 1 -->
+      <div class="op-card reveal" onclick="openOpModal('op1')">
+        <div class="op-card-img">
+          <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=800&auto=format&fit=crop" alt="CP Plus Surveillance" />
         </div>
-        <div class="project-info">
-          <h3 class="project-title">CP Plus Multi-Channel Surveillance</h3>
-          <p class="project-desc">Real-time live feed monitoring across warehouse floors, perimeter zones, and dock areas to prevent stock shrinkage.</p>
-          <span class="project-link-btn">View Details <i class="fa-solid fa-arrow-up-right-from-square"></i></span>
-        </div>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="project-card reveal" onclick="openModal('modal2')">
-        <div class="project-img">
-          <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop" alt="Gate Control & Logistics" />
-        </div>
-        <div class="project-info">
-          <h3 class="project-title">Digital GIGO Gate Control System</h3>
-          <p class="project-desc">High-volume commercial vehicle logging, driver credential verification, and material gate pass authorization.</p>
-          <span class="project-link-btn">View Details <i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+        <div class="op-card-body">
+          <h3 class="op-card-title">CP Plus Multi-Channel Monitoring</h3>
+          <p class="op-card-desc">Active perimeter monitoring, footage archiving, playback investigation, and real-time incident flagging[span_4](start_span)[span_4](end_span).</p>
+          <span class="op-link-trigger">Expand Details <i class="fa-solid fa-arrow-up-right-from-square"></i></span>
         </div>
       </div>
 
-      <!-- Card 3 -->
-      <div class="project-card reveal" onclick="openModal('modal3')">
-        <div class="project-img">
-          <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=800&auto=format&fit=crop" alt="Safety & Compliance" />
+      <!-- Operation Card 2 -->
+      <div class="op-card reveal" onclick="openOpModal('op2')">
+        <div class="op-card-img">
+          <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=800&auto=format&fit=crop" alt="GIGO Gate Control" />
         </div>
-        <div class="project-info">
-          <h3 class="project-title">PSARA & Fire Safety Protocol</h3>
-          <p class="project-desc">Structured execution of emergency drills, badge access enforcement, and compliance reporting in accordance with PSARA guidelines.</p>
-          <span class="project-link-btn">View Details <i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+        <div class="op-card-body">
+          <h3 class="op-card-title">Digital GIGO Gate Verification</h3>
+          <p class="op-card-desc">High-density commercial vehicle logging, driver credential audits, and material gate pass authorization[span_5](start_span)[span_5](end_span).</p>
+          <span class="op-link-trigger">Expand Details <i class="fa-solid fa-arrow-up-right-from-square"></i></span>
         </div>
+      </div>
+
+      <!-- Operation Card 3 -->
+      <div class="op-card reveal" onclick="openOpModal('op3')">
+        <div class="op-card-img">
+          <img src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=800&auto=format&fit=crop" alt="PSARA Compliance" />
+        </div>
+        <div class="op-card-body">
+          <h3 class="op-card-title">PSARA & Fire Safety Protocol</h3>
+          <p class="op-card-desc">Fire evacuation drills, badge access audits, emergency escalation, and strict PSARA compliance[span_6](start_span)[span_6](end_span).</p>
+          <span class="op-link-trigger">Expand Details <i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Experience Log / Timeline -->
+  <section id="experience">
+    <div class="section-header reveal">
+      <span class="section-tag">03 / Duty Log</span>
+      <h2 class="section-title">Professional Experience</h2>
+    </div>
+
+    <div class="timeline reveal">
+      
+      <!-- Role 1 -->
+      <div class="timeline-item">
+        <div class="timeline-node"></div>
+        <div class="timeline-date">2025 – PRESENT</div>
+        <h3 class="timeline-role">Security Systems & Gate Control Operator</h3>
+        <p class="timeline-company">Innovision Limited (Flipkart Kalash Warehouse - Mega Hub) | Patli, Haryana[span_7](start_span)[span_7](end_span)</p>
+        <ul class="timeline-details">
+          <li>Manage end-to-end gate security operations and digital GIGO systems for India's largest Flipkart hub[span_8](start_span)[span_8](end_span).</li>
+          <li>Execute real-time MS Excel data entry for all inbound/outbound commercial fleets with 100% accuracy[span_9](start_span)[span_9](end_span).</li>
+          <li>Conduct strict entry/exit verification for dock movement, driver credentials, and security access badges[span_10](start_span)[span_10](end_span).</li>
+          <li>Perform active surveillance and perimeter monitoring to prevent stock shrinkage across warehouse zones[span_11](start_span)[span_11](end_span).</li>
+        </ul>
+      </div>
+
+      <!-- Role 2 -->
+      <div class="timeline-item">
+        <div class="timeline-node"></div>
+        <div class="timeline-date">2023 – 2024</div>
+        <h3 class="timeline-role">Security Guard & Surveillance Operator</h3>
+        <p class="timeline-company">A.P. Securitas Pvt. Ltd. (Client Site: Ekart Logistics Pvt. Ltd.) | Haryana, India[span_12](start_span)[span_12](end_span)</p>
+        <ul class="timeline-details">
+          <li>Monitored multi-camera CCTV feeds, identifying suspicious activities and enforcing facility safety standards[span_13](start_span)[span_13](end_span).</li>
+          <li>Conducted regular floor patrols, inventory spot checks, and fire safety inspections[span_14](start_span)[span_14](end_span).</li>
+          <li>Operated emergency response equipment and maintained daily shift logs for management review[span_15](start_span)[span_15](end_span).</li>
+        </ul>
       </div>
 
     </div>
   </section>
 
   <!-- Contact Section -->
-  <section id="contact" class="contact-section">
-    <div class="contact-bg-overlay"></div>
+  <section id="contact">
     <div class="section-header reveal">
-      <div class="section-subtitle">Get In Touch</div>
-      <h2 class="section-title">Contact Me</h2>
+      <span class="section-tag">04 / Direct Transmission</span>
+      <h2 class="section-title">Send a Message</h2>
     </div>
 
-    <div class="contact-wrapper glass-card reveal">
-      <form onsubmit="handleContact(event)">
-        <div class="form-group">
-          <input type="text" class="form-control" id="name" placeholder=" " required />
-          <label for="name" class="form-label">Your Name</label>
+    <div style="max-width: 700px; margin: 0 auto;" class="glass-card reveal">
+      <form onsubmit="handleDirectMessage(event)">
+        <div class="form-field">
+          <input type="text" id="contact-name" class="form-input" placeholder=" " required />
+          <label for="contact-name" class="form-label">Your Name</label>
         </div>
 
-        <div class="form-group">
-          <input type="email" class="form-control" id="email" placeholder=" " required />
-          <label for="email" class="form-label">Your Email</label>
+        <div class="form-field">
+          <input type="email" id="contact-email" class="form-input" placeholder=" " required />
+          <label for="contact-email" class="form-label">Your Email</label>
         </div>
 
-        <div class="form-group">
-          <textarea class="form-control" id="message" placeholder=" " required></textarea>
-          <label for="message" class="form-label">Your Message</label>
+        <div class="form-field">
+          <textarea id="contact-message" class="form-input" placeholder=" " required></textarea>
+          <label for="contact-message" class="form-label">Shift Details / Message</label>
         </div>
 
-        <button type="submit" class="btn btn-primary" style="width: 100%;">
-          Send Message <i class="fa-solid fa-paper-plane"></i>
+        <button type="submit" class="btn btn-hire" style="width: 100%; justify-content: center;">
+          <i class="fa-solid fa-paper-plane"></i> Send Direct Briefing
         </button>
       </form>
     </div>
@@ -852,30 +1088,34 @@
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2026 Sumit Anand. All Rights Reserved. | Rohtak, Haryana, India</p>
+    <p>&copy; 2026 Sumit Anand. All Rights Reserved. | Rohtak, Haryana, India[span_16](start_span)[span_16](end_span)</p>
   </footer>
 
-  <!-- Modal / Popup Overlay -->
-  <div class="modal-overlay" id="modal-overlay" onclick="closeModalOnOverlay(event)">
-    <div class="modal-container">
-      <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
-      <img id="modal-img" class="modal-img" src="" alt="Project Detail" />
-      <h2 id="modal-title" class="modal-title"></h2>
-      <p id="modal-text" class="modal-text"></p>
-      <button class="btn btn-primary" onclick="closeModal()">Close Details</button>
+  <!-- Universal Interactive Modal (Used for Operations & HIRE ME) -->
+  <div class="modal-backdrop" id="modal-backdrop" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-window" id="modal-window">
+      <button class="modal-close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div id="modal-content">
+        <!-- Dynamic Insertion via JS -->
+      </div>
     </div>
   </div>
 
-  <!-- JavaScript -->
+  <!-- Toast Notification -->
+  <div class="toast-popup" id="toast-popup">
+    <i class="fa-solid fa-circle-check" style="color: var(--neon-green); font-size: 1.2rem;"></i>
+    <span id="toast-msg">Briefing transmitted successfully!</span>
+  </div>
+
+  <!-- JavaScript logic -->
   <script>
     /* ==========================================================================
-       1. CUSTOM CURSOR TRAILING EFFECT
+       1. TRAILING CURSOR & MAGNET HOVER EFFECT
        ========================================================================== */
     const cursorDot = document.querySelector('.cursor-dot');
-    const cursorOutline = document.querySelector('.cursor-outline');
-
+    const cursorRing = document.querySelector('.cursor-ring');
     let mouseX = 0, mouseY = 0;
-    let outlineX = 0, outlineY = 0;
+    let ringX = 0, ringY = 0;
 
     window.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
@@ -884,94 +1124,246 @@
       cursorDot.style.top = `${mouseY}px`;
     });
 
-    function animateCursor() {
-      outlineX += (mouseX - outlineX) * 0.15;
-      outlineY += (mouseY - outlineY) * 0.15;
-
-      cursorOutline.style.left = `${outlineX}px`;
-      cursorOutline.style.top = `${outlineY}px`;
-
-      requestAnimationFrame(animateCursor);
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.15;
+      ringY += (mouseY - ringY) * 0.15;
+      cursorRing.style.left = `${ringX}px`;
+      cursorRing.style.top = `${ringY}px`;
+      requestAnimationFrame(renderCursor);
     }
-    animateCursor();
+    renderCursor();
+
+    // Hover effect on buttons and cards
+    document.querySelectorAll('a, button, .op-card, .glass-card').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+    });
 
     /* ==========================================================================
        2. SCROLL PROGRESS BAR
        ========================================================================== */
     window.addEventListener('scroll', () => {
-      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
-      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      document.getElementById('scroll-progress').style.width = scrolled + '%';
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const progress = (scrollTop / scrollHeight) * 100;
+      document.getElementById('progress-bar').style.width = `${progress}%`;
     });
 
     /* ==========================================================================
-       3. FLOATING PARTICLES CANVAS
+       3. CONSTELLATION PARTICLES CANVAS
        ========================================================================== */
     const canvas = document.getElementById('particles-canvas');
     const ctx = canvas.getContext('2d');
+    let particlesArray = [];
 
-    let particles = [];
-    const particleCount = 50;
-
-    function resizeCanvas() {
+    function initCanvas() {
       canvas.width = canvas.parentElement.clientWidth;
       canvas.height = canvas.parentElement.clientHeight;
     }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    window.addEventListener('resize', initCanvas);
+    initCanvas();
 
     class Particle {
       constructor() {
-        this.reset();
-      }
-
-      reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
         this.size = Math.random() * 2 + 1;
-        this.speedX = (Math.random() - 0.5) * 0.6;
-        this.speedY = (Math.random() - 0.5) * 0.6;
-        this.alpha = Math.random() * 0.5 + 0.2;
+        this.speedX = (Math.random() - 0.5) * 0.8;
+        this.speedY = (Math.random() - 0.5) * 0.8;
       }
-
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
-
-        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-          this.reset();
-        }
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
       }
-
       draw() {
-        ctx.fillStyle = `rgba(168, 85, 247, ${this.alpha})`;
+        ctx.fillStyle = 'rgba(0, 243, 255, 0.6)';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
       }
     }
 
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
+    for (let i = 0; i < 45; i++) {
+      particlesArray.push(new Particle());
     }
 
     function animateParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+        
+        for (let j = i; j < particlesArray.length; j++) {
+          const dx = particlesArray[i].x - particlesArray[j].x;
+          const dy = particlesArray[i].y - particlesArray[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 110) {
+            ctx.strokeStyle = `rgba(176, 38, 255, ${0.25 - dist/440})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+            ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+            ctx.stroke();
+          }
+        }
+      }
       requestAnimationFrame(animateParticles);
     }
     animateParticles();
 
     /* ==========================================================================
-       4. SCROLL REVEAL ANIMATION (INTERSECTION OBSERVER)
+       4. 3D CARD TILT EFFECT
        ========================================================================== */
-    const revealElements = document.querySelectorAll('.reveal');
+    document.querySelectorAll('.op-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / 12;
+        const rotateY = (centerX - x) / 12;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+      });
 
-    const revealObserver = new IntersectionObserver((entries) => {
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)`;
+      });
+    });
+
+    /* ==========================================================================
+       5. INTERACTION MODALS ("HIRE ME" & OPERATIONS)
+       ========================================================================== */
+    const opData = {
+      op1: {
+        title: "CP Plus Multi-Channel Surveillance Network",
+        img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1000&auto=format&fit=crop",
+        desc: "Configured and actively monitored CP Plus multi-channel camera arrays across high-density logistics hubs[span_17](start_span)[span_17](end_span). Responsible for tracking live feeds, archiving footage, performing playback analysis during security investigations, and preventing stock shrinkage across warehouse zones[span_18](start_span)[span_18](end_span)."
+      },
+      op2: {
+        title: "Digital GIGO Gate & Logistics Control",
+        img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=1000&auto=format&fit=crop",
+        desc: "Managed high-density commercial vehicle logging and Goods-In/Goods-Out (GIGO) gate control for Flipkart's Kalash Mega Hub[span_19](start_span)[span_19](end_span). Performed real-time MS Excel data entry, driver ID verification, dock allocation, and material gate pass clearance with 100% operational precision[span_20](start_span)[span_20](end_span)."
+      },
+      op3: {
+        title: "PSARA Compliance & Emergency Fire Safety",
+        img: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1000&auto=format&fit=crop",
+        desc: "Enforced strict compliance with the Private Security Agencies Regulation Act (PSARA)[span_21](start_span)[span_21](end_span). Conducted fire extinguisher inspections, led emergency evacuation drills, performed security badge audits, and maintained daily shift logs for management review[span_22](start_span)[span_22](end_span)."
+      }
+    };
+
+    function openOpModal(opKey) {
+      const data = opData[opKey];
+      if (!data) return;
+
+      const html = `
+        <img src="${data.img}" class="modal-img" alt="${data.title}" />
+        <h2 class="modal-title">${data.title}</h2>
+        <p class="modal-body-text">${data.desc}</p>
+        <button class="btn btn-hire" onclick="openHireModal()"><i class="fa-solid fa-paper-plane"></i> Discuss This Deployment</button>
+      `;
+
+      document.getElementById('modal-content').innerHTML = html;
+      document.getElementById('modal-backdrop').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // THE WORKING "HIRE ME" MODAL TRIGGER
+    function openHireModal() {
+      const html = `
+        <div style="text-align: center; margin-bottom: 1.8rem;">
+          <span style="color: var(--neon-cyan); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 0.85rem;">Deployment Enquiry</span>
+          <h2 class="modal-title" style="margin-top: 0.4rem;">Hire Sumit Anand</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Deploy an experienced CCTV Operator & Gate Systems Specialist to your facility[span_23](start_span)[span_23](end_span).</p>
+        </div>
+
+        <form onsubmit="handleHireSubmit(event)">
+          <div class="form-field">
+            <input type="text" id="hire-name" class="form-input" placeholder=" " required />
+            <label for="hire-name" class="form-label">Your Name / Organization</label>
+          </div>
+
+          <div class="form-field">
+            <input type="email" id="hire-email" class="form-input" placeholder=" " required />
+            <label for="hire-email" class="form-label">Work Email</label>
+          </div>
+
+          <div class="form-field">
+            <input type="text" id="hire-role" class="form-input" placeholder=" " />
+            <label for="hire-role" class="form-label">Role / Location (e.g. Control Room, Mega Hub)</label>
+          </div>
+
+          <div class="form-field">
+            <textarea id="hire-msg" class="form-input" placeholder=" " required></textarea>
+            <label for="hire-msg" class="form-label">Shift Details & Offer Note</label>
+          </div>
+
+          <button type="submit" class="btn btn-hire" style="width: 100%; justify-content: center;">
+            <i class="fa-solid fa-bolt"></i> Submit Employment Enquiry
+          </button>
+        </form>
+      `;
+
+      document.getElementById('modal-content').innerHTML = html;
+      document.getElementById('modal-backdrop').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('modal-backdrop').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'modal-backdrop') closeModal();
+    }
+
+    /* ==========================================================================
+       6. FORM SUBMISSIONS & TOAST FEEDBACK
+       ========================================================================== */
+    function handleHireSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('hire-name').value;
+      const email = document.getElementById('hire-email').value;
+      const role = document.getElementById('hire-role').value;
+      const msg = document.getElementById('hire-msg').value;
+
+      const mailtoSubject = encodeURIComponent(`Hire Enquiry for Sumit Anand: ${role || 'Security Specialist'}`);
+      const mailtoBody = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nRole: ${role}\n\nNote:\n${msg}`);
+
+      window.location.href = `mailto:sa8518430@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
+
+      closeModal();
+      showToast("Opening Email Client to Transmit Hire Proposal!");
+    }
+
+    function handleDirectMessage(e) {
+      e.preventDefault();
+      const name = document.getElementById('contact-name').value;
+      const email = document.getElementById('contact-email').value;
+      const msg = document.getElementById('contact-message').value;
+
+      const mailtoSubject = encodeURIComponent(`Portfolio Briefing from ${name}`);
+      const mailtoBody = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${msg}`);
+
+      window.location.href = `mailto:sa8518430@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
+      e.target.reset();
+      showToast("Briefing pre-filled in your email client!");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast-popup');
+      document.getElementById('toast-msg').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    /* ==========================================================================
+       7. SCROLL REVEAL OBSERVER
+       ========================================================================== */
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('active');
@@ -979,60 +1371,7 @@
       });
     }, { threshold: 0.15 });
 
-    revealElements.forEach(el => revealObserver.observe(el));
-
-    /* ==========================================================================
-       5. MODAL DATA & FUNCTIONS
-       ========================================================================== */
-    const modalData = {
-      modal1: {
-        title: "CP Plus Multi-Channel Surveillance Network",
-        image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1200&auto=format&fit=crop",
-        text: "Configured and actively monitored CP Plus multi-channel camera arrays across high-density logistics hubs. Responsible for tracking live feeds, archiving footage, performing playback analysis during security investigations, and preventing unauthorized access or stock shrinkage."
-      },
-      modal2: {
-        title: "Digital GIGO Gate & Vehicle Access System",
-        image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=1200&auto=format&fit=crop",
-        text: "Managed high-density commercial vehicle logging and Goods-In/Goods-Out (GIGO) gate control for Flipkart's Kalash Mega Hub. Performed real-time MS Excel data entry, driver ID verification, and material gate pass clearance with 100% operational precision."
-      },
-      modal3: {
-        title: "PSARA & Fire Safety Protocol Execution",
-        image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?q=80&w=1200&auto=format&fit=crop",
-        text: "Enforced compliance with the Private Security Agencies Regulation Act (PSARA). Conducted fire extinguisher inspections, led emergency evacuation drills, performed security badge audits, and maintained clear daily shift logs for management review."
-      }
-    };
-
-    function openModal(id) {
-      const data = modalData[id];
-      if (!data) return;
-
-      document.getElementById('modal-img').src = data.image;
-      document.getElementById('modal-title').textContent = data.title;
-      document.getElementById('modal-text').textContent = data.text;
-
-      document.getElementById('modal-overlay').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-      document.getElementById('modal-overlay').classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
-
-    function closeModalOnOverlay(e) {
-      if (e.target.id === 'modal-overlay') {
-        closeModal();
-      }
-    }
-
-    /* ==========================================================================
-       6. CONTACT FORM SUBMISSION
-       ========================================================================== */
-    function handleContact(e) {
-      e.preventDefault();
-      alert("Thank you, Sumit Anand has received your message!");
-      e.target.reset();
-    }
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
   </script>
 </body>
 </html>
