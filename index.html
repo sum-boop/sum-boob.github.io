@@ -3,42 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sumit Anand | Surveillance & Cyber Security Specialist</title>
+  <title>Sumit Anand | CCTV Operator & Security Systems Specialist</title>
 
-  <!-- Google Fonts: Syne & Space Grotesk -->
+  <!-- Google Fonts: Inter & Playfair Display -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
 
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <style>
     /* ==========================================================================
-       1. ULTRA DARK SURVEILLANCE & NEON PALETTE
+       1. CSS VARIABLES & RESET
        ========================================================================== */
     :root {
-      --bg-void: #020205;
-      --bg-card: rgba(8, 10, 18, 0.75);
-      --bg-card-hover: rgba(14, 18, 32, 0.9);
-      --border-cyan: rgba(0, 243, 255, 0.22);
-      --border-purple: rgba(176, 38, 255, 0.25);
-      
-      --neon-cyan: #00f3ff;
-      --neon-cyan-glow: rgba(0, 243, 255, 0.45);
-      --neon-purple: #b026ff;
-      --neon-purple-glow: rgba(176, 38, 255, 0.45);
-      --neon-green: #00ff88;
-      --neon-green-glow: rgba(0, 255, 136, 0.45);
-      --neon-amber: #ffb703;
-
-      --text-main: #f0f4ff;
-      --text-muted: #838dae;
-      
-      --font-heading: 'Syne', sans-serif;
-      --font-body: 'Space Grotesk', sans-serif;
-      --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --bg-dark: #07070d;
+      --card-bg: rgba(18, 18, 30, 0.65);
+      --card-border: rgba(168, 85, 247, 0.18);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-purple: #a855f7;
+      --accent-purple-glow: rgba(168, 85, 247, 0.4);
+      --accent-blue: #3b82f6;
+      --accent-cyan: #38bdf8;
+      --font-heading: 'Playfair Display', serif;
+      --font-body: 'Inter', sans-serif;
+      --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * {
@@ -49,116 +40,81 @@
     }
 
     body {
-      background-color: var(--bg-void);
+      background-color: var(--bg-dark);
       color: var(--text-main);
       font-family: var(--font-body);
       overflow-x: hidden;
       line-height: 1.6;
-      cursor: none; /* Interactive glowing custom cursor */
+      cursor: none; /* Custom cursor active */
     }
 
-    /* Scanline & Grid HUD Overlay */
-    .hud-grid-overlay {
-      position: fixed;
-      inset: 0;
-      background: 
-        linear-gradient(rgba(0, 243, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 243, 255, 0.02) 1px, transparent 1px);
-      background-size: 50px 50px;
-      pointer-events: none;
-      z-index: 1;
+    /* Selection Color */
+    ::selection {
+      background: var(--accent-purple);
+      color: #ffffff;
     }
 
-    .scanline {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
-      opacity: 0.6;
-      box-shadow: 0 0 15px var(--neon-cyan);
-      pointer-events: none;
-      z-index: 9999;
-      animation: scanMove 8s linear infinite;
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 8px;
     }
-
-    @keyframes scanMove {
-      0% { top: 0%; }
-      100% { top: 100%; }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
     }
-
-    /* Glowing Ambient Background Orbs */
-    .ambient-orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(140px);
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.3;
-      animation: floatOrb 20s ease-in-out infinite alternate;
+    ::-webkit-scrollbar-thumb {
+      background: #1f1f33;
+      border-radius: 4px;
     }
-    .orb-1 { width: 550px; height: 550px; background: var(--neon-purple); top: -10%; left: -10%; }
-    .orb-2 { width: 650px; height: 650px; background: var(--neon-cyan); bottom: 5%; right: -10%; animation-delay: -10s; }
-
-    @keyframes floatOrb {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(70px, 50px) scale(1.12); }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-purple);
     }
-
-    /* Custom Selection & Scrollbar */
-    ::selection { background: var(--neon-purple); color: #fff; }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-void); }
-    ::-webkit-scrollbar-thumb { background: #161a2e; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan); }
 
     /* ==========================================================================
-       2. TRAILING CYBER CURSOR
+       2. CUSTOM CURSOR
        ========================================================================== */
-    .cursor-dot, .cursor-ring {
+    .cursor-dot,
+    .cursor-outline {
       pointer-events: none;
       position: fixed;
       top: 0;
       left: 0;
       transform: translate(-50%, -50%);
       border-radius: 50%;
-      z-index: 99999;
-      transition: opacity 0.3s ease;
+      z-index: 9999;
+      transition: opacity 0.3s ease-in-out, transform 0.15s ease-out;
     }
+
     .cursor-dot {
       width: 8px;
       height: 8px;
-      background-color: var(--neon-cyan);
-      box-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+      background-color: var(--accent-cyan);
+      box-shadow: 0 0 10px var(--accent-cyan);
     }
-    .cursor-ring {
-      width: 44px;
-      height: 44px;
-      border: 1.5px solid var(--neon-purple);
-      box-shadow: 0 0 15px var(--neon-purple-glow);
-      transition: width 0.25s var(--ease-bounce), height 0.25s var(--ease-bounce), border-color 0.25s ease, background-color 0.25s ease;
+
+    .cursor-outline {
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid var(--accent-purple);
+      box-shadow: 0 0 15px var(--accent-purple-glow);
     }
-    body.cursor-hover .cursor-ring {
-      width: 68px;
-      height: 68px;
-      border-color: var(--neon-cyan);
-      background-color: rgba(0, 243, 255, 0.08);
-      box-shadow: 0 0 25px var(--neon-cyan-glow);
+
+    body:hover .cursor-dot,
+    body:hover .cursor-outline {
+      opacity: 1;
     }
 
     /* ==========================================================================
-       3. NAVIGATION & PROGRESS BAR
+       3. SCROLL PROGRESS BAR & NAVBAR
        ========================================================================== */
-    #progress-bar {
+    #scroll-progress {
       position: fixed;
       top: 0;
       left: 0;
       height: 3px;
       width: 0%;
-      background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan), var(--neon-green));
+      background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
       z-index: 10000;
-      box-shadow: 0 0 12px var(--neon-cyan);
+      box-shadow: 0 0 10px var(--accent-purple);
     }
 
     nav {
@@ -170,188 +126,89 @@
       justify-content: space-between;
       align-items: center;
       z-index: 1000;
-      background: rgba(2, 2, 5, 0.82);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(7, 7, 13, 0.7);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      transition: var(--transition-smooth);
     }
 
-    .brand-logo {
+    .logo {
       font-family: var(--font-heading);
-      font-size: 1.5rem;
-      font-weight: 800;
+      font-size: 1.6rem;
+      font-weight: 700;
       color: #fff;
       text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      letter-spacing: 0.5px;
     }
 
-    .brand-logo .dot-span {
-      width: 10px;
-      height: 10px;
-      background: var(--neon-cyan);
-      border-radius: 50%;
-      box-shadow: 0 0 12px var(--neon-cyan);
-      display: inline-block;
+    .logo span {
+      color: var(--accent-purple);
+      text-shadow: 0 0 10px var(--accent-purple-glow);
     }
 
     .nav-links {
       display: flex;
       gap: 2.2rem;
       list-style: none;
-      align-items: center;
     }
 
     .nav-links a {
       color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       font-weight: 500;
-      transition: var(--ease-smooth);
+      transition: var(--transition-smooth);
       position: relative;
     }
 
     .nav-links a:hover {
-      color: var(--neon-cyan);
-      text-shadow: 0 0 8px var(--neon-cyan-glow);
+      color: #fff;
     }
 
     .nav-links a::after {
       content: '';
       position: absolute;
-      bottom: -6px;
-      left: 50%;
-      transform: translateX(-50%);
+      bottom: -4px;
+      left: 0;
       width: 0%;
       height: 2px;
-      background: var(--neon-purple);
-      box-shadow: 0 0 8px var(--neon-purple);
-      transition: var(--ease-smooth);
+      background: var(--accent-purple);
+      box-shadow: 0 0 8px var(--accent-purple);
+      transition: var(--transition-smooth);
     }
 
-    .nav-links a:hover::after { width: 100%; }
-
-    /* ==========================================================================
-       4. ADVANCED NEON BUTTONS & SPAN STYLES
-       ========================================================================== */
-    .btn {
-      position: relative;
-      padding: 0.85rem 2.2rem;
-      border-radius: 50px;
-      font-family: var(--font-body);
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-decoration: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      border: none;
-      outline: none;
-      overflow: hidden;
-      transition: transform 0.3s var(--ease-bounce), box-shadow 0.3s ease;
-      z-index: 1;
-    }
-
-    .btn-hire {
-      background: linear-gradient(135deg, var(--neon-purple), #6366f1, var(--neon-cyan));
-      background-size: 200% 200%;
-      color: #fff;
-      box-shadow: 0 0 25px var(--neon-purple-glow), 0 0 10px rgba(0, 243, 255, 0.3);
-      animation: gradientShift 6s ease infinite;
-    }
-
-    .btn-hire:hover {
-      transform: translateY(-4px) scale(1.03);
-      box-shadow: 0 0 35px var(--neon-purple-glow), 0 0 20px var(--neon-cyan-glow);
-    }
-
-    .btn-glass {
-      background: rgba(255, 255, 255, 0.04);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(12px);
-    }
-
-    .btn-glass:hover {
-      background: rgba(255, 255, 255, 0.09);
-      border-color: var(--neon-cyan);
-      transform: translateY(-4px);
-      box-shadow: 0 0 20px rgba(0, 243, 255, 0.25);
-      color: var(--neon-cyan);
-    }
-
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Reusable Aesthetic Spans */
-    .highlight-span {
-      color: var(--neon-cyan);
-      text-shadow: 0 0 10px var(--neon-cyan-glow);
-      font-weight: 700;
-    }
-
-    .purple-span {
-      color: var(--neon-purple);
-      text-shadow: 0 0 10px var(--neon-purple-glow);
-      font-weight: 700;
-    }
-
-    .hud-badge-span {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 0.45rem 1.2rem;
-      border-radius: 50px;
-      background: rgba(0, 255, 136, 0.06);
-      border: 1px solid rgba(0, 255, 136, 0.3);
-      color: var(--neon-green);
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 1.8rem;
-      box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
-    }
-
-    .pulse-dot-span {
-      width: 8px;
-      height: 8px;
-      background: var(--neon-green);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--neon-green);
-      animation: pulseGreen 1.8s infinite;
-      display: inline-block;
-    }
-
-    @keyframes pulseGreen {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(1.4); }
+    .nav-links a:hover::after {
+      width: 100%;
     }
 
     /* ==========================================================================
-       5. HERO SECTION WITH SURVEILLANCE BACKDROP & PARTICLES
+       4. HERO SECTION WITH PARTICLES & OVERLAY
        ========================================================================== */
     .hero {
       position: relative;
-      min-height: 100vh;
+      height: 100vh;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 8rem 8% 4rem;
-      z-index: 2;
-      background: linear-gradient(180deg, rgba(2,2,5,0.4) 0%, var(--bg-void) 100%), 
-                  url('https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
-      background-attachment: fixed;
+      padding: 0 8%;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 50%, rgba(20, 15, 35, 0.8), var(--bg-dark));
+    }
+
+    .hero-bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
+      opacity: 0.08;
+      filter: blur(2px);
+      z-index: 1;
     }
 
     #particles-canvas {
       position: absolute;
       inset: 0;
-      z-index: 1;
+      z-index: 2;
       pointer-events: none;
     }
 
@@ -359,47 +216,92 @@
       position: relative;
       z-index: 3;
       text-align: center;
-      max-width: 920px;
+      max-width: 850px;
+    }
+
+    .hero-subtitle {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: var(--accent-cyan);
+      margin-bottom: 1.2rem;
+      font-weight: 600;
+      text-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
     }
 
     .hero-title {
       font-family: var(--font-heading);
-      font-size: clamp(3.2rem, 7vw, 5.8rem);
-      font-weight: 800;
-      line-height: 1.05;
+      font-size: clamp(3rem, 6vw, 5rem);
+      line-height: 1.1;
       margin-bottom: 1.5rem;
-      letter-spacing: -1.5px;
-      background: linear-gradient(135deg, #ffffff 20%, #c4b5fd 50%, var(--neon-cyan) 100%);
+      background: linear-gradient(135deg, #ffffff 30%, var(--accent-purple) 80%, var(--accent-cyan) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 30px rgba(176, 38, 255, 0.25));
+      filter: drop-shadow(0 0 25px rgba(168, 85, 247, 0.2));
     }
 
-    .hero-subtitle {
-      font-size: 1.2rem;
+    .hero-description {
+      font-size: 1.15rem;
       color: var(--text-muted);
-      margin-bottom: 2.8rem;
-      max-width: 760px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+      max-width: 680px;
       margin-left: auto;
       margin-right: auto;
-      font-weight: 400;
     }
 
-    .hero-btn-group {
+    .btn-group {
       display: flex;
       gap: 1.5rem;
       justify-content: center;
       align-items: center;
-      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.9rem 2.2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: var(--transition-smooth);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+      color: #fff;
+      box-shadow: 0 0 20px var(--accent-purple-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.7);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent-cyan);
+      transform: translateY(-3px);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
     }
 
     /* ==========================================================================
-       6. GLASS CARDS & THEMED SECTIONS
+       5. GENERAL SECTION STYLING & GLASSMORPHISM
        ========================================================================== */
     section {
       padding: 7rem 8%;
       position: relative;
-      z-index: 2;
     }
 
     .section-header {
@@ -407,346 +309,250 @@
       margin-bottom: 4.5rem;
     }
 
-    .section-tag-span {
-      color: var(--neon-cyan);
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      margin-bottom: 0.6rem;
-      display: block;
-      text-shadow: 0 0 10px var(--neon-cyan-glow);
-    }
-
     .section-title {
       font-family: var(--font-heading);
-      font-size: clamp(2.2rem, 4vw, 3.2rem);
-      font-weight: 800;
-      color: #fff;
-    }
-
-    .glass-card {
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--border-purple);
-      border-radius: 24px;
-      padding: 2.5rem;
-      transition: all 0.4s var(--ease-smooth);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .glass-card:hover {
-      border-color: rgba(0, 243, 255, 0.5);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 243, 255, 0.15);
-      transform: translateY(-6px);
-    }
-
-    /* ==========================================================================
-       7. ABOUT & CAPABILITIES WITH CAMERA & SECURITY IMAGES
-       ========================================================================== */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 4rem;
-      align-items: center;
-    }
-
-    .about-image-wrapper {
-      position: relative;
-      border-radius: 24px;
-      overflow: hidden;
-      border: 1px solid var(--border-cyan);
-      box-shadow: 0 0 35px var(--neon-cyan-glow);
-    }
-
-    .about-image-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.6s var(--ease-smooth);
-    }
-
-    .about-image-wrapper:hover img { transform: scale(1.06); }
-
-    .about-info h3 {
-      font-family: var(--font-heading);
-      font-size: 2.2rem;
-      color: #fff;
-      margin-bottom: 1.2rem;
-    }
-
-    .about-info p {
-      color: var(--text-muted);
-      margin-bottom: 1.4rem;
-      font-size: 1.05rem;
-    }
-
-    .tech-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      margin-top: 2rem;
-    }
-
-    .tech-tag-span {
-      background: rgba(176, 38, 255, 0.08);
-      color: var(--neon-cyan);
-      border: 1px solid rgba(0, 243, 255, 0.25);
-      padding: 0.45rem 1.1rem;
-      border-radius: 50px;
-      font-size: 0.88rem;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .tech-tag-span:hover {
-      background: var(--neon-purple);
-      color: #fff;
-      border-color: var(--neon-purple);
-      box-shadow: 0 0 15px var(--neon-purple-glow);
-      transform: translateY(-2px);
-    }
-
-    /* ==========================================================================
-       8. OPERATIONS GRID (CAMERAS, CYBER SECURITY & DATA ENTRY)
-       ========================================================================== */
-    .operations-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2.5rem;
-      perspective: 1000px;
-    }
-
-    .op-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-purple);
-      border-radius: 24px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.1s linear;
-      transform-style: preserve-3d;
-    }
-
-    .op-card:hover {
-      border-color: var(--neon-cyan);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 25px var(--neon-cyan-glow);
-    }
-
-    .op-card-img {
-      height: 230px;
-      width: 100%;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .op-card-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s var(--ease-smooth);
-    }
-
-    .op-card:hover .op-card-img img { transform: scale(1.1); }
-
-    .op-card-badge-span {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: rgba(2, 2, 5, 0.85);
-      border: 1px solid var(--neon-cyan);
-      color: var(--neon-cyan);
-      padding: 0.3rem 0.8rem;
-      border-radius: 50px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      backdrop-filter: blur(8px);
-    }
-
-    .op-card-body { padding: 2rem; }
-
-    .op-card-title {
-      font-family: var(--font-heading);
-      font-size: 1.5rem;
+      font-size: 2.8rem;
       color: #fff;
       margin-bottom: 0.8rem;
     }
 
-    .op-card-desc {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-bottom: 1.4rem;
+    .section-subtitle {
+      color: var(--accent-purple);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.85rem;
+      font-weight: 600;
     }
 
-    .op-link-span {
-      color: var(--neon-cyan);
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      transition: var(--transition-smooth);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(168, 85, 247, 0.4);
+      box-shadow: 0 15px 35px rgba(168, 85, 247, 0.15);
+    }
+
+    /* ==========================================================================
+       6. ABOUT SECTION
+       ========================================================================== */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-img-container {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .about-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: var(--transition-smooth);
+    }
+
+    .about-img-container:hover img {
+      transform: scale(1.04);
+    }
+
+    .about-text h3 {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      margin-bottom: 1.2rem;
+      color: #fff;
+    }
+
+    .about-text p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      font-size: 1.05rem;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1.8rem;
+    }
+
+    .tag {
+      background: rgba(168, 85, 247, 0.1);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      padding: 0.5rem 1.2rem;
+      border-radius: 50px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: var(--transition-smooth);
+      cursor: pointer;
+    }
+
+    .tag:hover {
+      background: rgba(168, 85, 247, 0.25);
+      border-color: var(--accent-purple);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 0 12px var(--accent-purple-glow);
+    }
+
+    /* ==========================================================================
+       7. PROJECTS SECTION
+       ========================================================================== */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2.5rem;
+    }
+
+    .project-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      transition: var(--transition-smooth);
+      cursor: pointer;
+    }
+
+    .project-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--accent-purple);
+      box-shadow: 0 15px 35px rgba(168, 85, 247, 0.25);
+    }
+
+    .project-img {
+      height: 220px;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .project-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: var(--transition-smooth);
+    }
+
+    .project-card:hover .project-img img {
+      transform: scale(1.08);
+    }
+
+    .project-info {
+      padding: 1.8rem;
+    }
+
+    .project-title {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      color: #fff;
+      margin-bottom: 0.6rem;
+    }
+
+    .project-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.2rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .project-link-btn {
+      color: var(--accent-cyan);
       font-weight: 600;
       font-size: 0.9rem;
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
 
     /* ==========================================================================
-       9. TIMELINE / EXPERIENCE LOG
+       8. MODAL / POPUP WITH KEYWORDS
        ========================================================================== */
-    .timeline {
-      position: relative;
-      max-width: 850px;
-      margin: 0 auto;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 20px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(180deg, var(--neon-purple), var(--neon-cyan));
-      box-shadow: 0 0 10px var(--neon-purple-glow);
-    }
-
-    .timeline-item {
-      position: relative;
-      padding-left: 60px;
-      margin-bottom: 3rem;
-    }
-
-    .timeline-node-span {
-      position: absolute;
-      left: 11px;
-      top: 0;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--bg-void);
-      border: 2px solid var(--neon-cyan);
-      box-shadow: 0 0 12px var(--neon-cyan);
-      display: block;
-    }
-
-    .timeline-date-span {
-      font-size: 0.85rem;
-      color: var(--neon-cyan);
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 0.4rem;
-      display: block;
-    }
-
-    .timeline-role {
-      font-family: var(--font-heading);
-      font-size: 1.6rem;
-      color: #fff;
-      margin-bottom: 0.4rem;
-    }
-
-    .timeline-company {
-      color: var(--text-muted);
-      font-size: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .timeline-details { list-style: none; }
-
-    .timeline-details li {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-bottom: 0.6rem;
-      position: relative;
-      padding-left: 1.2rem;
-    }
-
-    .timeline-details li::before {
-      content: '▹';
-      position: absolute;
-      left: 0;
-      color: var(--neon-purple);
-    }
-
-    /* ==========================================================================
-       10. ULTRA POPUP MODAL (HIRE ME & OPERATIONS)
-       ========================================================================== */
-    .modal-backdrop {
+    .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(2, 2, 5, 0.92);
-      backdrop-filter: blur(25px);
-      z-index: 99999;
+      background: rgba(7, 7, 13, 0.85);
+      backdrop-filter: blur(16px);
+      z-index: 9999;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 2rem;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.4s var(--ease-smooth);
+      transition: var(--transition-smooth);
     }
 
-    .modal-backdrop.active {
+    .modal-overlay.active {
       opacity: 1;
       pointer-events: all;
     }
 
-    .modal-window {
-      background: rgba(10, 12, 24, 0.95);
-      border: 1px solid var(--neon-purple);
-      border-radius: 28px;
+    .modal-container {
+      background: #0f0f1a;
+      border: 1px solid var(--accent-purple);
+      border-radius: 24px;
       max-width: 750px;
       width: 100%;
-      max-height: 88vh;
+      max-height: 90vh;
       overflow-y: auto;
-      padding: 2.8rem;
       position: relative;
-      box-shadow: 0 0 60px var(--neon-purple-glow);
-      transform: scale(0.85) translateY(30px);
-      transition: transform 0.4s var(--ease-bounce);
+      padding: 2.5rem;
+      box-shadow: 0 0 50px rgba(168, 85, 247, 0.3);
+      transform: scale(0.7);
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .modal-backdrop.active .modal-window {
-      transform: scale(1) translateY(0);
+    .modal-overlay.active .modal-container {
+      transform: scale(1);
     }
 
-    .modal-close-btn {
+    .modal-close {
       position: absolute;
       top: 1.5rem;
       right: 1.5rem;
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
       color: #fff;
       font-size: 1.2rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
       cursor: pointer;
+      transition: var(--transition-smooth);
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s ease;
     }
 
-    .modal-close-btn:hover {
-      background: var(--neon-purple);
-      border-color: var(--neon-purple);
+    .modal-close:hover {
+      background: var(--accent-purple);
       transform: rotate(90deg);
-      box-shadow: 0 0 15px var(--neon-purple-glow);
     }
 
     .modal-img {
       width: 100%;
       height: 280px;
       object-fit: cover;
-      border-radius: 18px;
+      border-radius: 16px;
       margin-bottom: 1.8rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .modal-title {
@@ -756,42 +562,91 @@
       margin-bottom: 1rem;
     }
 
-    .modal-body-text {
+    .modal-text {
       color: var(--text-muted);
-      font-size: 1.05rem;
-      line-height: 1.8;
-      margin-bottom: 2rem;
+      font-size: 1.02rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
     }
 
-    /* ==========================================================================
-       11. FORM INPUTS & FLOATING LABELS
-       ========================================================================== */
-    .form-field {
-      position: relative;
+    /* Keyword Tags inside Modal */
+    .keywords-section {
       margin-bottom: 1.8rem;
     }
 
-    .form-input {
+    .keywords-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.8rem;
+    }
+
+    .keywords-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .keyword-badge {
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       9. CONTACT SECTION & FORM
+       ========================================================================== */
+    .contact-section {
+      background: radial-gradient(circle at 50% 100%, rgba(25, 15, 45, 0.6), var(--bg-dark));
+    }
+
+    .contact-bg-overlay {
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
+      opacity: 0.05;
+      pointer-events: none;
+    }
+
+    .contact-wrapper {
+      max-width: 750px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 2rem;
+    }
+
+    .form-control {
       width: 100%;
       padding: 1.1rem 1.4rem;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
+      border-radius: 12px;
       color: #fff;
       font-size: 1rem;
       font-family: var(--font-body);
       outline: none;
-      transition: all 0.3s ease;
+      transition: var(--transition-smooth);
     }
 
-    .form-input:focus {
-      border-color: var(--neon-cyan);
-      background: rgba(0, 243, 255, 0.04);
-      box-shadow: 0 0 20px var(--neon-cyan-glow);
+    .form-control:focus {
+      border-color: var(--accent-purple);
+      background: rgba(168, 85, 247, 0.05);
+      box-shadow: 0 0 20px var(--accent-purple-glow);
     }
 
-    textarea.form-input {
-      min-height: 140px;
+    textarea.form-control {
+      min-height: 150px;
       resize: vertical;
     }
 
@@ -801,62 +656,36 @@
       top: 1.1rem;
       color: var(--text-muted);
       pointer-events: none;
-      transition: all 0.3s ease;
+      transition: var(--transition-smooth);
+      font-size: 0.95rem;
     }
 
-    .form-input:focus ~ .form-label,
-    .form-input:not(:placeholder-shown) ~ .form-label {
-      top: -0.6rem;
+    .form-control:focus ~ .form-label,
+    .form-control:not(:placeholder-shown) ~ .form-label {
+      top: -0.7rem;
       left: 1rem;
       font-size: 0.8rem;
       padding: 0 0.5rem;
-      background: #0a0c18;
-      color: var(--neon-cyan);
+      background: #0d0d17;
+      color: var(--accent-cyan);
       border-radius: 4px;
     }
 
     /* ==========================================================================
-       12. FOOTER & TOAST NOTIFICATION
+       10. FOOTER & ANIMATIONS
        ========================================================================== */
     footer {
       text-align: center;
-      padding: 3rem 8%;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
       color: var(--text-muted);
       font-size: 0.9rem;
-      position: relative;
-      z-index: 2;
-      background: #020205;
-    }
-
-    .toast-popup {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: rgba(10, 12, 24, 0.95);
-      border: 1px solid var(--neon-green);
-      color: #fff;
-      padding: 1rem 1.8rem;
-      border-radius: 16px;
-      box-shadow: 0 0 25px var(--neon-green-glow);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      z-index: 100000;
-      transform: translateY(100px);
-      opacity: 0;
-      transition: all 0.4s var(--ease-bounce);
-    }
-
-    .toast-popup.show {
-      transform: translateY(0);
-      opacity: 1;
     }
 
     .reveal {
       opacity: 0;
       transform: translateY(40px);
-      transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-smooth);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .reveal.active {
@@ -865,520 +694,85 @@
     }
 
     @media (max-width: 768px) {
-      body { cursor: default; }
-      .cursor-dot, .cursor-ring { display: none; }
-      .nav-links { display: none; }
-      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .hero-title { font-size: 3rem; }
-      .modal-window { padding: 1.8rem; }
+      body {
+        cursor: default;
+      }
+      .cursor-dot, .cursor-outline {
+        display: none;
+      }
+      .nav-links {
+        display: none;
+      }
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+      .hero-title {
+        font-size: 2.8rem;
+      }
+      .btn-group {
+        flex-direction: column;
+        width: 100%;
+      }
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Scanline & Grid Overlays for Surveillance Theme -->
-  <div class="hud-grid-overlay"></div>
-  <div class="scanline"></div>
-
-  <!-- Ambient Glow Orbs -->
-  <div class="ambient-orb orb-1"></div>
-  <div class="ambient-orb orb-2"></div>
-
   <!-- Scroll Progress Indicator -->
-  <div id="progress-bar"></div>
+  <div id="scroll-progress"></div>
 
-  <!-- Custom Magnetic Cyber Cursor -->
+  <!-- Custom Cursor Elements -->
   <div class="cursor-dot"></div>
-  <div class="cursor-ring"></div>
+  <div class="cursor-outline"></div>
 
   <!-- Navigation Bar -->
   <nav>
-    <a href="#hero" class="brand-logo">
-      <span class="dot-span"></span> SUMIT ANAND
-    </a>
+    <a href="#hero" class="logo">Sumit <span>Anand</span></a>
     <ul class="nav-links">
       <li><a href="#about">About</a></li>
-      <li><a href="#operations">Operations</a></li>
-      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Operations</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <!-- High-Impact Working HIRE ME Button -->
-    <button class="btn btn-hire" onclick="openHireModal()">
-      <i class="fa-solid fa-bolt"></i> <span class="btn-text-span">Hire Me</span>
-    </button>
   </nav>
 
-  <!-- Hero Section with CCTV Backdrop & Matrix Particles -->
+  <!-- Hero Section -->
   <section id="hero" class="hero">
+    <div class="hero-bg-overlay"></div>
     <canvas id="particles-canvas"></canvas>
     
     <div class="hero-content">
-      <span class="hud-badge-span">
-        <span class="pulse-dot-span"></span> Active Surveillance & Gate Control Lead
-      </span>
-
-      <h1 class="hero-title">
-        SUMIT <span class="highlight-span">ANAND</span>
-      </h1>
-      
-      <p class="hero-subtitle">
-        CCTV Operator & Cyber Systems Specialist with 2+ years of core operational experience in multi-channel <span class="purple-span">CP Plus surveillance</span>, high-volume <span class="highlight-span">GIGO data entry gate control</span>, and loss prevention across mega logistics hubs.
+      <div class="hero-subtitle">CCTV Operator & Security Systems Specialist</div>
+      <h1 class="hero-title">Sumit Anand</h1>
+      <p class="hero-description">
+        Specializing in multi-channel surveillance, CP Plus equipment setup, GIGO gate verification, loss prevention, and real-time security management for large-scale logistics hubs.
       </p>
-
-      <div class="hero-btn-group">
-        <!-- Interactive Working Hire Me Button -->
-        <button class="btn btn-hire" onclick="openHireModal()">
-          <i class="fa-solid fa-briefcase"></i> <span class="btn-text-span">Hire Me Now</span>
-        </button>
-        <a href="#operations" class="btn btn-glass">
-          <i class="fa-solid fa-eye"></i> <span class="btn-text-span">Explore Operations</span>
+      <div class="btn-group">
+        <a href="#projects" class="btn btn-primary">
+          Explore Operations <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="#contact" class="btn btn-secondary">
+          Get In Touch <i class="fa-solid fa-envelope"></i>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- About & Capabilities Section -->
+  <!-- About Section -->
   <section id="about">
     <div class="section-header reveal">
-      <span class="section-tag-span">01 / Security Profile</span>
-      <h2 class="section-title">Surveillance & Data Systems Specialist</h2>
+      <div class="section-subtitle">Background & Profile</div>
+      <h2 class="section-title">About Me</h2>
     </div>
 
     <div class="about-grid">
-      <!-- High-Tech Camera & Control Room Image -->
-      <div class="about-image-wrapper reveal">
-        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop" alt="Cyber Security Data & Surveillance Setup" />
+      <div class="about-img-container reveal">
+        <img src="https://images.unsplash.com/photo-1508739773434-c26b3d09e071?q=80&w=800&auto=format&fit=crop" alt="Sumit Anand - Surveillance Specialist" />
       </div>
 
-      <div class="about-info reveal">
-        <h3>Precision Monitoring & <span class="highlight-span">Asset Protection</span></h3>
-        <p>
-          Specializing in real-time camera monitoring, high-speed vehicle & driver data logging, and incident investigation across mega logistics operations including Flipkart Kalash Mega Hub and Ekart Logistics.
-        </p>
-        <p>
-          Expert in operating multi-screen CP Plus CCTV arrays, managing digital GIGO gate entry systems, maintaining zero-error Excel logs, and strictly enforcing PSARA safety protocols to eliminate shrinkage.
-        </p>
-
-        <div class="tech-tags">
-          <span class="tech-tag-span"><i class="fa-solid fa-video"></i> CP Plus CCTV Setup</span>
-          <span class="tech-tag-span"><i class="fa-solid fa-database"></i> GIGO Gate Entry</span>
-          <span class="tech-tag-span"><i class="fa-solid fa-table"></i> MS Excel Data Logging</span>
-          <span class="tech-tag-span"><i class="fa-solid fa-shield-halved"></i> Loss Prevention</span>
-          <span class="tech-tag-span"><i class="fa-solid fa-user-shield"></i> PSARA Regulations</span>
-          <span class="tech-tag-span"><i class="fa-solid fa-fire-extinguisher"></i> Emergency Response</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Operations / Case Studies Section -->
-  <section id="operations">
-    <div class="section-header reveal">
-      <span class="section-tag-span">02 / Key Deployments</span>
-      <h2 class="section-title">Surveillance & Data Case Studies</h2>
-    </div>
-
-    <div class="operations-grid">
-      
-      <!-- Card 1: Camera Surveillance -->
-      <div class="op-card reveal" onclick="openOpModal('op1')">
-        <div class="op-card-img">
-          <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=800&auto=format&fit=crop" alt="Camera Monitoring" />
-          <span class="op-card-badge-span">Camera Grid</span>
-        </div>
-        <div class="op-card-body">
-          <h3 class="op-card-title">CP Plus Multi-Channel Surveillance</h3>
-          <p class="op-card-desc">24/7 perimeter surveillance, footage playback, anomaly detection, and shrink prevention.</p>
-          <span class="op-link-span">Expand Briefing <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </div>
-
-      <!-- Card 2: Data Entry & Gate Control -->
-      <div class="op-card reveal" onclick="openOpModal('op2')">
-        <div class="op-card-img">
-          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop" alt="Data Entry Terminal" />
-          <span class="op-card-badge-span">Data Entry</span>
-        </div>
-        <div class="op-card-body">
-          <h3 class="op-card-title">Digital GIGO Gate & Data Logging</h3>
-          <p class="op-card-desc">High-volume commercial fleet entry/exit logging, credential audits, and real-time Excel tracking.</p>
-          <span class="op-link-span">Expand Briefing <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </div>
-
-      <!-- Card 3: Cyber Security & Audit -->
-      <div class="op-card reveal" onclick="openOpModal('op3')">
-        <div class="op-card-img">
-          <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=800&auto=format&fit=crop" alt="Security Shield" />
-          <span class="op-card-badge-span">Security Audit</span>
-        </div>
-        <div class="op-card-body">
-          <h3 class="op-card-title">PSARA & Fire Safety Protocol</h3>
-          <p class="op-card-desc">Badge access enforcement, emergency evacuation drills, and PSARA regulatory compliance.</p>
-          <span class="op-link-span">Expand Briefing <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Experience Log Section -->
-  <section id="experience">
-    <div class="section-header reveal">
-      <span class="section-tag-span">03 / Duty History</span>
-      <h2 class="section-title">Professional Experience Log</h2>
-    </div>
-
-    <div class="timeline reveal">
-      
-      <!-- Role 1 -->
-      <div class="timeline-item">
-        <span class="timeline-node-span"></span>
-        <span class="timeline-date-span">2025 – PRESENT</span>
-        <h3 class="timeline-role">Security Systems & Gate Control Operator</h3>
-        <p class="timeline-company"><span class="highlight-span">Innovision Limited</span> (Flipkart Kalash Warehouse - Mega Hub) | Patli, Haryana</p>
-        <ul class="timeline-details">
-          <li>Manage end-to-end gate security operations and digital GIGO systems for India's largest Flipkart hub.</li>
-          <li>Execute real-time MS Excel data entry for all inbound/outbound commercial fleets with 100% accuracy.</li>
-          <li>Conduct strict entry/exit verification for dock movement, driver credentials, and security access badges.</li>
-          <li>Perform active surveillance and perimeter monitoring to prevent stock shrinkage across warehouse zones.</li>
-        </ul>
-      </div>
-
-      <!-- Role 2 -->
-      <div class="timeline-item">
-        <span class="timeline-node-span"></span>
-        <span class="timeline-date-span">2023 – 2024</span>
-        <h3 class="timeline-role">Security Guard & Surveillance Operator</h3>
-        <p class="timeline-company"><span class="purple-span">A.P. Securitas Pvt. Ltd.</span> (Client Site: Ekart Logistics Pvt. Ltd.) | Haryana, India</p>
-        <ul class="timeline-details">
-          <li>Monitored multi-camera CCTV feeds, identifying suspicious activities and enforcing facility safety standards.</li>
-          <li>Conducted regular floor patrols, inventory spot checks, and fire safety inspections.</li>
-          <li>Operated emergency response equipment and maintained daily shift logs for management review.</li>
-        </ul>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section id="contact">
-    <div class="section-header reveal">
-      <span class="section-tag-span">04 / Transmission</span>
-      <h2 class="section-title">Send Direct Briefing</h2>
-    </div>
-
-    <div style="max-width: 720px; margin: 0 auto;" class="glass-card reveal">
-      <form onsubmit="handleDirectMessage(event)">
-        <div class="form-field">
-          <input type="text" id="contact-name" class="form-input" placeholder=" " required />
-          <label for="contact-name" class="form-label">Your Name / Organization</label>
-        </div>
-
-        <div class="form-field">
-          <input type="email" id="contact-email" class="form-input" placeholder=" " required />
-          <label for="contact-email" class="form-label">Work Email</label>
-        </div>
-
-        <div class="form-field">
-          <textarea id="contact-message" class="form-input" placeholder=" " required></textarea>
-          <label for="contact-message" class="form-label">Deployment Details & Notes</label>
-        </div>
-
-        <button type="submit" class="btn btn-hire" style="width: 100%; justify-content: center;">
-          <i class="fa-solid fa-paper-plane"></i> <span class="btn-text-span">Send Direct Briefing</span>
-        </button>
-      </form>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2026 <span class="highlight-span">Sumit Anand</span>. All Rights Reserved. | Rohtak, Haryana, India</p>
-  </footer>
-
-  <!-- Universal Interactive Modal (Hire Me & Operations) -->
-  <div class="modal-backdrop" id="modal-backdrop" onclick="closeModalOnBackdrop(event)">
-    <div class="modal-window" id="modal-window">
-      <button class="modal-close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
-      <div id="modal-content">
-        <!-- Dynamic Content Inserted via JS -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Toast Notification -->
-  <div class="toast-popup" id="toast-popup">
-    <i class="fa-solid fa-circle-check" style="color: var(--neon-green); font-size: 1.2rem;"></i>
-    <span id="toast-msg">Briefing transmitted successfully!</span>
-  </div>
-
-  <!-- JavaScript Interaction Logic -->
-  <script>
-    /* ==========================================================================
-       1. CYBER TRAILING CURSOR
-       ========================================================================== */
-    const cursorDot = document.querySelector('.cursor-dot');
-    const cursorRing = document.querySelector('.cursor-ring');
-    let mouseX = 0, mouseY = 0;
-    let ringX = 0, ringY = 0;
-
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      cursorDot.style.left = `${mouseX}px`;
-      cursorDot.style.top = `${mouseY}px`;
-    });
-
-    function renderCursor() {
-      ringX += (mouseX - ringX) * 0.15;
-      ringY += (mouseY - ringY) * 0.15;
-      cursorRing.style.left = `${ringX}px`;
-      cursorRing.style.top = `${ringY}px`;
-      requestAnimationFrame(renderCursor);
-    }
-    renderCursor();
-
-    document.querySelectorAll('a, button, .op-card, .glass-card').forEach(el => {
-      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
-    });
-
-    /* ==========================================================================
-       2. SCROLL PROGRESS
-       ========================================================================== */
-    window.addEventListener('scroll', () => {
-      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-      const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-      const progress = (scrollTop / scrollHeight) * 100;
-      document.getElementById('progress-bar').style.width = `${progress}%`;
-    });
-
-    /* ==========================================================================
-       3. CONSTELLATION / MATRIX CANVAS PARTICLES
-       ========================================================================== */
-    const canvas = document.getElementById('particles-canvas');
-    const ctx = canvas.getContext('2d');
-    let particlesArray = [];
-
-    function initCanvas() {
-      canvas.width = canvas.parentElement.clientWidth;
-      canvas.height = canvas.parentElement.clientHeight;
-    }
-    window.addEventListener('resize', initCanvas);
-    initCanvas();
-
-    class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 1;
-        this.speedX = (Math.random() - 0.5) * 0.8;
-        this.speedY = (Math.random() - 0.5) * 0.8;
-      }
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-      }
-      draw() {
-        ctx.fillStyle = 'rgba(0, 243, 255, 0.6)';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    for (let i = 0; i < 50; i++) {
-      particlesArray.push(new Particle());
-    }
-
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let i = 0; i < particlesArray.length; i++) {
-        particlesArray[i].update();
-        particlesArray[i].draw();
-        
-        for (let j = i; j < particlesArray.length; j++) {
-          const dx = particlesArray[i].x - particlesArray[j].x;
-          const dy = particlesArray[i].y - particlesArray[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            ctx.strokeStyle = `rgba(176, 38, 255, ${0.25 - dist/480})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
-            ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
-            ctx.stroke();
-          }
-        }
-      }
-      requestAnimationFrame(animateParticles);
-    }
-    animateParticles();
-
-    /* ==========================================================================
-       4. 3D CARD TILT EFFECT
-       ========================================================================== */
-    document.querySelectorAll('.op-card').forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-        const rotateX = (y - centerY) / 12;
-        const rotateY = (centerX - x) / 12;
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
-      });
-
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)`;
-      });
-    });
-
-    /* ==========================================================================
-       5. INTERACTIVE MODALS & WORKING "HIRE ME" FORM
-       ========================================================================== */
-    const opData = {
-      op1: {
-        title: "CP Plus Multi-Channel Surveillance Network",
-        img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1000&auto=format&fit=crop",
-        desc: "Configured and actively monitored CP Plus multi-channel camera arrays across high-density logistics hubs. Responsible for live feeds, footage archiving, playback investigation during incidents, and preventing stock shrinkage across warehouse zones."
-      },
-      op2: {
-        title: "Digital GIGO Gate & Data Entry Terminal",
-        img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop",
-        desc: "Managed high-density commercial vehicle logging and Goods-In/Goods-Out (GIGO) gate control for Flipkart's Kalash Mega Hub. Performed real-time MS Excel data entry, driver ID audits, dock allocation, and material gate pass clearance with zero operational error."
-      },
-      op3: {
-        title: "PSARA Compliance & Emergency Safety Protocols",
-        img: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1000&auto=format&fit=crop",
-        desc: "Enforced strict compliance with Private Security Agencies Regulation Act (PSARA) protocols. Conducted fire extinguisher inspections, led emergency evacuation drills, performed security badge audits, and maintained daily shift logs for management review."
-      }
-    };
-
-    function openOpModal(opKey) {
-      const data = opData[opKey];
-      if (!data) return;
-
-      const html = `
-        <img src="${data.img}" class="modal-img" alt="${data.title}" />
-        <h2 class="modal-title">${data.title}</h2>
-        <p class="modal-body-text">${data.desc}</p>
-        <button class="btn btn-hire" onclick="openHireModal()">
-          <i class="fa-solid fa-paper-plane"></i> <span class="btn-text-span">Discuss Deployment Offer</span>
-        </button>
-      `;
-
-      document.getElementById('modal-content').innerHTML = html;
-      document.getElementById('modal-backdrop').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    // ADVANCED WORKING HIRE ME MODAL
-    function openHireModal() {
-      const html = `
-        <div style="text-align: center; margin-bottom: 1.8rem;">
-          <span class="section-tag-span">Deployment Enquiry</span>
-          <h2 class="modal-title" style="margin-top: 0.4rem;">Hire <span class="highlight-span">Sumit Anand</span></h2>
-          <p style="color: var(--text-muted); font-size: 0.95rem;">Deploy a CCTV Operator & Gate Control Specialist to your hub.</p>
-        </div>
-
-        <form onsubmit="handleHireSubmit(event)">
-          <div class="form-field">
-            <input type="text" id="hire-name" class="form-input" placeholder=" " required />
-            <label for="hire-name" class="form-label">Your Name / Organization</label>
-          </div>
-
-          <div class="form-field">
-            <input type="email" id="hire-email" class="form-input" placeholder=" " required />
-            <label for="hire-email" class="form-label">Work Email</label>
-          </div>
-
-          <div class="form-field">
-            <input type="text" id="hire-role" class="form-input" placeholder=" " />
-            <label for="hire-role" class="form-label">Role Title / Location (e.g. CCTV Lead - Mega Hub)</label>
-          </div>
-
-          <div class="form-field">
-            <textarea id="hire-msg" class="form-input" placeholder=" " required></textarea>
-            <label for="hire-msg" class="form-label">Shift Details & Offer Note</label>
-          </div>
-
-          <button type="submit" class="btn btn-hire" style="width: 100%; justify-content: center;">
-            <i class="fa-solid fa-bolt"></i> <span class="btn-text-span">Submit Employment Proposal</span>
-          </button>
-        </form>
-      `;
-
-      document.getElementById('modal-content').innerHTML = html;
-      document.getElementById('modal-backdrop').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-      document.getElementById('modal-backdrop').classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
-
-    function closeModalOnBackdrop(e) {
-      if (e.target.id === 'modal-backdrop') closeModal();
-    }
-
-    /* ==========================================================================
-       6. FORM SUBMISSION HANDLERS
-       ========================================================================== */
-    function handleHireSubmit(e) {
-      e.preventDefault();
-      const name = document.getElementById('hire-name').value;
-      const email = document.getElementById('hire-email').value;
-      const role = document.getElementById('hire-role').value;
-      const msg = document.getElementById('hire-msg').value;
-
-      const mailtoSubject = encodeURIComponent(`Hire Proposal for Sumit Anand: ${role || 'Security Specialist'}`);
-      const mailtoBody = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nRole/Location: ${role}\n\nNote:\n${msg}`);
-
-      window.location.href = `mailto:sa8518430@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
-
-      closeModal();
-      showToast("Opening email application to send proposal!");
-    }
-
-    function handleDirectMessage(e) {
-      e.preventDefault();
-      const name = document.getElementById('contact-name').value;
-      const email = document.getElementById('contact-email').value;
-      const msg = document.getElementById('contact-message').value;
-
-      const mailtoSubject = encodeURIComponent(`Portfolio Message from ${name}`);
-      const mailtoBody = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${msg}`);
-
-      window.location.href = `mailto:sa8518430@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
-      e.target.reset();
-      showToast("Briefing pre-filled in your email application!");
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast-popup');
-      document.getElementById('toast-msg').textContent = msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 3500);
-    }
-
-    /* ==========================================================================
-       7. SCROLL REVEAL OBSERVER
-       ========================================================================== */
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
-      });
-    }, { threshold: 0.15 });
-
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  </script>
-</body>
-</html>
+    
