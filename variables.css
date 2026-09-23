@@ -75,9 +75,12 @@
   --status-live:      #ff3b5c;
   --status-live-rgb:  255, 59, 92;
   --status-online:    #00ff9c;
+  --status-online-rgb: 0, 255, 156;
   --status-offline:   #4a5468;
+  --status-offline-rgb: 74, 84, 104;
   --status-alert:     #ff3b5c;
   --status-warning:   #ffb703;
+  --status-warning-rgb: 255, 183, 3;
   --status-scanning:  #00e5ff;
 
   /* ==============================================================
