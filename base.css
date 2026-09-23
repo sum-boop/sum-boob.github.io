@@ -2,14 +2,17 @@
    BASE.CSS — Foundation Layer
    CCTV Command Center Portfolio
 
-   A quiet, disciplined surface: one narrative serif for the big
+   A quiet, disciplined surface. One narrative serif for the big
    moments, clean sans for reading, mono for system readouts.
-   Atmosphere (grid / grain / vignette / spotlight) stays subtle —
-   it should be felt more than seen.
+   Atmosphere (grid / grain / vignette / spotlight) is felt more
+   than seen — it should never compete with the content.
    ================================================================ */
 
 /* ================================================================
    1. RESET & BOX MODEL
+   Predictable layout everywhere. Strip browser defaults, inherit
+   typography into form controls, kill cursors because a custom
+   reticle is drawn on top by cursor.css.
    ================================================================ */
 *,
 *::before,
@@ -73,7 +76,13 @@ table {
 hr {
   border: none;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border-default) 20%, var(--border-default) 80%, transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--border-default) 20%,
+    var(--border-default) 80%,
+    transparent
+  );
   margin: var(--space-lg) 0;
 }
 
@@ -85,6 +94,9 @@ hr {
 
 /* ================================================================
    2. BODY SURFACE & ATMOSPHERE
+   Obsidian base, two soft radial glows, a cinematic vignette,
+   film grain, and an optional cursor spotlight. All overlays are
+   pointer-events: none so they never intercept interaction.
    ================================================================ */
 body {
   position: relative;
@@ -132,17 +144,21 @@ body::after {
   pointer-events: none;
 }
 
-/* A soft light that can trail the cursor across dark panels —
-   activated by toggling body.spotlight-active from script.js
-   and updating --mx / --my on mousemove. Degrades gracefully
-   if the script never touches it. */
+/* Soft light that follows the cursor across dark panels.
+   script.js toggles body.spotlight-active and updates --mx / --my
+   on mousemove. If the script never runs, this stays fully
+   transparent and no visual change occurs. */
 .cursor-spotlight {
   position: fixed;
   inset: 0;
   z-index: var(--z-base);
   pointer-events: none;
   opacity: 0;
-  background: radial-gradient(var(--spotlight-size) circle at var(--mx, 50%) var(--my, 40%), var(--spotlight-color), transparent 70%);
+  background: radial-gradient(
+    var(--spotlight-size) circle at var(--mx, 50%) var(--my, 40%),
+    var(--spotlight-color),
+    transparent 70%
+  );
   transition: opacity var(--duration-slower) var(--ease-smooth);
 }
 
@@ -152,9 +168,9 @@ body.spotlight-active .cursor-spotlight {
 
 /* ================================================================
    3. TYPOGRAPHY SYSTEM
-   Display (serif) → h1 / h2 narrative moments only
-   Body (sans)     → h3–h5, paragraphs, everything read at length
-   Mono            → h6, eyebrows, system labels
+   Display serif → h1 / h2 narrative moments only
+   Body sans     → h3–h5, paragraphs, everything read at length
+   Mono          → h6, eyebrows, system labels
    ================================================================ */
 h1, h2, h3, h4, h5 {
   color: var(--text-primary);
@@ -213,8 +229,8 @@ strong, b {
   color: var(--text-primary);
 }
 
-/* Inherits its context's color/family — an italic word inside a serif
-   headline should stay large and bright, not fade like body copy */
+/* Inherits its context's color and family — an italic word inside
+   a serif headline must stay large and bright, not fade like body copy */
 em, i {
   font-style: italic;
   color: inherit;
@@ -269,7 +285,9 @@ pre {
   color: var(--text-cyan);
 }
 
-.text-muted { color: var(--text-muted); }
+.text-muted {
+  color: var(--text-muted);
+}
 
 .text-glow {
   color: var(--accent-cyan);
@@ -278,6 +296,7 @@ pre {
 
 /* ================================================================
    4. SELECTION
+   Cyan signal fill so highlighting reads as part of the system.
    ================================================================ */
 ::selection {
   background: var(--accent-cyan-mid);
@@ -292,7 +311,9 @@ pre {
 }
 
 /* ================================================================
-   5. FOCUS STATES — accessible and on-theme
+   5. FOCUS STATES
+   Accessible and on-theme. The default outline is removed ONLY
+   because a visible cyan ring replaces it on :focus-visible.
    ================================================================ */
 :focus {
   outline: none;
@@ -312,6 +333,8 @@ select:focus-visible,
 
 /* ================================================================
    6. CUSTOM SCROLLBARS
+   Thin, cyan-accented, glowing on hover — reads as a system
+   readout rather than chrome.
    ================================================================ */
 html {
   scrollbar-width: thin;
@@ -351,7 +374,9 @@ html {
 }
 
 /* ================================================================
-   7. TACTICAL GRID OVERLAY — felt, not seen
+   7. TACTICAL GRID OVERLAY
+   A faint two-direction grid, masked so it fades toward the edges.
+   Felt, not seen — it should register only on the second look.
    ================================================================ */
 .hud-grid-overlay {
   position: fixed;
@@ -362,12 +387,22 @@ html {
     linear-gradient(var(--grid-line-color) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line-color) 1px, transparent 1px);
   background-size: var(--grid-line-size) var(--grid-line-size);
-  -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, #000 25%, transparent 100%);
-  mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, #000 25%, transparent 100%);
+  -webkit-mask-image: radial-gradient(
+    ellipse 85% 75% at 50% 35%,
+    #000 25%,
+    transparent 100%
+  );
+  mask-image: radial-gradient(
+    ellipse 85% 75% at 50% 35%,
+    #000 25%,
+    transparent 100%
+  );
 }
 
 /* ================================================================
-   8. SCANLINE — a single, slow surveillance sweep
+   8. SCANLINE
+   A single, slow horizontal sweep. One line, one pass, no
+   repetition stacks — a surveillance tell, not a screensaver.
    ================================================================ */
 .scanline {
   position: fixed;
@@ -377,11 +412,17 @@ html {
   height: 1px;
   z-index: var(--z-overlay);
   pointer-events: none;
-  background: linear-gradient(90deg, transparent 0%, var(--accent-cyan-soft) 20%, var(--accent-cyan) 50%, var(--accent-cyan-soft) 80%, transparent 100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--accent-cyan-soft) 20%,
+    var(--accent-cyan) 50%,
+    var(--accent-cyan-soft) 80%,
+    transparent 100%
+  );
   opacity: var(--scanline-opacity);
   box-shadow: var(--glow-cyan-sm);
-  animation: scanMove var(--duration-scan) linear infinite;
-  animation-duration: 9s;
+  animation: scanMove 9s linear infinite;
   will-change: top;
 }
 
@@ -393,7 +434,9 @@ html {
 }
 
 /* ================================================================
-   9. AMBIENT GLOW ORBS — soft, slow, mostly out of frame
+   9. AMBIENT GLOW ORBS
+   Soft, slow, mostly out of frame. They exist to break the flat
+   black of the background — nothing more.
    ================================================================ */
 .ambient-orb {
   position: fixed;
@@ -440,6 +483,7 @@ html {
 
 /* ================================================================
    10. LAYOUT PRIMITIVES
+   Container grid, screen-reader-only utilities, and the skip link.
    ================================================================ */
 .container {
   width: 100%;
@@ -489,6 +533,7 @@ html {
 
 /* ================================================================
    11. REDUCED MOTION
+   Kill motion, hide decorative atmosphere, honor the user.
    ================================================================ */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -511,6 +556,7 @@ html {
 
 /* ================================================================
    12. PRINT
+   Plain black on white. No atmosphere, no overlays.
    ================================================================ */
 @media print {
   body {
