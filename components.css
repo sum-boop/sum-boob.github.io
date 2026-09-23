@@ -633,7 +633,39 @@ nav {
 }
 
 /* ==========================================================================
-   8. RESPONSIVE
+   8. TOAST NOTIFICATION
+   ========================================================================== */
+.toast-popup {
+  position: fixed;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  z-index: var(--z-toast);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--border-green);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-size: var(--fs-sm);
+  box-shadow: var(--shadow-panel-lg), var(--glow-green-sm);
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  transform: translateY(24px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform var(--duration-slow) var(--ease-bounce),
+              opacity var(--duration-slow) var(--ease-smooth);
+}
+
+.toast-popup.show {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   9. RESPONSIVE
    ========================================================================== */
 @media (max-width: 768px) {
   .nav-links {
@@ -644,5 +676,10 @@ nav {
   }
   .btn {
     padding: 0.75rem 1.5rem;
+  }
+  .toast-popup {
+    left: var(--space-md);
+    right: var(--space-md);
+    bottom: var(--space-md);
   }
 }
