@@ -1,23 +1,173 @@
-    :root {
-      --bg-void: #020205;
-      --bg-card: rgba(8, 10, 18, 0.75);
-      --bg-card-hover: rgba(14, 18, 32, 0.9);
-      --border-cyan: rgba(0, 243, 255, 0.22);
-      --border-purple: rgba(176, 38, 255, 0.25);
-      
-      --neon-cyan: #00f3ff;
-      --neon-cyan-glow: rgba(0, 243, 255, 0.45);
-      --neon-purple: #b026ff;
-      --neon-purple-glow: rgba(176, 38, 255, 0.45);
-      --neon-green: #00ff88;
-      --neon-green-glow: rgba(0, 255, 136, 0.45);
-      --neon-amber: #ffb703;
+:root {
 
-      --text-main: #f0f4ff;
-      --text-muted: #838dae;
-      
-      --font-heading: 'Syne', sans-serif;
-      --font-body: 'Space Grotesk', sans-serif;
-      --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
+  /* ============================================================
+     BACKGROUNDS — obsidian depth scale
+     ============================================================ */
+  --bg-void: #05070d;
+  --bg-base: #0a0f1d;
+  --bg-elevated: #0d1424;
+  --bg-surface: #101a2e;
+  --bg-surface-hover: #142238;
+
+  /* Glass panel surfaces */
+  --glass-bg: rgba(13, 20, 36, 0.55);
+  --glass-bg-strong: rgba(13, 20, 36, 0.78);
+  --glass-bg-hover: rgba(20, 34, 56, 0.85);
+  --glass-blur: 18px;
+  --glass-blur-strong: 32px;
+  --glass-saturate: 140%;
+
+  /* ============================================================
+     NEON ACCENTS
+     ============================================================ */
+  --neon-cyan: #00e5ff;
+  --neon-cyan-rgb: 0, 229, 255;
+  --neon-cyan-glow: rgba(0, 229, 255, 0.45);
+  --neon-cyan-glow-soft: rgba(0, 229, 255, 0.18);
+
+  --neon-blue: #2979ff;
+  --neon-blue-rgb: 41, 121, 255;
+  --neon-blue-glow: rgba(41, 121, 255, 0.4);
+
+  --neon-green: #00ff9c;
+  --neon-green-rgb: 0, 255, 156;
+  --neon-green-glow: rgba(0, 255, 156, 0.45);
+  --neon-green-glow-soft: rgba(0, 255, 156, 0.18);
+
+  /* Reserved secondary accent for rare highlight use */
+  --neon-violet: #9d4dff;
+  --neon-violet-rgb: 157, 77, 255;
+  --neon-violet-glow: rgba(157, 77, 255, 0.4);
+
+  /* ============================================================
+     STATUS COLORS — surveillance/system states
+     ============================================================ */
+  --status-online: #00ff9c;
+  --status-online-glow: rgba(0, 255, 156, 0.5);
+  --status-offline: #4a5468;
+  --status-offline-glow: rgba(74, 84, 104, 0.3);
+  --status-alert: #ff3b5c;
+  --status-alert-glow: rgba(255, 59, 92, 0.55);
+  --status-warning: #ffb703;
+  --status-warning-glow: rgba(255, 183, 3, 0.45);
+  --status-scanning: #00e5ff;
+  --status-scanning-glow: rgba(0, 229, 255, 0.5);
+  --status-recording: #ff3b5c;
+
+  /* ============================================================
+     TEXT
+     ============================================================ */
+  --text-primary: #eaf2ff;
+  --text-secondary: #9fb0c9;
+  --text-muted: #5e6c85;
+  --text-disabled: #3a4358;
+  --text-on-accent: #04101a;
+
+  /* ============================================================
+     BORDERS
+     ============================================================ */
+  --border-subtle: rgba(159, 176, 201, 0.08);
+  --border-default: rgba(159, 176, 201, 0.14);
+  --border-cyan: rgba(0, 229, 255, 0.28);
+  --border-cyan-strong: rgba(0, 229, 255, 0.55);
+  --border-green: rgba(0, 255, 156, 0.28);
+  --border-alert: rgba(255, 59, 92, 0.4);
+
+  /* ============================================================
+     GLOW / SHADOW TOKENS
+     ============================================================ */
+  --glow-cyan-sm: 0 0 8px var(--neon-cyan-glow-soft);
+  --glow-cyan-md: 0 0 20px var(--neon-cyan-glow);
+  --glow-cyan-lg: 0 0 40px var(--neon-cyan-glow), 0 0 80px var(--neon-cyan-glow-soft);
+  --glow-green-md: 0 0 20px var(--neon-green-glow);
+  --glow-alert-md: 0 0 20px var(--status-alert-glow);
+  --text-glow-cyan: 0 0 12px var(--neon-cyan-glow);
+  --text-glow-green: 0 0 12px var(--neon-green-glow);
+
+  --shadow-panel: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --shadow-panel-lg: 0 16px 60px rgba(0, 0, 0, 0.6);
+  --shadow-inset-hairline: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  /* ============================================================
+     TYPOGRAPHY
+     ============================================================ */
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --font-heading: var(--font-mono);
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-base: 1rem;
+  --fs-md: 1.125rem;
+  --fs-lg: 1.375rem;
+  --fs-xl: 1.75rem;
+  --fs-2xl: 2.25rem;
+  --fs-3xl: 3rem;
+  --fs-4xl: 4rem;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  --lh-tight: 1.15;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.7;
+
+  --ls-tight: -0.01em;
+  --ls-normal: 0;
+  --ls-wide: 0.04em;
+  --ls-widest: 0.12em;
+
+  /* ============================================================
+     SPACING SCALE
+     ============================================================ */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4.5rem;
+  --space-3xl: 7rem;
+
+  /* ============================================================
+     RADIUS
+     ============================================================ */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-xl: 22px;
+  --radius-full: 999px;
+
+  /* ============================================================
+     MOTION
+     ============================================================ */
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-sharp: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --duration-fast: 150ms;
+  --duration-base: 280ms;
+  --duration-slow: 500ms;
+  --duration-scan: 2400ms;
+
+  /* ============================================================
+     LAYOUT / MISC UTILITIES
+     ============================================================ */
+  --container-max: 1280px;
+  --header-height: 72px;
+  --grid-line-color: rgba(0, 229, 255, 0.06);
+  --grid-line-size: 40px;
+  --noise-opacity: 0.03;
+  --scanline-opacity: 0.05;
+
+  /* Z-index scale */
+  --z-base: 1;
+  --z-panel: 10;
+  --z-overlay: 100;
+  --z-modal: 1000;
+  --z-toast: 1100;
+  --z-cursor: 9999;
+}
