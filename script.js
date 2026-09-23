@@ -426,18 +426,82 @@ function showToast(msg) {
 /* ==========================================================================
    9. SCROLL REVEAL OBSERVER
    ========================================================================== */
+// Stagger children inside any [data-stagger] container so they cascade in
+// one after another instead of all animating at once.
+document.querySelectorAll('[data-stagger]').forEach(group => {
+  const staggerChildren = Array.from(
+    group.querySelectorAll(':scope > .reveal, :scope > .reveal-left, :scope > .reveal-right, :scope > .reveal-scale, :scope > .reveal-scan')
+  );
+  staggerChildren.forEach((child, i) => {
+    child.style.transitionDelay = `${i * 90}ms`;
+  });
+});
+
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add('active');
+      // Animate once, then stop watching — avoids unnecessary work on scroll
+      revealObserver.unobserve(entry.target);
     }
   });
-}, { threshold: 0.15 });
+}, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
 
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+document
+  .querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-scan, .reveal-decode')
+  .forEach(el => revealObserver.observe(el));
 
 /* ==========================================================================
-   10. KEYBOARD SHORTCUTS
+   10. HERO PARALLAX ON SCROLL
+   ========================================================================== */
+const heroContent = document.querySelector('.hero-content');
+
+if (heroContent && supportsFinePointer) {
+  let parallaxTicking = false;
+
+  function updateParallax() {
+    const scrollY = window.scrollY;
+    heroContent.style.transform = `translateY(${scrollY * 0.15}px)`;
+    heroContent.style.opacity = Math.max(0, 1 - scrollY / 600);
+    parallaxTicking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!parallaxTicking) {
+      requestAnimationFrame(updateParallax);
+      parallaxTicking = true;
+    }
+  }, { passive: true });
+
+  updateParallax(); // sync immediately in case the page loads mid-scroll
+}
+
+/* ==========================================================================
+   11. SCROLL-SPY NAVIGATION
+   ========================================================================== */
+const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+
+if (navLinks.length) {
+  const sectionMap = new Map();
+  navLinks.forEach(link => {
+    const section = document.querySelector(link.getAttribute('href'));
+    if (section) sectionMap.set(section, link);
+  });
+
+  const spyObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const link = sectionMap.get(entry.target);
+      if (!link || !entry.isIntersecting) return;
+      navLinks.forEach(l => l.classList.remove('is-current'));
+      link.classList.add('is-current');
+    });
+  }, { threshold: 0, rootMargin: '-45% 0px -50% 0px' });
+
+  sectionMap.forEach((_, section) => spyObserver.observe(section));
+}
+
+/* ==========================================================================
+   12. KEYBOARD SHORTCUTS
    ========================================================================== */
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
@@ -447,4 +511,4 @@ document.addEventListener('keydown', (e) => {
     }
   }
 });
-        
+         
