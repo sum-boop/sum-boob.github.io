@@ -1,368 +1,295 @@
-/* ============================================================
+/* ================================================================
    CCTV COMMAND CENTER — DESIGN TOKENS
    variables.css
-   Aesthetic: cinematic surveillance / dark glass / neon precision
-   ============================================================ */
+
+   Direction: editorial precision meets control-room technicality.
+   A serif carries the big narrative moments; mono carries system
+   readouts (tags, timestamps, status); sans carries everything you
+   read. Neon is a signal, not a wallpaper — most of the interface
+   should read as quiet obsidian, with color reserved for the one
+   thing that matters on screen.
+   ================================================================ */
 
 :root {
 
-  /* ============================================================
-     1. BACKGROUNDS — obsidian depth scale
-     ============================================================ */
-  --bg-void:            #04060b;
-  --bg-base:            #070b16;
-  --bg-elevated:        #0b1120;
-  --bg-surface:         #0f172b;
-  --bg-surface-hover:   #131d34;
-  --bg-surface-active:  #172340;
-  --bg-inset:           #050810;
+  /* ==============================================================
+     1. CORE PALETTE — obsidian depth scale
+     ============================================================== */
+  --bg-void:           #030405;
+  --bg-base:            #07080b;
+  --bg-elevated:        #0c0e13;
+  --bg-surface:         #12141b;
+  --bg-surface-hover:   #171a23;
+  --bg-surface-active:  #1c202b;
+  --bg-inset:           #020203;
 
-  /* Gradient atmospheres */
-  --bg-radial-cyan:     radial-gradient(circle at 50% 0%, rgba(0, 229, 255, 0.08), transparent 60%);
-  --bg-radial-green:    radial-gradient(circle at 50% 100%, rgba(0, 255, 156, 0.06), transparent 60%);
-  --bg-vignette:        radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
+  /* Atmosphere — used once or twice per page, never tiled everywhere */
+  --bg-radial-cyan:   radial-gradient(circle at 50% 0%, rgba(0, 229, 255, 0.07), transparent 62%);
+  --bg-radial-green:  radial-gradient(circle at 50% 100%, rgba(0, 255, 156, 0.05), transparent 62%);
+  --bg-vignette:       radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.6) 100%);
 
-  /* Glass panel surfaces */
-  --glass-bg:           rgba(11, 17, 32, 0.55);
-  --glass-bg-strong:    rgba(11, 17, 32, 0.78);
-  --glass-bg-soft:      rgba(11, 17, 32, 0.35);
-  --glass-bg-hover:     rgba(19, 29, 52, 0.85);
-  --glass-border:       rgba(159, 176, 201, 0.10);
-  --glass-border-strong:rgba(159, 176, 201, 0.18);
-  --glass-highlight:    rgba(255, 255, 255, 0.06);
-  --glass-blur:         18px;
-  --glass-blur-strong:  32px;
-  --glass-blur-soft:    10px;
-  --glass-saturate:     140%;
+  /* ==============================================================
+     2. GLASS SURFACES
+     ============================================================== */
+  --glass-bg:             rgba(12, 14, 19, 0.52);
+  --glass-bg-strong:      rgba(12, 14, 19, 0.80);
+  --glass-bg-soft:        rgba(12, 14, 19, 0.30);
+  --glass-bg-hover:       rgba(23, 26, 35, 0.85);
+  --glass-border:         rgba(200, 212, 230, 0.08);
+  --glass-border-strong:  rgba(200, 212, 230, 0.16);
+  --glass-highlight:      rgba(255, 255, 255, 0.05);
+  --glass-blur:           16px;
+  --glass-blur-strong:    28px;
+  --glass-blur-soft:      8px;
+  --glass-saturate:       130%;
 
-  /* ============================================================
-     2. NEON ACCENTS
-     ============================================================ */
-  --neon-cyan:            #00e5ff;
-  --neon-cyan-rgb:        0, 229, 255;
-  --neon-cyan-glow:       rgba(0, 229, 255, 0.45);
-  --neon-cyan-glow-soft:  rgba(0, 229, 255, 0.18);
-  --neon-cyan-glow-hard:  rgba(0, 229, 255, 0.70);
+  /* ==============================================================
+     3. ACCENT SYSTEM
+     Cyan is primary — reserve it for the single most important
+     signal in any given view (live status, active nav, primary CTA).
+     Green means "operational/good." Violet is a rare tertiary,
+     used once per page at most, never for interactive states.
+     ============================================================== */
+  --accent-cyan:       #00e5ff;
+  --accent-cyan-rgb:   0, 229, 255;
+  --accent-cyan-soft:  rgba(0, 229, 255, 0.16);
+  --accent-cyan-mid:   rgba(0, 229, 255, 0.38);
 
-  --neon-blue:            #2979ff;
-  --neon-blue-rgb:        41, 121, 255;
-  --neon-blue-glow:       rgba(41, 121, 255, 0.40);
-  --neon-blue-glow-soft:  rgba(41, 121, 255, 0.18);
+  --accent-green:      #00ff9c;
+  --accent-green-rgb:  0, 255, 156;
+  --accent-green-soft: rgba(0, 255, 156, 0.16);
+  --accent-green-mid:  rgba(0, 255, 156, 0.38);
 
-  --neon-green:           #00ff9c;
-  --neon-green-rgb:       0, 255, 156;
-  --neon-green-glow:      rgba(0, 255, 156, 0.45);
-  --neon-green-glow-soft: rgba(0, 255, 156, 0.18);
-  --neon-green-glow-hard: rgba(0, 255, 156, 0.70);
+  --accent-violet:     #a78bfa;
+  --accent-violet-rgb: 167, 139, 250;
+  --accent-violet-soft:rgba(167, 139, 250, 0.16);
 
-  --neon-violet:          #9d4dff;
-  --neon-violet-rgb:      157, 77, 255;
-  --neon-violet-glow:     rgba(157, 77, 255, 0.40);
+  /* Legacy aliases kept for cross-file compatibility */
+  --neon-cyan:   var(--accent-cyan);
+  --neon-green:  var(--accent-green);
+  --neon-violet: var(--accent-violet);
 
-  --neon-amber:           #ffb703;
-  --neon-amber-rgb:       255, 183, 3;
-  --neon-amber-glow:      rgba(255, 183, 3, 0.45);
+  /* ==============================================================
+     4. STATUS COLORS — system states
+     ============================================================== */
+  --status-live:      #ff3b5c;
+  --status-live-rgb:  255, 59, 92;
+  --status-online:    #00ff9c;
+  --status-offline:   #4a5468;
+  --status-alert:     #ff3b5c;
+  --status-warning:   #ffb703;
+  --status-scanning:  #00e5ff;
 
-  /* ============================================================
-     3. STATUS COLORS — surveillance / system states
-     ============================================================ */
-  --status-online:          #00ff9c;
-  --status-online-rgb:      0, 255, 156;
-  --status-online-glow:     rgba(0, 255, 156, 0.50);
+  /* ==============================================================
+     5. GLOW TOKENS — deliberately short list
+     Three weights per color is enough. Use --glow-signal only for
+     the one hero moment on a page (a single button, a single badge).
+     ============================================================== */
+  --glow-cyan-sm:  0 0 10px var(--accent-cyan-soft);
+  --glow-cyan-md:  0 0 24px var(--accent-cyan-mid);
+  --glow-cyan-lg:  0 0 48px var(--accent-cyan-mid), 0 0 90px var(--accent-cyan-soft);
 
-  --status-offline:         #4a5468;
-  --status-offline-rgb:     74, 84, 104;
-  --status-offline-glow:    rgba(74, 84, 104, 0.30);
+  --glow-green-sm: 0 0 10px var(--accent-green-soft);
+  --glow-green-md: 0 0 24px var(--accent-green-mid);
 
-  --status-alert:           #ff3b5c;
-  --status-alert-rgb:       255, 59, 92;
-  --status-alert-glow:      rgba(255, 59, 92, 0.55);
+  --glow-alert-md: 0 0 22px rgba(var(--status-live-rgb), 0.5);
 
-  --status-warning:         #ffb703;
-  --status-warning-rgb:     255, 183, 3;
-  --status-warning-glow:    rgba(255, 183, 3, 0.45);
+  --glow-signal:   0 0 60px var(--accent-cyan-mid), 0 0 140px var(--accent-cyan-soft);
 
-  --status-scanning:        #00e5ff;
-  --status-scanning-rgb:    0, 229, 255;
-  --status-scanning-glow:   rgba(0, 229, 255, 0.50);
+  --text-glow-cyan:   0 0 14px var(--accent-cyan-mid);
+  --text-glow-green:  0 0 14px var(--accent-green-mid);
 
-  --status-recording:       #ff3b5c;
-  --status-recording-rgb:   255, 59, 92;
-  --status-recording-glow:  rgba(255, 59, 92, 0.65);
+  /* Panel depth */
+  --shadow-panel:     0 8px 30px rgba(0, 0, 0, 0.5);
+  --shadow-panel-lg:  0 20px 70px rgba(0, 0, 0, 0.65);
+  --shadow-hairline:  inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-hover:     0 20px 60px rgba(0, 0, 0, 0.55), 0 0 30px var(--accent-cyan-soft), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
-  --status-standby:         #9fb0c9;
-  --status-standby-rgb:     159, 176, 201;
+  /* ==============================================================
+     6. TEXT HIERARCHY
+     ============================================================== */
+  --text-primary:    #f2f5fa;
+  --text-secondary:  #a6b3c7;
+  --text-tertiary:   #79869c;
+  --text-muted:      #4d5768;
+  --text-on-accent:  #04101a;
+  --text-cyan:       #7fe8ff;
+  --text-green:      #7fffc4;
 
-  /* ============================================================
-     4. TEXT HIERARCHY
-     ============================================================ */
-  --text-primary:       #eaf2ff;
-  --text-secondary:     #9fb0c9;
-  --text-tertiary:      #7d8ba3;
-  --text-muted:         #5e6c85;
-  --text-disabled:      #3a4358;
-  --text-on-accent:     #04101a;
-  --text-cyan:          #7df0ff;
-  --text-green:         #7dffc8;
+  /* ==============================================================
+     7. BORDERS
+     ============================================================== */
+  --border-subtle:       rgba(200, 212, 230, 0.06);
+  --border-default:      rgba(200, 212, 230, 0.12);
+  --border-strong:       rgba(200, 212, 230, 0.22);
+  --border-cyan:         rgba(0, 229, 255, 0.25);
+  --border-cyan-strong:  rgba(0, 229, 255, 0.55);
+  --border-green:        rgba(0, 255, 156, 0.25);
+  --border-alert:        rgba(255, 59, 92, 0.40);
 
-  /* ============================================================
-     5. BORDERS
-     ============================================================ */
-  --border-subtle:        rgba(159, 176, 201, 0.08);
-  --border-default:       rgba(159, 176, 201, 0.14);
-  --border-strong:        rgba(159, 176, 201, 0.24);
-  --border-cyan:          rgba(0, 229, 255, 0.28);
-  --border-cyan-strong:   rgba(0, 229, 255, 0.55);
-  --border-green:         rgba(0, 255, 156, 0.28);
-  --border-green-strong:  rgba(0, 255, 156, 0.55);
-  --border-alert:         rgba(255, 59, 92, 0.40);
-  --border-warning:       rgba(255, 183, 3, 0.40);
-
-  /* ============================================================
-     6. GLOW / SHADOW TOKENS
-     ============================================================ */
-  /* Box glows */
-  --glow-cyan-xs:  0 0 4px  var(--neon-cyan-glow-soft);
-  --glow-cyan-sm:  0 0 8px  var(--neon-cyan-glow-soft);
-  --glow-cyan-md:  0 0 20px var(--neon-cyan-glow);
-  --glow-cyan-lg:  0 0 40px var(--neon-cyan-glow), 0 0 80px var(--neon-cyan-glow-soft);
-  --glow-cyan-xl:  0 0 60px var(--neon-cyan-glow), 0 0 120px var(--neon-cyan-glow-soft);
-
-  --glow-green-sm: 0 0 8px  var(--neon-green-glow-soft);
-  --glow-green-md: 0 0 20px var(--neon-green-glow);
-  --glow-green-lg: 0 0 40px var(--neon-green-glow), 0 0 80px var(--neon-green-glow-soft);
-
-  --glow-alert-sm: 0 0 8px  var(--status-alert-glow);
-  --glow-alert-md: 0 0 20px var(--status-alert-glow);
-  --glow-alert-lg: 0 0 40px var(--status-alert-glow);
-
-  --glow-warning-md: 0 0 20px var(--status-warning-glow);
-
-  /* Text glows */
-  --text-glow-cyan:      0 0 12px var(--neon-cyan-glow);
-  --text-glow-cyan-soft: 0 0 8px  var(--neon-cyan-glow-soft);
-  --text-glow-green:     0 0 12px var(--neon-green-glow);
-  --text-glow-alert:     0 0 12px var(--status-alert-glow);
-  --text-glow-strong:    0 0 6px currentColor, 0 0 18px currentColor;
-
-  /* Panel shadows */
-  --shadow-panel:       0 8px 32px rgba(0, 0, 0, 0.45);
-  --shadow-panel-lg:    0 16px 60px rgba(0, 0, 0, 0.60);
-  --shadow-panel-xl:    0 24px 90px rgba(0, 0, 0, 0.75);
-  --shadow-inset-hairline: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  --shadow-inset-deep:     inset 0 2px 12px rgba(0, 0, 0, 0.55);
-
-  /* Composite panel (border glow + depth) */
-  --panel-shadow-default: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  --panel-shadow-hover:   0 16px 48px rgba(0, 0, 0, 0.55), 0 0 24px var(--neon-cyan-glow-soft), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-
-  /* ============================================================
-     7. TYPOGRAPHY
-     ============================================================ */
+  /* ==============================================================
+     8. TYPOGRAPHY — three-tier system
+     Display  → editorial serif, large narrative moments only
+     Body     → clean sans, everything a visitor actually reads
+     Mono     → system readouts — tags, timestamps, labels, badges
+     ============================================================== */
+  --font-display: 'Instrument Serif', 'Georgia', 'Times New Roman', serif;
   --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --font-mono:    'JetBrains Mono', 'Fira Code', 'SFMono-Regular', ui-monospace, monospace;
-  --font-display: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
-  --font-heading: var(--font-mono);
-
-  /* Fluid type scale */
-  --fs-2xs: 0.6875rem;   /* 11px */
-  --fs-xs:  0.75rem;     /* 12px */
-  --fs-sm:  0.875rem;    /* 14px */
-  --fs-base:1rem;        /* 16px */
-  --fs-md:  1.125rem;    /* 18px */
-  --fs-lg:  1.375rem;    /* 22px */
-  --fs-xl:  1.75rem;     /* 28px */
-  --fs-2xl: 2.25rem;     /* 36px */
-  --fs-3xl: 3rem;        /* 48px */
-  --fs-4xl: 4rem;        /* 64px */
-  --fs-5xl: 5.25rem;     /* 84px */
+  --font-mono:    'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 
   /* Fluid display sizes */
-  --fs-hero:      clamp(2.5rem, 6vw + 1rem, 5.5rem);
-  --fs-section:   clamp(1.75rem, 3vw + 1rem, 3rem);
-  --fs-subtitle:  clamp(1.05rem, 1.2vw + 0.75rem, 1.375rem);
+  --fs-hero:      clamp(3rem, 5vw + 1.5rem, 7.5rem);
+  --fs-display:   clamp(2.25rem, 3vw + 1.25rem, 4.5rem);
+  --fs-section:   clamp(1.75rem, 2vw + 1rem, 2.75rem);
+  --fs-subtitle:  clamp(1.05rem, 0.6vw + 0.85rem, 1.375rem);
 
-  /* Weights */
-  --fw-light:    300;
+  /* Static scale — UI text, labels, body copy */
+  --fs-2xs: 0.6875rem;
+  --fs-xs:  0.75rem;
+  --fs-sm:  0.875rem;
+  --fs-base:1rem;
+  --fs-md:  1.125rem;
+  --fs-lg:  1.375rem;
+  --fs-xl:  1.75rem;
+
   --fw-regular:  400;
   --fw-medium:   500;
   --fw-semibold: 600;
   --fw-bold:     700;
-  --fw-black:    800;
 
-  /* Line heights */
-  --lh-tight:   1.15;
-  --lh-snug:    1.35;
+  --lh-tight:   1.05;
+  --lh-snug:    1.3;
   --lh-normal:  1.5;
   --lh-relaxed: 1.7;
-  --lh-loose:   1.9;
 
-  /* Letter spacing */
   --ls-tightest: -0.03em;
   --ls-tight:    -0.01em;
   --ls-normal:   0;
   --ls-wide:     0.04em;
-  --ls-wider:    0.08em;
-  --ls-widest:   0.12em;
-  --ls-mono:     0.16em;
+  --ls-wider:    0.1em;
+  --ls-widest:   0.18em;
 
-  /* ============================================================
-     8. SPACING SCALE
-     ============================================================ */
-  --space-4xs: 0.125rem;
+  /* ==============================================================
+     9. SPACING & LAYOUT — generous, editorial rhythm
+     ============================================================== */
   --space-3xs: 0.25rem;
   --space-2xs: 0.5rem;
   --space-xs:  0.75rem;
   --space-sm:  1rem;
   --space-md:  1.5rem;
-  --space-lg:  2rem;
-  --space-xl:  3rem;
-  --space-2xl: 4.5rem;
-  --space-3xl: 7rem;
-  --space-4xl: 10rem;
+  --space-lg:  2.25rem;
+  --space-xl:  3.5rem;
+  --space-2xl: 5.5rem;
+  --space-3xl: 8rem;
+  --space-4xl: 12rem;
 
-  /* Layout */
-  --container-max:   1280px;
-  --container-wide:  1440px;
-  --container-narrow:880px;
-  --gutter:          clamp(1.25rem, 4vw, 3rem);
-  --header-height:   72px;
+  --container-max:    1280px;
+  --container-narrow: 760px;
+  --gutter:           clamp(1.5rem, 5vw, 5rem);
+  --header-height:    76px;
 
-  /* ============================================================
-     9. RADIUS
-     ============================================================ */
-  --radius-xs:   2px;
-  --radius-sm:   4px;
-  --radius-md:   8px;
-  --radius-lg:   14px;
-  --radius-xl:   22px;
-  --radius-2xl:  32px;
+  /* ==============================================================
+     10. RADIUS
+     ============================================================== */
+  --radius-xs:   3px;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   16px;
+  --radius-xl:   26px;
   --radius-full: 999px;
 
-  /* ============================================================
-     10. MOTION
-     ============================================================ */
-  --ease-smooth:  cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-sharp:   cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-bounce:  cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-in-out:  cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in:      cubic-bezier(0.7, 0, 0.84, 0);
+  /* ==============================================================
+     11. MOTION
+     ============================================================== */
+  --ease-smooth:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-sharp:     cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-bounce:    cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  --duration-instant: 80ms;
-  --duration-fast:    150ms;
-  --duration-base:    280ms;
-  --duration-medium:  400ms;
-  --duration-slow:    500ms;
-  --duration-slower:  800ms;
+  --duration-fast:   150ms;
+  --duration-base:   300ms;
+  --duration-slow:   550ms;
+  --duration-slower: 900ms;
 
-  /* Signature timings */
-  --duration-scan:    2400ms;
-  --duration-pulse:   1800ms;
-  --duration-blip:    1200ms;
-  --duration-flicker: 3600ms;
+  --duration-scan:  2400ms;
+  --duration-pulse: 1800ms;
 
-  /* ============================================================
-     11. ATMOSPHERE / OVERLAYS
-     ============================================================ */
-  --grid-line-color:     rgba(0, 229, 255, 0.06);
-  --grid-line-color-major: rgba(0, 229, 255, 0.10);
-  --grid-line-size:      40px;
-  --grid-line-size-major:200px;
-  --noise-opacity:       0.03;
-  --scanline-opacity:    0.05;
-  --scanline-gap:        3px;
-  --scanline-color:      rgba(0, 229, 255, 0.05);
-  --vignette-opacity:    0.6;
+  /* ==============================================================
+     12. ATMOSPHERE — kept quiet by default
+     ============================================================== */
+  --grid-line-color:  rgba(0, 229, 255, 0.05);
+  --grid-line-size:   44px;
+  --scanline-opacity: 0.04;
+  --vignette-opacity: 0.55;
 
-  /* ============================================================
-     12. CURSOR / RETICLE
-     ============================================================ */
-  --cursor-size:        28px;
-  --cursor-size-lg:     56px;
-  --cursor-dot:         3px;
-  --cursor-color:       var(--neon-cyan);
-  --cursor-color-alt:   var(--neon-green);
-  --cursor-ring-width:  1.5px;
-  --cursor-blend:       screen;
+  /* Fine film-grain texture, applied at very low opacity for depth */
+  --grain-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'%3E%3C/feTurbulence%3E%3CfeColorMatrix type='saturate' values='0'%3E%3C/feColorMatrix%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'%3E%3C/rect%3E%3C/svg%3E");
+  --grain-opacity: 0.035;
 
-  /* ============================================================
-     13. Z-INDEX SCALE
-     ============================================================ */
-  --z-hide:      -1;
-  --z-base:       1;
-  --z-content:    5;
-  --z-panel:      10;
-  --z-sticky:     50;
-  --z-header:     60;
-  --z-overlay:    100;
-  --z-drawer:     200;
-  --z-modal:      1000;
-  --z-toast:      1100;
-  --z-cursor:     9999;
+  /* Soft light that can follow the cursor across a dark panel */
+  --spotlight-size:  520px;
+  --spotlight-color: rgba(0, 229, 255, 0.07);
 
-  /* ============================================================
-     14. FOCUS / ACCESSIBILITY
-     ============================================================ */
-  --focus-ring:        0 0 0 2px var(--bg-base), 0 0 0 4px var(--neon-cyan);
-  --focus-ring-soft:   0 0 0 3px var(--neon-cyan-glow-soft);
-  --focus-outline:     2px solid var(--neon-cyan);
-  --focus-offset:      2px;
+  /* ==============================================================
+     13. CURSOR / RETICLE
+     ============================================================== */
+  --cursor-size:       26px;
+  --cursor-size-lg:    58px;
+  --cursor-dot:        4px;
+  --cursor-color:      var(--accent-cyan);
+  --cursor-color-alt:  var(--accent-green);
+  --cursor-ring-width: 1px;
 
-  /* ============================================================
-     15. MISC UTILITIES
-     ============================================================ */
-  --hud-corner-size:   14px;
-  --hud-corner-width:  1.5px;
-  --hud-corner-color:  var(--neon-cyan);
-  --hud-tick-length:   6px;
+  /* ==============================================================
+     14. IMAGE TREATMENT
+     Photography stays desaturated at rest, resolves to full color
+     on hover/focus — reads as "footage coming online."
+     ============================================================== */
+  --image-filter-rest:  grayscale(0.55) contrast(1.05) brightness(0.92);
+  --image-filter-hover: grayscale(0) contrast(1.02) brightness(1);
 
-  --noise-tint:        rgba(0, 229, 255, 0.015);
-  --divider-color:     var(--border-subtle);
-  --divider-gradient:  linear-gradient(90deg, transparent, var(--border-default) 20%, var(--border-default) 80%, transparent);
+  /* ==============================================================
+     15. Z-INDEX SCALE
+     ============================================================== */
+  --z-base:     1;
+  --z-content:  5;
+  --z-panel:    10;
+  --z-header:   60;
+  --z-overlay:  100;
+  --z-modal:    1000;
+  --z-toast:    1100;
+  --z-cursor:   9999;
 
-  --backdrop-blur:     blur(12px) saturate(140%);
-  --backdrop-blur-strong: blur(24px) saturate(160%);
+  /* ==============================================================
+     16. FOCUS / ACCESSIBILITY
+     ============================================================== */
+  --focus-ring:      0 0 0 2px var(--bg-base), 0 0 0 4px var(--accent-cyan);
+  --focus-ring-soft: 0 0 0 3px var(--accent-cyan-soft);
 }
 
-/* ============================================================
-   DARK MODE SUPPORT — future-proof
-   ============================================================ */
-@media (prefers-color-scheme: light) {
-  :root {
-    /* Intentionally locked to dark — surveillance interfaces
-       should never invert. Declared for spec compliance. */
-  }
-}
-
-/* ============================================================
+/* ==================================================================
    REDUCED MOTION — respects user preference
-   ============================================================ */
+   ================================================================== */
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --duration-instant: 0ms;
-    --duration-fast:    0ms;
-    --duration-base:    0ms;
-    --duration-medium:  0ms;
-    --duration-slow:    0ms;
-    --duration-slower:  0ms;
-    --duration-scan:    0ms;
-    --duration-pulse:   0ms;
-    --duration-blip:    0ms;
-    --duration-flicker: 0ms;
+    --duration-fast:   0ms;
+    --duration-base:   0ms;
+    --duration-slow:   0ms;
+    --duration-slower: 0ms;
+    --duration-scan:   0ms;
+    --duration-pulse:  0ms;
   }
 }
 
-/* ============================================================
+/* ==================================================================
    HIGH CONTRAST MODE
-   ============================================================ */
+   ================================================================== */
 @media (prefers-contrast: more) {
   :root {
-    --text-primary:     #ffffff;
-    --text-secondary:   #c8d6ea;
-    --border-default:   rgba(200, 214, 234, 0.35);
-    --border-strong:    rgba(200, 214, 234, 0.55);
-    --glass-bg:         rgba(7, 11, 22, 0.85);
-    --glass-bg-strong:  rgba(7, 11, 22, 0.95);
+    --text-primary:   #ffffff;
+    --text-secondary: #d6dfec;
+    --border-default: rgba(214, 223, 236, 0.35);
+    --glass-bg:        rgba(7, 8, 11, 0.9);
+    --glass-bg-strong: rgba(7, 8, 11, 0.97);
   }
 }
