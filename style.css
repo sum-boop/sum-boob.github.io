@@ -1,21 +1,59 @@
 /* ==========================================================================
-   MASTER STYLESHEET
-   Central importer only — no rules should be added below.
-   Load order matters: tokens first, then base resets, then cursor,
-   then layout, then components.
+   MASTER STYLESHEET — style.css
+   CCTV Operator & Surveillance Command Center Portfolio
+   --------------------------------------------------------------------------
+   Central import manifest. No rules should be authored in this file.
+   Load order is strictly sequential and matters:
+     tokens → reset → cursor → layout → components.
    ========================================================================== */
 
-/* 1. Design tokens — colors, type scale, spacing, motion */
+/* --------------------------------------------------------------------------
+   0. FONT FOUNDRY
+   Loaded first so every downstream layer can reference the type stacks
+   declared in variables.css without FOUT/FOIT gaps.
+   Inter         → body / UI copy
+   JetBrains Mono→ mono, HUD labels, status text
+   Space Grotesk → display headings
+   -------------------------------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* --------------------------------------------------------------------------
+   1. DESIGN TOKENS
+   CSS custom properties: color system, neon glows, glass tokens, type
+   scale, spacing rhythm, motion curves, z-index scale. Must resolve
+   before any consumer layer runs.
+   -------------------------------------------------------------------------- */
 @import url('variables.css');
 
-/* 2. Global resets, typography defaults, scrollbars, HUD backdrop */
+/* --------------------------------------------------------------------------
+   2. BASE LAYER
+   Modern reset, box model, global typography defaults, high-tech
+   scrollbars, tactical grid + scanline backdrop, focus rings,
+   accessibility (reduced-motion / print) overrides.
+   -------------------------------------------------------------------------- */
 @import url('base.css');
 
-/* 3. Custom crosshair/reticle cursor system */
+/* --------------------------------------------------------------------------
+   3. CURSOR SYSTEM
+   Surveillance reticle cursor: crosshair ring, lock-on hover state,
+   active click state, text-mode, and touch-device fallbacks.
+   -------------------------------------------------------------------------- */
 @import url('cursor.css');
 
-/* 4. Section-level layout: hero, about, feeds, work log, command form */
+/* --------------------------------------------------------------------------
+   4. SECTION LAYOUTS
+   Structural layouts for hero, about, surveillance feeds grid,
+   work-log timeline, command form, footer, and reveal utilities.
+   -------------------------------------------------------------------------- */
 @import url('sections-layout.css');
 
-/* 5. Reusable UI components: buttons, badges, cards, modals, nav */
+/* --------------------------------------------------------------------------
+   5. COMPONENT LIBRARY
+   Reusable UI primitives: buttons, status badges, glass feed cards,
+   log markers, modals, form fields, navigation, progress bar.
+   -------------------------------------------------------------------------- */
 @import url('components.css');
+
+/* ==========================================================================
+   END OF MANIFEST — do not append rules below this line.
+   ========================================================================== */
