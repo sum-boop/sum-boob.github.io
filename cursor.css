@@ -1,247 +1,213 @@
-/* ============================================================
+/* ================================================================
    CURSOR.CSS — Surveillance Reticle System
    CCTV Command Center Portfolio
-   Precision crosshair · Lock-on states · Neon glow
-   ============================================================ */
 
-/* ============================================================
-   1. CORE ELEMENTS
-   Positioned via JS (top/left). Transform handles centering
-   + rotation + scale, animated per-state below.
-   ============================================================ */
+   Four quiet layers instead of one busy one: a precise dot, a
+   restrained ring, a soft trailing glow for depth, and a small
+   mono label that surfaces context on hover ("VIEW", "OPEN").
+   No perpetual spin — the reticle only moves when you do.
+   ================================================================ */
+
+/* ================================================================
+   1. CORE POSITIONING
+   Positioned via JS (top/left, lerped per-layer for depth).
+   Transform handles centering only, so animated states can add
+   scale/rotation on top without a JS rewrite.
+   ================================================================ */
 .cursor-dot,
-.cursor-ring {
+.cursor-ring,
+.cursor-glow,
+.cursor-label {
   position: fixed;
   top: 0;
   left: 0;
   pointer-events: none;
-  border-radius: var(--radius-full);
   z-index: var(--z-cursor);
-  will-change: transform, width, height, box-shadow;
-  transform: translate3d(-50%, -50%, 0);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
-/* ============================================================
-   2. CENTER DOT — precision point of aim
-   ============================================================ */
-.cursor-dot {
-  width: 5px;
-  height: 5px;
-  background: var(--neon-cyan);
-  box-shadow:
-    var(--glow-cyan-sm),
-    0 0 0 1px var(--neon-cyan-glow-soft);
-  transition:
-    background-color var(--duration-fast) var(--ease-smooth),
-    box-shadow var(--duration-fast) var(--ease-smooth),
-    width var(--duration-fast) var(--ease-smooth),
-    height var(--duration-fast) var(--ease-smooth);
-}
-
-.cursor-dot::after {
-  content: "";
-  position: absolute;
-  inset: -6px;
+.cursor-dot,
+.cursor-ring,
+.cursor-glow {
   border-radius: var(--radius-full);
-  background: radial-gradient(
-    circle,
-    var(--neon-cyan-glow-soft) 0%,
-    transparent 70%
-  );
-  opacity: 0.9;
-  pointer-events: none;
+  transform: translate3d(-50%, -50%, 0);
+  will-change: transform, width, height, box-shadow;
 }
 
-/* ============================================================
-   3. OUTER RING — segmented reticle
-   ============================================================ */
+/* ================================================================
+   2. AMBIENT GLOW — furthest layer, most delay, gives depth
+   ================================================================ */
+.cursor-glow {
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, var(--spotlight-color) 0%, transparent 72%);
+  filter: blur(6px);
+  opacity: 0.7;
+  animation: glowBreathe 4.5s var(--ease-smooth) infinite;
+}
+
+@keyframes glowBreathe {
+  0%, 100% { transform: translate3d(-50%, -50%, 0) scale(1); opacity: 0.55; }
+  50%      { transform: translate3d(-50%, -50%, 0) scale(1.18); opacity: 0.85; }
+}
+
+/* ================================================================
+   3. CENTER DOT — precision point of aim, zero lag
+   ================================================================ */
+.cursor-dot {
+  width: var(--cursor-dot);
+  height: var(--cursor-dot);
+  background: var(--accent-cyan);
+  box-shadow: var(--glow-cyan-sm);
+  transition: background-color var(--duration-fast) var(--ease-smooth),
+              box-shadow var(--duration-fast) var(--ease-smooth),
+              width var(--duration-fast) var(--ease-smooth),
+              height var(--duration-fast) var(--ease-smooth);
+}
+
+/* ================================================================
+   4. OUTER RING — restrained by default, brackets only on lock-on
+   ================================================================ */
 .cursor-ring {
-  width: 42px;
-  height: 42px;
-  border: 1px dashed var(--border-cyan-strong);
-  box-shadow:
-    var(--glow-cyan-xs),
-    inset 0 0 12px var(--neon-cyan-glow-soft);
-  transition:
-    width var(--duration-base) var(--ease-bounce),
-    height var(--duration-base) var(--ease-bounce),
-    border-color var(--duration-base) var(--ease-smooth),
-    border-style var(--duration-base) var(--ease-smooth),
-    border-radius var(--duration-base) var(--ease-smooth),
-    background-color var(--duration-base) var(--ease-smooth),
-    box-shadow var(--duration-base) var(--ease-smooth),
-    opacity var(--duration-base) var(--ease-smooth);
-  animation: cursorRotate 16s linear infinite;
+  width: var(--cursor-size);
+  height: var(--cursor-size);
+  border: var(--cursor-ring-width) solid var(--border-cyan-strong);
+  box-shadow: var(--glow-cyan-sm);
+  transition: width var(--duration-base) var(--ease-bounce),
+              height var(--duration-base) var(--ease-bounce),
+              border-color var(--duration-base) var(--ease-smooth),
+              border-radius var(--duration-base) var(--ease-smooth),
+              background-color var(--duration-base) var(--ease-smooth),
+              box-shadow var(--duration-base) var(--ease-smooth),
+              opacity var(--duration-base) var(--ease-smooth);
 }
 
-/* Corner tick marks — 4 HUD brackets around the ring */
-.cursor-ring::before,
+/* Corner brackets — invisible at idle, revealed only on target lock */
+.cursor-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-smooth);
+  background:
+    linear-gradient(var(--accent-green), var(--accent-green)) top left / 9px 1.5px no-repeat,
+    linear-gradient(var(--accent-green), var(--accent-green)) top left / 1.5px 9px no-repeat,
+    linear-gradient(var(--accent-green), var(--accent-green)) top right / 9px 1.5px no-repeat,
+    linear-gradient(var(--accent-green), var(--accent-green)) top right / 1.5px 9px no-repeat,
+    linear-gradient(var(--accent-green), var(--accent-green)) bottom left / 9px 1.5px no-repeat,
+    linear-gradient(var(--accent-green), var(--accent-green)) bottom left / 1.5px 9px no-repeat,
+    linear-gradient(var(--accent-green), var(--accent-green)) bottom right / 9px 1.5px no-repeat,
+    linear-gradient(var(--accent-green), var(--accent-green)) bottom right / 1.5px 9px no-repeat;
+}
+
+/* Fine crosshair hairline through the ring's center — always present,
+   very faint, reads as precision rather than decoration */
 .cursor-ring::after {
   content: "";
   position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-}
-
-.cursor-ring::before {
+  inset: 0;
+  opacity: 0.3;
+  transition: opacity var(--duration-base) var(--ease-smooth), background var(--duration-base) var(--ease-smooth);
   background:
-    linear-gradient(var(--neon-cyan), var(--neon-cyan)) top left / 6px 1px no-repeat,
-    linear-gradient(var(--neon-cyan), var(--neon-cyan)) top left / 1px 6px no-repeat,
-    linear-gradient(var(--neon-cyan), var(--neon-cyan)) top right / 6px 1px no-repeat,
-    linear-gradient(var(--neon-cyan), var(--neon-cyan)) top right / 1px 6px no-repeat,
-    linear-gradient(var(--neon-cyan), var(--neon-cyan)) bottom left / 6px 1px no-repeat,
-    linear-gradient(var(--neon-cyan), var(--neon-cyan)) bottom left / 1px 6px no-repeat,
-    linear-gradient(var(--neon-cyan), var(--neon-cyan)) bottom right / 6px 1px no-repeat,
-    linear-gradient(var(--neon-cyan), var(--neon-cyan)) bottom right / 1px 6px no-repeat;
-  opacity: 0.75;
-  transition: opacity var(--duration-base) var(--ease-smooth);
+    linear-gradient(90deg, transparent 46%, var(--accent-cyan) 46%, var(--accent-cyan) 54%, transparent 54%) center / 100% 1px no-repeat,
+    linear-gradient(0deg, transparent 46%, var(--accent-cyan) 46%, var(--accent-cyan) 54%, transparent 54%) center / 1px 100% no-repeat;
 }
 
-/* Center crosshair hairlines */
-.cursor-ring::after {
-  background:
-    linear-gradient(
-      90deg,
-      transparent 0%,
-      transparent 40%,
-      var(--neon-cyan) 40%,
-      var(--neon-cyan) 60%,
-      transparent 60%,
-      transparent 100%
-    ) center / 100% 1px no-repeat,
-    linear-gradient(
-      0deg,
-      transparent 0%,
-      transparent 40%,
-      var(--neon-cyan) 40%,
-      var(--neon-cyan) 60%,
-      transparent 60%,
-      transparent 100%
-    ) center / 1px 100% no-repeat;
-  opacity: 0.35;
-  transition: opacity var(--duration-base) var(--ease-smooth);
-}
-
-@keyframes cursorRotate {
-  from { transform: translate3d(-50%, -50%, 0) rotate(0deg); }
-  to   { transform: translate3d(-50%, -50%, 0) rotate(360deg); }
-}
-
-/* ============================================================
-   4. HOVER STATE — target acquired / lock-on
+/* ================================================================
+   5. HOVER STATE — target acquired / lock-on
    Toggled via body.cursor-hover in JS
-   ============================================================ */
+   ================================================================ */
 body.cursor-hover .cursor-dot {
-  width: 4px;
-  height: 4px;
-  background: var(--neon-green);
-  box-shadow:
-    var(--glow-green-sm),
-    0 0 0 1px var(--neon-green-glow-soft);
-}
-
-body.cursor-hover .cursor-dot::after {
-  background: radial-gradient(
-    circle,
-    var(--neon-green-glow-soft) 0%,
-    transparent 70%
-  );
+  width: calc(var(--cursor-dot) - 1px);
+  background: var(--accent-green);
+  box-shadow: var(--glow-green-sm);
 }
 
 body.cursor-hover .cursor-ring {
-  width: 68px;
-  height: 68px;
-  border-style: solid;
-  border-color: var(--neon-green);
-  background: var(--neon-green-glow-soft);
-  box-shadow:
-    var(--glow-green-md),
-    inset 0 0 18px var(--neon-green-glow-soft);
-  animation-play-state: paused;
+  width: var(--cursor-size-lg);
+  height: var(--cursor-size-lg);
+  border-color: var(--accent-green);
+  background: var(--accent-green-soft);
+  box-shadow: var(--glow-green-md);
 }
 
 body.cursor-hover .cursor-ring::before {
-  background:
-    linear-gradient(var(--neon-green), var(--neon-green)) top left / 10px 1.5px no-repeat,
-    linear-gradient(var(--neon-green), var(--neon-green)) top left / 1.5px 10px no-repeat,
-    linear-gradient(var(--neon-green), var(--neon-green)) top right / 10px 1.5px no-repeat,
-    linear-gradient(var(--neon-green), var(--neon-green)) top right / 1.5px 10px no-repeat,
-    linear-gradient(var(--neon-green), var(--neon-green)) bottom left / 10px 1.5px no-repeat,
-    linear-gradient(var(--neon-green), var(--neon-green)) bottom left / 1.5px 10px no-repeat,
-    linear-gradient(var(--neon-green), var(--neon-green)) bottom right / 10px 1.5px no-repeat,
-    linear-gradient(var(--neon-green), var(--neon-green)) bottom right / 1.5px 10px no-repeat;
   opacity: 1;
 }
 
 body.cursor-hover .cursor-ring::after {
+  opacity: 0.55;
   background:
-    linear-gradient(
-      90deg,
-      transparent 0%,
-      transparent 30%,
-      var(--neon-green) 30%,
-      var(--neon-green) 70%,
-      transparent 70%,
-      transparent 100%
-    ) center / 100% 1px no-repeat,
-    linear-gradient(
-      0deg,
-      transparent 0%,
-      transparent 30%,
-      var(--neon-green) 30%,
-      var(--neon-green) 70%,
-      transparent 70%,
-      transparent 100%
-    ) center / 1px 100% no-repeat;
-  opacity: 0.85;
+    linear-gradient(90deg, transparent 38%, var(--accent-green) 38%, var(--accent-green) 62%, transparent 62%) center / 100% 1px no-repeat,
+    linear-gradient(0deg, transparent 38%, var(--accent-green) 38%, var(--accent-green) 62%, transparent 62%) center / 1px 100% no-repeat;
 }
 
-/* ============================================================
-   5. ACTIVE STATE — click / trigger
+body.cursor-hover .cursor-glow {
+  opacity: 0.5;
+  filter: blur(4px);
+}
+
+/* ================================================================
+   6. LABEL — small context tag next to the reticle on hover
+   Content + visibility set via JS (data-cursor-text on the target)
+   ================================================================ */
+.cursor-label {
+  transform: translate(16px, 16px) scale(0.9);
+  padding: 0.3rem 0.7rem;
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--border-cyan);
+  border-radius: var(--radius-full);
+  color: var(--text-cyan);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  backdrop-filter: var(--glass-blur);
+  transition: opacity var(--duration-base) var(--ease-smooth),
+              transform var(--duration-base) var(--ease-bounce);
+}
+
+body.cursor-hover .cursor-label {
+  opacity: 1;
+  transform: translate(16px, 16px) scale(1);
+}
+
+/* ================================================================
+   7. ACTIVE STATE — click / trigger, sharp and immediate
    Toggled via body.cursor-active in JS
-   ============================================================ */
+   ================================================================ */
 body.cursor-active .cursor-ring {
-  width: 32px;
-  height: 32px;
-  border-color: var(--neon-cyan);
-  background: var(--neon-cyan-glow-soft);
-  box-shadow:
-    var(--glow-cyan-md),
-    inset 0 0 14px var(--neon-cyan-glow-soft);
+  width: calc(var(--cursor-size) * 0.7);
+  height: calc(var(--cursor-size) * 0.7);
+  box-shadow: var(--glow-cyan-md);
   transition-duration: var(--duration-fast);
 }
 
 body.cursor-active .cursor-dot {
-  transform: translate3d(-50%, -50%, 0) scale(1.4);
-  box-shadow: var(--glow-cyan-lg);
+  transform: translate3d(-50%, -50%, 0) scale(1.5);
 }
 
 body.cursor-active.cursor-hover .cursor-ring {
-  border-color: var(--neon-green);
-  background: var(--neon-green-glow-soft);
-  box-shadow:
-    var(--glow-green-md),
-    inset 0 0 14px var(--neon-green-glow-soft);
+  width: calc(var(--cursor-size-lg) * 0.75);
+  height: calc(var(--cursor-size-lg) * 0.75);
+  box-shadow: var(--glow-green-md);
 }
 
-/* ============================================================
-   6. TEXT STATE — over paragraphs / inputs
+/* ================================================================
+   8. TEXT STATE — over paragraphs / inputs, becomes an I-beam
    Toggled via body.cursor-text in JS
-   ============================================================ */
+   ================================================================ */
 body.cursor-text .cursor-ring {
-  width: 4px;
-  height: 32px;
+  width: var(--cursor-ring-width);
+  height: 30px;
   border-radius: var(--radius-xs);
-  border-style: solid;
-  border-color: var(--neon-cyan);
-  background: transparent;
+  border-color: var(--accent-cyan);
+  background: var(--accent-cyan);
   box-shadow: var(--glow-cyan-sm);
-  animation-play-state: paused;
 }
 
 body.cursor-text .cursor-ring::before,
@@ -249,46 +215,51 @@ body.cursor-text .cursor-ring::after {
   opacity: 0;
 }
 
-body.cursor-text .cursor-dot {
+body.cursor-text .cursor-dot,
+body.cursor-text .cursor-glow {
   opacity: 0;
 }
 
-/* ============================================================
-   7. HIDDEN STATE — when leaving the viewport
+/* ================================================================
+   9. HIDDEN STATE — cursor left the viewport
    Toggled via body.cursor-hidden in JS
-   ============================================================ */
+   ================================================================ */
 body.cursor-hidden .cursor-dot,
-body.cursor-hidden .cursor-ring {
+body.cursor-hidden .cursor-ring,
+body.cursor-hidden .cursor-glow,
+body.cursor-hidden .cursor-label {
   opacity: 0;
   transition: opacity var(--duration-base) var(--ease-smooth);
 }
 
-/* ============================================================
-   8. FALLBACK — touch / coarse pointer
-   ============================================================ */
+/* ================================================================
+   10. FALLBACK — touch / coarse pointer
+   ================================================================ */
 @media (hover: none), (pointer: coarse) {
   .cursor-dot,
-  .cursor-ring {
+  .cursor-ring,
+  .cursor-glow,
+  .cursor-label {
     display: none !important;
   }
 
-  body,
-  button,
-  a {
+  body, button, a {
     cursor: auto;
   }
 }
 
-/* ============================================================
-   9. REDUCED MOTION — freeze animation loops
-   ============================================================ */
+/* ================================================================
+   11. REDUCED MOTION — freeze all loops and transitions
+   ================================================================ */
 @media (prefers-reduced-motion: reduce) {
-  .cursor-ring {
+  .cursor-glow {
     animation: none;
   }
 
   .cursor-dot,
-  .cursor-ring {
+  .cursor-ring,
+  .cursor-glow,
+  .cursor-label {
     transition: none;
   }
 }
