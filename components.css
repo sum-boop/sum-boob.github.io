@@ -408,4 +408,92 @@ textarea.form-input {
   background: var(--bg-elevated);
   color: var(--neon-cyan);
   border-radius: var(--radius-sm);
-     }
+}
+
+/* ==========================================================================
+   7. NAVIGATION & PROGRESS BAR
+   ========================================================================== */
+#progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--neon-violet), var(--neon-cyan), var(--neon-green));
+  z-index: var(--z-toast);
+  box-shadow: 0 0 12px var(--neon-cyan);
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: var(--space-sm) clamp(1.5rem, 6vw, 6rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: var(--z-overlay);
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.brand-logo {
+  font-family: var(--font-heading);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--text-primary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo .dot-span {
+  width: 10px;
+  height: 10px;
+  background: var(--neon-cyan);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 12px var(--neon-cyan);
+  display: inline-block;
+}
+
+.nav-links {
+  display: flex;
+  gap: var(--space-md);
+  list-style: none;
+  align-items: center;
+}
+
+.nav-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  position: relative;
+  transition: color var(--duration-base) var(--ease-smooth),
+              text-shadow var(--duration-base) var(--ease-smooth);
+}
+
+.nav-links a:hover {
+  color: var(--neon-cyan);
+  text-shadow: var(--text-glow-cyan);
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0%;
+  height: 2px;
+  background: var(--neon-violet);
+  box-shadow: 0 0 8px var(--neon-violet);
+  transition: width var(--duration-base) var(--ease-smooth);
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+   }
+   
