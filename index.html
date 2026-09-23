@@ -5,13 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sumit Anand | Surveillance & Cyber Security Specialist</title>
 
-  <!-- Google Fonts: Syne & Space Grotesk -->
+  <!-- Google Fonts: Inter & JetBrains Mono (matches variables.css font tokens) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
 </head>
@@ -28,31 +29,30 @@
   <!-- Scroll Progress Indicator -->
   <div id="progress-bar"></div>
 
-  <!-- Custom Magnetic Cyber Cursor -->
+  <!-- Custom Crosshair Cursor -->
   <div class="cursor-dot"></div>
   <div class="cursor-ring"></div>
 
-  <!-- Navigation Bar -->
+  <!-- Navigation -->
   <nav>
     <a href="#hero" class="brand-logo">
       <span class="dot-span"></span> SUMIT ANAND
     </a>
     <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#operations">Operations</a></li>
-      <li><a href="#experience">Experience</a></li>
+      <li><a href="#about">Expertise</a></li>
+      <li><a href="#operations">Camera Feeds</a></li>
+      <li><a href="#experience">Logbook</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <!-- High-Impact Working HIRE ME Button -->
     <button class="btn btn-hire" onclick="openHireModal()">
       <i class="fa-solid fa-bolt"></i> <span class="btn-text-span">Hire Me</span>
     </button>
   </nav>
 
-  <!-- Hero Section with CCTV Backdrop & Matrix Particles -->
+  <!-- Hero Section -->
   <section id="hero" class="hero">
     <canvas id="particles-canvas"></canvas>
-    
+
     <div class="hero-content">
       <span class="hud-badge-span">
         <span class="pulse-dot-span"></span> Active Surveillance & Gate Control Lead
@@ -61,13 +61,12 @@
       <h1 class="hero-title">
         SUMIT <span class="highlight-span">ANAND</span>
       </h1>
-      
+
       <p class="hero-subtitle">
         CCTV Operator & Cyber Systems Specialist with 2+ years of core operational experience in multi-channel <span class="purple-span">CP Plus surveillance</span>, high-volume <span class="highlight-span">GIGO data entry gate control</span>, and loss prevention across mega logistics hubs.
       </p>
 
       <div class="hero-btn-group">
-        <!-- Interactive Working Hire Me Button -->
         <button class="btn btn-hire" onclick="openHireModal()">
           <i class="fa-solid fa-briefcase"></i> <span class="btn-text-span">Hire Me Now</span>
         </button>
@@ -78,15 +77,14 @@
     </div>
   </section>
 
-  <!-- About & Capabilities Section -->
+  <!-- CCTV Skills / Expertise Section -->
   <section id="about">
     <div class="section-header reveal">
       <span class="section-tag-span">01 / Security Profile</span>
-      <h2 class="section-title">Surveillance & Data Systems Specialist</h2>
+      <h2 class="section-title">CCTV Skills & Expertise</h2>
     </div>
 
     <div class="about-grid">
-      <!-- High-Tech Camera & Control Room Image -->
       <div class="about-image-wrapper reveal">
         <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop" alt="Cyber Security Data & Surveillance Setup" />
       </div>
@@ -112,16 +110,15 @@
     </div>
   </section>
 
-  <!-- Operations / Case Studies Section -->
+  <!-- Camera Feed Projects Section -->
   <section id="operations">
     <div class="section-header reveal">
       <span class="section-tag-span">02 / Key Deployments</span>
-      <h2 class="section-title">Surveillance & Data Case Studies</h2>
+      <h2 class="section-title">Camera Feed Deployments</h2>
     </div>
 
     <div class="operations-grid">
-      
-      <!-- Card 1: Camera Surveillance -->
+
       <div class="op-card reveal" onclick="openOpModal('op1')">
         <div class="op-card-img">
           <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=800&auto=format&fit=crop" alt="Camera Monitoring" />
@@ -134,7 +131,6 @@
         </div>
       </div>
 
-      <!-- Card 2: Data Entry & Gate Control -->
       <div class="op-card reveal" onclick="openOpModal('op2')">
         <div class="op-card-img">
           <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop" alt="Data Entry Terminal" />
@@ -147,7 +143,6 @@
         </div>
       </div>
 
-      <!-- Card 3: Cyber Security & Audit -->
       <div class="op-card reveal" onclick="openOpModal('op3')">
         <div class="op-card-img">
           <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=800&auto=format&fit=crop" alt="Security Shield" />
@@ -163,19 +158,19 @@
     </div>
   </section>
 
-  <!-- Experience Log Section -->
+  <!-- Logbook Timeline (Experience) Section -->
   <section id="experience">
     <div class="section-header reveal">
       <span class="section-tag-span">03 / Duty History</span>
-      <h2 class="section-title">Professional Experience Log</h2>
+      <h2 class="section-title">Operational Logbook</h2>
     </div>
 
     <div class="timeline reveal">
-      
-      <!-- Role 1 -->
+
       <div class="timeline-item">
-        <span class="timeline-node-span"></span>
+        <span class="timeline-node-span online"></span>
         <span class="timeline-date-span">2025 – PRESENT</span>
+        <span class="log-status active">Active Post</span>
         <h3 class="timeline-role">Security Systems & Gate Control Operator</h3>
         <p class="timeline-company"><span class="highlight-span">Innovision Limited</span> (Flipkart Kalash Warehouse - Mega Hub) | Patli, Haryana</p>
         <ul class="timeline-details">
@@ -186,10 +181,10 @@
         </ul>
       </div>
 
-      <!-- Role 2 -->
       <div class="timeline-item">
         <span class="timeline-node-span"></span>
         <span class="timeline-date-span">2023 – 2024</span>
+        <span class="log-status archived">Archived</span>
         <h3 class="timeline-role">Security Guard & Surveillance Operator</h3>
         <p class="timeline-company"><span class="purple-span">A.P. Securitas Pvt. Ltd.</span> (Client Site: Ekart Logistics Pvt. Ltd.) | Haryana, India</p>
         <ul class="timeline-details">
@@ -202,32 +197,42 @@
     </div>
   </section>
 
-  <!-- Contact Section -->
+  <!-- Contact / Command Form Section -->
   <section id="contact">
     <div class="section-header reveal">
       <span class="section-tag-span">04 / Transmission</span>
       <h2 class="section-title">Send Direct Briefing</h2>
     </div>
 
-    <div style="max-width: 720px; margin: 0 auto;" class="glass-card reveal">
-      <form onsubmit="handleDirectMessage(event)">
-        <div class="form-field">
-          <input type="text" id="contact-name" class="form-input" placeholder=" " required />
-          <label for="contact-name" class="form-label">Your Name / Organization</label>
+    <div class="command-terminal reveal">
+      <div class="command-terminal-header">
+        <span class="terminal-dot-group">
+          <span class="terminal-dot alert"></span>
+          <span class="terminal-dot warning"></span>
+          <span class="terminal-dot online"></span>
+        </span>
+        SECURE_CHANNEL // TRANSMIT
+      </div>
+
+      <form class="command-form" onsubmit="handleDirectMessage(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contact-name">Name / Organization</label>
+            <input type="text" id="contact-name" name="name" required />
+          </div>
+          <div class="form-group">
+            <label for="contact-email">Work Email</label>
+            <input type="email" id="contact-email" name="email" required />
+          </div>
         </div>
 
-        <div class="form-field">
-          <input type="email" id="contact-email" class="form-input" placeholder=" " required />
-          <label for="contact-email" class="form-label">Work Email</label>
+        <div class="form-group">
+          <label for="contact-message">Deployment Details & Notes</label>
+          <textarea id="contact-message" name="message" rows="5" required></textarea>
         </div>
 
-        <div class="form-field">
-          <textarea id="contact-message" class="form-input" placeholder=" " required></textarea>
-          <label for="contact-message" class="form-label">Deployment Details & Notes</label>
-        </div>
-
-        <button type="submit" class="btn btn-hire" style="width: 100%; justify-content: center;">
-          <i class="fa-solid fa-paper-plane"></i> <span class="btn-text-span">Send Direct Briefing</span>
+        <button type="submit" class="command-submit-btn">
+          <i class="fa-solid fa-paper-plane"></i> Transmit Briefing
         </button>
       </form>
     </div>
@@ -250,11 +255,9 @@
 
   <!-- Toast Notification -->
   <div class="toast-popup" id="toast-popup">
-    <i class="fa-solid fa-circle-check" style="color: var(--neon-green); font-size: 1.2rem;"></i>
+    <i class="fa-solid fa-circle-check" style="color: var(--status-online); font-size: 1.2rem;"></i>
     <span id="toast-msg">Briefing transmitted successfully!</span>
   </div>
 
-  <!-- JavaScript Interaction Logic -->
-  
 </body>
 </html>
