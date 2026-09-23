@@ -451,6 +451,9 @@ section {
 .op-card:nth-child(1) { grid-column: span 4; }
 .op-card:nth-child(2) { grid-column: span 2; }
 .op-card:nth-child(3) { grid-column: span 6; }
+.op-card:nth-child(4),
+.op-card:nth-child(5),
+.op-card:nth-child(6) { grid-column: span 2; }
 
 .op-card {
   position: relative;
@@ -474,9 +477,20 @@ section {
   transform: translateY(-4px);
 }
 
-/* Featured third card reads as a wide case-study strip: image beside copy */
+/* Featured wide card reads as a horizontal case-study strip:
+   image beside copy instead of stacked, matching its full-row span */
 .op-card--wide {
-  flex-direction: column;
+  flex-direction: row;
+}
+
+.op-card--wide .op-card-img {
+  flex: 0 0 42%;
+  height: auto;
+}
+
+.op-card--wide .op-card-body {
+  flex: 1;
+  justify-content: center;
 }
 
 .op-card-img {
@@ -1090,9 +1104,7 @@ footer {
   .operations-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .op-card:nth-child(1),
-  .op-card:nth-child(2),
-  .op-card:nth-child(3) {
+  .op-card {
     grid-column: span 2;
   }
 }
@@ -1133,13 +1145,18 @@ footer {
   .operations-grid {
     grid-template-columns: 1fr;
   }
-  .op-card:nth-child(1),
-  .op-card:nth-child(2),
-  .op-card:nth-child(3) {
+  .op-card {
     grid-column: span 1;
   }
   .op-card:nth-child(1) .op-card-img {
     height: 240px;
+  }
+  .op-card--wide {
+    flex-direction: column;
+  }
+  .op-card--wide .op-card-img {
+    flex: none;
+    height: 220px;
   }
 }
 
