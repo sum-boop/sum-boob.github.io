@@ -1,173 +1,368 @@
+/* ============================================================
+   CCTV COMMAND CENTER — DESIGN TOKENS
+   variables.css
+   Aesthetic: cinematic surveillance / dark glass / neon precision
+   ============================================================ */
+
 :root {
 
   /* ============================================================
-     BACKGROUNDS — obsidian depth scale
+     1. BACKGROUNDS — obsidian depth scale
      ============================================================ */
-  --bg-void: #05070d;
-  --bg-base: #0a0f1d;
-  --bg-elevated: #0d1424;
-  --bg-surface: #101a2e;
-  --bg-surface-hover: #142238;
+  --bg-void:            #04060b;
+  --bg-base:            #070b16;
+  --bg-elevated:        #0b1120;
+  --bg-surface:         #0f172b;
+  --bg-surface-hover:   #131d34;
+  --bg-surface-active:  #172340;
+  --bg-inset:           #050810;
+
+  /* Gradient atmospheres */
+  --bg-radial-cyan:     radial-gradient(circle at 50% 0%, rgba(0, 229, 255, 0.08), transparent 60%);
+  --bg-radial-green:    radial-gradient(circle at 50% 100%, rgba(0, 255, 156, 0.06), transparent 60%);
+  --bg-vignette:        radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
 
   /* Glass panel surfaces */
-  --glass-bg: rgba(13, 20, 36, 0.55);
-  --glass-bg-strong: rgba(13, 20, 36, 0.78);
-  --glass-bg-hover: rgba(20, 34, 56, 0.85);
-  --glass-blur: 18px;
-  --glass-blur-strong: 32px;
-  --glass-saturate: 140%;
+  --glass-bg:           rgba(11, 17, 32, 0.55);
+  --glass-bg-strong:    rgba(11, 17, 32, 0.78);
+  --glass-bg-soft:      rgba(11, 17, 32, 0.35);
+  --glass-bg-hover:     rgba(19, 29, 52, 0.85);
+  --glass-border:       rgba(159, 176, 201, 0.10);
+  --glass-border-strong:rgba(159, 176, 201, 0.18);
+  --glass-highlight:    rgba(255, 255, 255, 0.06);
+  --glass-blur:         18px;
+  --glass-blur-strong:  32px;
+  --glass-blur-soft:    10px;
+  --glass-saturate:     140%;
 
   /* ============================================================
-     NEON ACCENTS
+     2. NEON ACCENTS
      ============================================================ */
-  --neon-cyan: #00e5ff;
-  --neon-cyan-rgb: 0, 229, 255;
-  --neon-cyan-glow: rgba(0, 229, 255, 0.45);
-  --neon-cyan-glow-soft: rgba(0, 229, 255, 0.18);
+  --neon-cyan:            #00e5ff;
+  --neon-cyan-rgb:        0, 229, 255;
+  --neon-cyan-glow:       rgba(0, 229, 255, 0.45);
+  --neon-cyan-glow-soft:  rgba(0, 229, 255, 0.18);
+  --neon-cyan-glow-hard:  rgba(0, 229, 255, 0.70);
 
-  --neon-blue: #2979ff;
-  --neon-blue-rgb: 41, 121, 255;
-  --neon-blue-glow: rgba(41, 121, 255, 0.4);
+  --neon-blue:            #2979ff;
+  --neon-blue-rgb:        41, 121, 255;
+  --neon-blue-glow:       rgba(41, 121, 255, 0.40);
+  --neon-blue-glow-soft:  rgba(41, 121, 255, 0.18);
 
-  --neon-green: #00ff9c;
-  --neon-green-rgb: 0, 255, 156;
-  --neon-green-glow: rgba(0, 255, 156, 0.45);
+  --neon-green:           #00ff9c;
+  --neon-green-rgb:       0, 255, 156;
+  --neon-green-glow:      rgba(0, 255, 156, 0.45);
   --neon-green-glow-soft: rgba(0, 255, 156, 0.18);
+  --neon-green-glow-hard: rgba(0, 255, 156, 0.70);
 
-  /* Reserved secondary accent for rare highlight use */
-  --neon-violet: #9d4dff;
-  --neon-violet-rgb: 157, 77, 255;
-  --neon-violet-glow: rgba(157, 77, 255, 0.4);
+  --neon-violet:          #9d4dff;
+  --neon-violet-rgb:      157, 77, 255;
+  --neon-violet-glow:     rgba(157, 77, 255, 0.40);
 
-  /* ============================================================
-     STATUS COLORS — surveillance/system states
-     ============================================================ */
-  --status-online: #00ff9c;
-  --status-online-glow: rgba(0, 255, 156, 0.5);
-  --status-offline: #4a5468;
-  --status-offline-glow: rgba(74, 84, 104, 0.3);
-  --status-alert: #ff3b5c;
-  --status-alert-glow: rgba(255, 59, 92, 0.55);
-  --status-warning: #ffb703;
-  --status-warning-glow: rgba(255, 183, 3, 0.45);
-  --status-scanning: #00e5ff;
-  --status-scanning-glow: rgba(0, 229, 255, 0.5);
-  --status-recording: #ff3b5c;
+  --neon-amber:           #ffb703;
+  --neon-amber-rgb:       255, 183, 3;
+  --neon-amber-glow:      rgba(255, 183, 3, 0.45);
 
   /* ============================================================
-     TEXT
+     3. STATUS COLORS — surveillance / system states
      ============================================================ */
-  --text-primary: #eaf2ff;
-  --text-secondary: #9fb0c9;
-  --text-muted: #5e6c85;
-  --text-disabled: #3a4358;
-  --text-on-accent: #04101a;
+  --status-online:          #00ff9c;
+  --status-online-rgb:      0, 255, 156;
+  --status-online-glow:     rgba(0, 255, 156, 0.50);
+
+  --status-offline:         #4a5468;
+  --status-offline-rgb:     74, 84, 104;
+  --status-offline-glow:    rgba(74, 84, 104, 0.30);
+
+  --status-alert:           #ff3b5c;
+  --status-alert-rgb:       255, 59, 92;
+  --status-alert-glow:      rgba(255, 59, 92, 0.55);
+
+  --status-warning:         #ffb703;
+  --status-warning-rgb:     255, 183, 3;
+  --status-warning-glow:    rgba(255, 183, 3, 0.45);
+
+  --status-scanning:        #00e5ff;
+  --status-scanning-rgb:    0, 229, 255;
+  --status-scanning-glow:   rgba(0, 229, 255, 0.50);
+
+  --status-recording:       #ff3b5c;
+  --status-recording-rgb:   255, 59, 92;
+  --status-recording-glow:  rgba(255, 59, 92, 0.65);
+
+  --status-standby:         #9fb0c9;
+  --status-standby-rgb:     159, 176, 201;
 
   /* ============================================================
-     BORDERS
+     4. TEXT HIERARCHY
      ============================================================ */
-  --border-subtle: rgba(159, 176, 201, 0.08);
-  --border-default: rgba(159, 176, 201, 0.14);
-  --border-cyan: rgba(0, 229, 255, 0.28);
-  --border-cyan-strong: rgba(0, 229, 255, 0.55);
-  --border-green: rgba(0, 255, 156, 0.28);
-  --border-alert: rgba(255, 59, 92, 0.4);
+  --text-primary:       #eaf2ff;
+  --text-secondary:     #9fb0c9;
+  --text-tertiary:      #7d8ba3;
+  --text-muted:         #5e6c85;
+  --text-disabled:      #3a4358;
+  --text-on-accent:     #04101a;
+  --text-cyan:          #7df0ff;
+  --text-green:         #7dffc8;
 
   /* ============================================================
-     GLOW / SHADOW TOKENS
+     5. BORDERS
      ============================================================ */
-  --glow-cyan-sm: 0 0 8px var(--neon-cyan-glow-soft);
-  --glow-cyan-md: 0 0 20px var(--neon-cyan-glow);
-  --glow-cyan-lg: 0 0 40px var(--neon-cyan-glow), 0 0 80px var(--neon-cyan-glow-soft);
+  --border-subtle:        rgba(159, 176, 201, 0.08);
+  --border-default:       rgba(159, 176, 201, 0.14);
+  --border-strong:        rgba(159, 176, 201, 0.24);
+  --border-cyan:          rgba(0, 229, 255, 0.28);
+  --border-cyan-strong:   rgba(0, 229, 255, 0.55);
+  --border-green:         rgba(0, 255, 156, 0.28);
+  --border-green-strong:  rgba(0, 255, 156, 0.55);
+  --border-alert:         rgba(255, 59, 92, 0.40);
+  --border-warning:       rgba(255, 183, 3, 0.40);
+
+  /* ============================================================
+     6. GLOW / SHADOW TOKENS
+     ============================================================ */
+  /* Box glows */
+  --glow-cyan-xs:  0 0 4px  var(--neon-cyan-glow-soft);
+  --glow-cyan-sm:  0 0 8px  var(--neon-cyan-glow-soft);
+  --glow-cyan-md:  0 0 20px var(--neon-cyan-glow);
+  --glow-cyan-lg:  0 0 40px var(--neon-cyan-glow), 0 0 80px var(--neon-cyan-glow-soft);
+  --glow-cyan-xl:  0 0 60px var(--neon-cyan-glow), 0 0 120px var(--neon-cyan-glow-soft);
+
+  --glow-green-sm: 0 0 8px  var(--neon-green-glow-soft);
   --glow-green-md: 0 0 20px var(--neon-green-glow);
-  --glow-alert-md: 0 0 20px var(--status-alert-glow);
-  --text-glow-cyan: 0 0 12px var(--neon-cyan-glow);
-  --text-glow-green: 0 0 12px var(--neon-green-glow);
+  --glow-green-lg: 0 0 40px var(--neon-green-glow), 0 0 80px var(--neon-green-glow-soft);
 
-  --shadow-panel: 0 8px 32px rgba(0, 0, 0, 0.45);
-  --shadow-panel-lg: 0 16px 60px rgba(0, 0, 0, 0.6);
+  --glow-alert-sm: 0 0 8px  var(--status-alert-glow);
+  --glow-alert-md: 0 0 20px var(--status-alert-glow);
+  --glow-alert-lg: 0 0 40px var(--status-alert-glow);
+
+  --glow-warning-md: 0 0 20px var(--status-warning-glow);
+
+  /* Text glows */
+  --text-glow-cyan:      0 0 12px var(--neon-cyan-glow);
+  --text-glow-cyan-soft: 0 0 8px  var(--neon-cyan-glow-soft);
+  --text-glow-green:     0 0 12px var(--neon-green-glow);
+  --text-glow-alert:     0 0 12px var(--status-alert-glow);
+  --text-glow-strong:    0 0 6px currentColor, 0 0 18px currentColor;
+
+  /* Panel shadows */
+  --shadow-panel:       0 8px 32px rgba(0, 0, 0, 0.45);
+  --shadow-panel-lg:    0 16px 60px rgba(0, 0, 0, 0.60);
+  --shadow-panel-xl:    0 24px 90px rgba(0, 0, 0, 0.75);
   --shadow-inset-hairline: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-inset-deep:     inset 0 2px 12px rgba(0, 0, 0, 0.55);
+
+  /* Composite panel (border glow + depth) */
+  --panel-shadow-default: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --panel-shadow-hover:   0 16px 48px rgba(0, 0, 0, 0.55), 0 0 24px var(--neon-cyan-glow-soft), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 
   /* ============================================================
-     TYPOGRAPHY
+     7. TYPOGRAPHY
      ============================================================ */
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', 'SFMono-Regular', ui-monospace, monospace;
+  --font-display: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
   --font-heading: var(--font-mono);
 
-  --fs-xs: 0.75rem;
-  --fs-sm: 0.875rem;
-  --fs-base: 1rem;
-  --fs-md: 1.125rem;
-  --fs-lg: 1.375rem;
-  --fs-xl: 1.75rem;
-  --fs-2xl: 2.25rem;
-  --fs-3xl: 3rem;
-  --fs-4xl: 4rem;
+  /* Fluid type scale */
+  --fs-2xs: 0.6875rem;   /* 11px */
+  --fs-xs:  0.75rem;     /* 12px */
+  --fs-sm:  0.875rem;    /* 14px */
+  --fs-base:1rem;        /* 16px */
+  --fs-md:  1.125rem;    /* 18px */
+  --fs-lg:  1.375rem;    /* 22px */
+  --fs-xl:  1.75rem;     /* 28px */
+  --fs-2xl: 2.25rem;     /* 36px */
+  --fs-3xl: 3rem;        /* 48px */
+  --fs-4xl: 4rem;        /* 64px */
+  --fs-5xl: 5.25rem;     /* 84px */
 
-  --fw-regular: 400;
-  --fw-medium: 500;
+  /* Fluid display sizes */
+  --fs-hero:      clamp(2.5rem, 6vw + 1rem, 5.5rem);
+  --fs-section:   clamp(1.75rem, 3vw + 1rem, 3rem);
+  --fs-subtitle:  clamp(1.05rem, 1.2vw + 0.75rem, 1.375rem);
+
+  /* Weights */
+  --fw-light:    300;
+  --fw-regular:  400;
+  --fw-medium:   500;
   --fw-semibold: 600;
-  --fw-bold: 700;
+  --fw-bold:     700;
+  --fw-black:    800;
 
-  --lh-tight: 1.15;
-  --lh-normal: 1.5;
+  /* Line heights */
+  --lh-tight:   1.15;
+  --lh-snug:    1.35;
+  --lh-normal:  1.5;
   --lh-relaxed: 1.7;
+  --lh-loose:   1.9;
 
-  --ls-tight: -0.01em;
-  --ls-normal: 0;
-  --ls-wide: 0.04em;
-  --ls-widest: 0.12em;
+  /* Letter spacing */
+  --ls-tightest: -0.03em;
+  --ls-tight:    -0.01em;
+  --ls-normal:   0;
+  --ls-wide:     0.04em;
+  --ls-wider:    0.08em;
+  --ls-widest:   0.12em;
+  --ls-mono:     0.16em;
 
   /* ============================================================
-     SPACING SCALE
+     8. SPACING SCALE
      ============================================================ */
+  --space-4xs: 0.125rem;
   --space-3xs: 0.25rem;
   --space-2xs: 0.5rem;
-  --space-xs: 0.75rem;
-  --space-sm: 1rem;
-  --space-md: 1.5rem;
-  --space-lg: 2rem;
-  --space-xl: 3rem;
+  --space-xs:  0.75rem;
+  --space-sm:  1rem;
+  --space-md:  1.5rem;
+  --space-lg:  2rem;
+  --space-xl:  3rem;
   --space-2xl: 4.5rem;
   --space-3xl: 7rem;
+  --space-4xl: 10rem;
+
+  /* Layout */
+  --container-max:   1280px;
+  --container-wide:  1440px;
+  --container-narrow:880px;
+  --gutter:          clamp(1.25rem, 4vw, 3rem);
+  --header-height:   72px;
 
   /* ============================================================
-     RADIUS
+     9. RADIUS
      ============================================================ */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 14px;
-  --radius-xl: 22px;
+  --radius-xs:   2px;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   14px;
+  --radius-xl:   22px;
+  --radius-2xl:  32px;
   --radius-full: 999px;
 
   /* ============================================================
-     MOTION
+     10. MOTION
      ============================================================ */
-  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-sharp: cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-sharp:   cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-bounce:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-in-out:  cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:      cubic-bezier(0.7, 0, 0.84, 0);
 
-  --duration-fast: 150ms;
-  --duration-base: 280ms;
-  --duration-slow: 500ms;
-  --duration-scan: 2400ms;
+  --duration-instant: 80ms;
+  --duration-fast:    150ms;
+  --duration-base:    280ms;
+  --duration-medium:  400ms;
+  --duration-slow:    500ms;
+  --duration-slower:  800ms;
+
+  /* Signature timings */
+  --duration-scan:    2400ms;
+  --duration-pulse:   1800ms;
+  --duration-blip:    1200ms;
+  --duration-flicker: 3600ms;
 
   /* ============================================================
-     LAYOUT / MISC UTILITIES
+     11. ATMOSPHERE / OVERLAYS
      ============================================================ */
-  --container-max: 1280px;
-  --header-height: 72px;
-  --grid-line-color: rgba(0, 229, 255, 0.06);
-  --grid-line-size: 40px;
-  --noise-opacity: 0.03;
-  --scanline-opacity: 0.05;
+  --grid-line-color:     rgba(0, 229, 255, 0.06);
+  --grid-line-color-major: rgba(0, 229, 255, 0.10);
+  --grid-line-size:      40px;
+  --grid-line-size-major:200px;
+  --noise-opacity:       0.03;
+  --scanline-opacity:    0.05;
+  --scanline-gap:        3px;
+  --scanline-color:      rgba(0, 229, 255, 0.05);
+  --vignette-opacity:    0.6;
 
-  /* Z-index scale */
-  --z-base: 1;
-  --z-panel: 10;
-  --z-overlay: 100;
-  --z-modal: 1000;
-  --z-toast: 1100;
-  --z-cursor: 9999;
+  /* ============================================================
+     12. CURSOR / RETICLE
+     ============================================================ */
+  --cursor-size:        28px;
+  --cursor-size-lg:     56px;
+  --cursor-dot:         3px;
+  --cursor-color:       var(--neon-cyan);
+  --cursor-color-alt:   var(--neon-green);
+  --cursor-ring-width:  1.5px;
+  --cursor-blend:       screen;
+
+  /* ============================================================
+     13. Z-INDEX SCALE
+     ============================================================ */
+  --z-hide:      -1;
+  --z-base:       1;
+  --z-content:    5;
+  --z-panel:      10;
+  --z-sticky:     50;
+  --z-header:     60;
+  --z-overlay:    100;
+  --z-drawer:     200;
+  --z-modal:      1000;
+  --z-toast:      1100;
+  --z-cursor:     9999;
+
+  /* ============================================================
+     14. FOCUS / ACCESSIBILITY
+     ============================================================ */
+  --focus-ring:        0 0 0 2px var(--bg-base), 0 0 0 4px var(--neon-cyan);
+  --focus-ring-soft:   0 0 0 3px var(--neon-cyan-glow-soft);
+  --focus-outline:     2px solid var(--neon-cyan);
+  --focus-offset:      2px;
+
+  /* ============================================================
+     15. MISC UTILITIES
+     ============================================================ */
+  --hud-corner-size:   14px;
+  --hud-corner-width:  1.5px;
+  --hud-corner-color:  var(--neon-cyan);
+  --hud-tick-length:   6px;
+
+  --noise-tint:        rgba(0, 229, 255, 0.015);
+  --divider-color:     var(--border-subtle);
+  --divider-gradient:  linear-gradient(90deg, transparent, var(--border-default) 20%, var(--border-default) 80%, transparent);
+
+  --backdrop-blur:     blur(12px) saturate(140%);
+  --backdrop-blur-strong: blur(24px) saturate(160%);
+}
+
+/* ============================================================
+   DARK MODE SUPPORT — future-proof
+   ============================================================ */
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Intentionally locked to dark — surveillance interfaces
+       should never invert. Declared for spec compliance. */
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION — respects user preference
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 0ms;
+    --duration-fast:    0ms;
+    --duration-base:    0ms;
+    --duration-medium:  0ms;
+    --duration-slow:    0ms;
+    --duration-slower:  0ms;
+    --duration-scan:    0ms;
+    --duration-pulse:   0ms;
+    --duration-blip:    0ms;
+    --duration-flicker: 0ms;
+  }
+}
+
+/* ============================================================
+   HIGH CONTRAST MODE
+   ============================================================ */
+@media (prefers-contrast: more) {
+  :root {
+    --text-primary:     #ffffff;
+    --text-secondary:   #c8d6ea;
+    --border-default:   rgba(200, 214, 234, 0.35);
+    --border-strong:    rgba(200, 214, 234, 0.55);
+    --glass-bg:         rgba(7, 11, 22, 0.85);
+    --glass-bg-strong:  rgba(7, 11, 22, 0.95);
+  }
 }
