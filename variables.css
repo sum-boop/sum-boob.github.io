@@ -2,20 +2,31 @@
    CCTV COMMAND CENTER — DESIGN TOKENS
    variables.css
 
-   Direction: editorial precision meets control-room technicality.
-   A serif carries the big narrative moments; mono carries system
-   readouts (tags, timestamps, status); sans carries everything you
-   read. Neon is a signal, not a wallpaper — most of the interface
-   should read as quiet obsidian, with color reserved for the one
-   thing that matters on screen.
+   Design philosophy:
+   → SERIF (Instrument Serif) carries narrative, editorial moments —
+     the big statements, the human voice of the portfolio.
+   → SANS (Inter) carries everything a visitor actually reads —
+     body copy, UI labels, buttons, descriptions.
+   → MONO (JetBrains Mono) carries system readouts — tags,
+     timestamps, status, coordinates, technical metadata.
+   → NEON IS A SIGNAL, NOT WALLPAPER. Cyan, green, and violet are
+     reserved for the one thing that matters in a given view:
+     live status, active nav, primary CTA. The rest of the interface
+     is quiet obsidian, so color always means something.
+
+   Aesthetic: "Editorial precision meets control-room technicality."
+   Surveillance Command Center, elevated to award-winning level.
    ================================================================ */
 
 :root {
 
   /* ==============================================================
      1. CORE PALETTE — obsidian depth scale
+     Seven steps from near-black upward. Most of the page lives
+     between --bg-base and --bg-elevated; surfaces are used sparingly
+     so that elevation always reads as deliberate.
      ============================================================== */
-  --bg-void:           #030405;
+  --bg-void:            #030405;
   --bg-base:            #07080b;
   --bg-elevated:        #0c0e13;
   --bg-surface:         #12141b;
@@ -23,93 +34,120 @@
   --bg-surface-active:  #1c202b;
   --bg-inset:           #020203;
 
-  /* Atmosphere — used once or twice per page, never tiled everywhere */
+  /* Atmosphere — used once or twice per page, never tiled.
+     These gradients anchor the eye to a single focal point. */
   --bg-radial-cyan:   radial-gradient(circle at 50% 0%, rgba(0, 229, 255, 0.07), transparent 62%);
   --bg-radial-green:  radial-gradient(circle at 50% 100%, rgba(0, 255, 156, 0.05), transparent 62%);
-  --bg-vignette:       radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.6) 100%);
+  --bg-vignette:      radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.6) 100%);
 
   /* ==============================================================
      2. GLASS SURFACES
+     Frosted panels float above the obsidian base. Three weights:
+     soft (ambient cards), default (standard panels), strong
+     (modals, headers, anything that must dominate).
      ============================================================== */
   --glass-bg:             rgba(12, 14, 19, 0.52);
   --glass-bg-strong:      rgba(12, 14, 19, 0.80);
   --glass-bg-soft:        rgba(12, 14, 19, 0.30);
   --glass-bg-hover:       rgba(23, 26, 35, 0.85);
+
   --glass-border:         rgba(200, 212, 230, 0.08);
   --glass-border-strong:  rgba(200, 212, 230, 0.16);
   --glass-highlight:      rgba(255, 255, 255, 0.05);
+
+  --glass-blur-soft:      8px;
   --glass-blur:           16px;
   --glass-blur-strong:    28px;
-  --glass-blur-soft:      8px;
+
   --glass-saturate:       130%;
 
   /* ==============================================================
      3. ACCENT SYSTEM
-     Cyan is primary — reserve it for the single most important
-     signal in any given view (live status, active nav, primary CTA).
-     Green means "operational/good." Violet is a rare tertiary,
-     used once per page at most, never for interactive states.
+     Cyan is the primary signal — reserve it for the single most
+     important element in any given view (live status, active nav,
+     primary CTA, focus ring).
+     Green means "operational / good" — online states, success,
+     a resolved signal.
+     Violet is a rare tertiary — used at most once per page,
+     never for interactive states. It exists to break the
+     cyan/green duality on a single editorial moment.
      ============================================================== */
-  --accent-cyan:       #00e5ff;
-  --accent-cyan-rgb:   0, 229, 255;
-  --accent-cyan-soft:  rgba(0, 229, 255, 0.16);
-  --accent-cyan-mid:   rgba(0, 229, 255, 0.38);
+  --accent-cyan:        #00e5ff;
+  --accent-cyan-rgb:    0, 229, 255;
+  --accent-cyan-soft:   rgba(0, 229, 255, 0.16);
+  --accent-cyan-mid:    rgba(0, 229, 255, 0.38);
 
-  --accent-green:      #00ff9c;
-  --accent-green-rgb:  0, 255, 156;
-  --accent-green-soft: rgba(0, 255, 156, 0.16);
-  --accent-green-mid:  rgba(0, 255, 156, 0.38);
+  --accent-green:       #00ff9c;
+  --accent-green-rgb:   0, 255, 156;
+  --accent-green-soft:  rgba(0, 255, 156, 0.16);
+  --accent-green-mid:   rgba(0, 255, 156, 0.38);
 
-  --accent-violet:     #a78bfa;
-  --accent-violet-rgb: 167, 139, 250;
-  --accent-violet-soft:rgba(167, 139, 250, 0.16);
+  --accent-violet:      #a78bfa;
+  --accent-violet-rgb:  167, 139, 250;
+  --accent-violet-soft: rgba(167, 139, 250, 0.16);
 
-  /* Legacy aliases kept for cross-file compatibility */
+  /* Legacy aliases — kept so older components.css / animations.css
+     references continue to resolve without edits. */
   --neon-cyan:   var(--accent-cyan);
   --neon-green:  var(--accent-green);
   --neon-violet: var(--accent-violet);
 
   /* ==============================================================
      4. STATUS COLORS — system states
+     Semantic layer used by badges, dots, and status pills.
+     Never used decoratively — a red dot means something is live
+     or wrong, not "look, red."
      ============================================================== */
-  --status-live:      #ff3b5c;
-  --status-live-rgb:  255, 59, 92;
-  --status-online:    #00ff9c;
-  --status-online-rgb: 0, 255, 156;
-  --status-offline:   #4a5468;
+  --status-live:        #ff3b5c;
+  --status-live-rgb:    255, 59, 92;
+
+  --status-online:      #00ff9c;
+  --status-online-rgb:  0, 255, 156;
+
+  --status-offline:     #4a5468;
   --status-offline-rgb: 74, 84, 104;
-  --status-alert:     #ff3b5c;
-  --status-warning:   #ffb703;
+
+  --status-alert:       #ff3b5c;
+  --status-warning:     #ffb703;
   --status-warning-rgb: 255, 183, 3;
-  --status-scanning:  #00e5ff;
+
+  --status-scanning:    #00e5ff;
 
   /* ==============================================================
      5. GLOW TOKENS — deliberately short list
      Three weights per color is enough. Use --glow-signal only for
-     the one hero moment on a page (a single button, a single badge).
+     the single hero moment on a page (one button, one badge,
+     one live indicator) — never for two elements at once.
      ============================================================== */
-  --glow-cyan-sm:  0 0 10px var(--accent-cyan-soft);
-  --glow-cyan-md:  0 0 24px var(--accent-cyan-mid);
-  --glow-cyan-lg:  0 0 48px var(--accent-cyan-mid), 0 0 90px var(--accent-cyan-soft);
+  --glow-cyan-sm:   0 0 10px var(--accent-cyan-soft);
+  --glow-cyan-md:   0 0 24px var(--accent-cyan-mid);
+  --glow-cyan-lg:   0 0 48px var(--accent-cyan-mid), 0 0 90px var(--accent-cyan-soft);
 
-  --glow-green-sm: 0 0 10px var(--accent-green-soft);
-  --glow-green-md: 0 0 24px var(--accent-green-mid);
+  --glow-green-sm:  0 0 10px var(--accent-green-soft);
+  --glow-green-md:  0 0 24px var(--accent-green-mid);
 
-  --glow-alert-md: 0 0 22px rgba(var(--status-live-rgb), 0.5);
+  --glow-alert-md:  0 0 22px rgba(var(--status-live-rgb), 0.5);
 
-  --glow-signal:   0 0 60px var(--accent-cyan-mid), 0 0 140px var(--accent-cyan-soft);
+  --glow-signal:    0 0 60px var(--accent-cyan-mid), 0 0 140px var(--accent-cyan-soft);
 
-  --text-glow-cyan:   0 0 14px var(--accent-cyan-mid);
-  --text-glow-green:  0 0 14px var(--accent-green-mid);
+  --text-glow-cyan:  0 0 14px var(--accent-cyan-mid);
+  --text-glow-green: 0 0 14px var(--accent-green-mid);
 
   /* Panel depth */
   --shadow-panel:     0 8px 30px rgba(0, 0, 0, 0.5);
   --shadow-panel-lg:  0 20px 70px rgba(0, 0, 0, 0.65);
   --shadow-hairline:  inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  --shadow-hover:     0 20px 60px rgba(0, 0, 0, 0.55), 0 0 30px var(--accent-cyan-soft), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --shadow-hover:
+    0 20px 60px rgba(0, 0, 0, 0.55),
+    0 0 30px var(--accent-cyan-soft),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
   /* ==============================================================
      6. TEXT HIERARCHY
+     Four steps of neutral brightness on obsidian. All steps
+     meet WCAG AA against --bg-base and --bg-elevated.
+     Accent text variants exist for mono readouts where a value
+     needs to visibly belong to a signal.
      ============================================================== */
   --text-primary:    #f2f5fa;
   --text-secondary:  #a6b3c7;
@@ -121,6 +159,9 @@
 
   /* ==============================================================
      7. BORDERS
+     Cool-white hairlines for structure, accent-tinted borders
+     for state. Alpha values are tuned for obsidian backgrounds
+     so a "subtle" border still reads as intentional.
      ============================================================== */
   --border-subtle:       rgba(200, 212, 230, 0.06);
   --border-default:      rgba(200, 212, 230, 0.12);
@@ -132,28 +173,28 @@
 
   /* ==============================================================
      8. TYPOGRAPHY — three-tier system
-     Display  → editorial serif, large narrative moments only
-     Body     → clean sans, everything a visitor actually reads
-     Mono     → system readouts — tags, timestamps, labels, badges
+     Display → editorial serif, large narrative moments only.
+     Body    → clean sans, everything a visitor actually reads.
+     Mono    → system readouts — tags, timestamps, labels, badges.
      ============================================================== */
   --font-display: 'Instrument Serif', 'Georgia', 'Times New Roman', serif;
   --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --font-mono:    'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --font-mono:    'JetBrains Mono', 'Fira Code', ui-monospace, 'SFMono-Regular', monospace;
 
-  /* Fluid display sizes */
+  /* Fluid display sizes — scale smoothly across viewport */
   --fs-hero:      clamp(3rem, 5vw + 1.5rem, 7.5rem);
   --fs-display:   clamp(2.25rem, 3vw + 1.25rem, 4.5rem);
   --fs-section:   clamp(1.75rem, 2vw + 1rem, 2.75rem);
   --fs-subtitle:  clamp(1.05rem, 0.6vw + 0.85rem, 1.375rem);
 
   /* Static scale — UI text, labels, body copy */
-  --fs-2xs: 0.6875rem;
-  --fs-xs:  0.75rem;
-  --fs-sm:  0.875rem;
-  --fs-base:1rem;
-  --fs-md:  1.125rem;
-  --fs-lg:  1.375rem;
-  --fs-xl:  1.75rem;
+  --fs-2xs:  0.6875rem;  /* 11px — mono micro-labels */
+  --fs-xs:   0.75rem;    /* 12px — badges, tags */
+  --fs-sm:   0.875rem;   /* 14px — secondary UI */
+  --fs-base: 1rem;       /* 16px — body */
+  --fs-md:   1.125rem;   /* 18px — lead paragraphs */
+  --fs-lg:   1.375rem;   /* 22px — subheads */
+  --fs-xl:   1.75rem;    /* 28px — inline large */
 
   --fw-regular:  400;
   --fw-medium:   500;
@@ -174,17 +215,19 @@
 
   /* ==============================================================
      9. SPACING & LAYOUT — generous, editorial rhythm
+     Section spacing leans large so the page breathes. Gutters
+     and container widths are tuned for a 1280px editorial grid.
      ============================================================== */
-  --space-3xs: 0.25rem;
-  --space-2xs: 0.5rem;
-  --space-xs:  0.75rem;
-  --space-sm:  1rem;
-  --space-md:  1.5rem;
-  --space-lg:  2.25rem;
-  --space-xl:  3.5rem;
-  --space-2xl: 5.5rem;
-  --space-3xl: 8rem;
-  --space-4xl: 12rem;
+  --space-3xs: 0.25rem;   /* 4px */
+  --space-2xs: 0.5rem;    /* 8px */
+  --space-xs:  0.75rem;   /* 12px */
+  --space-sm:  1rem;      /* 16px */
+  --space-md:  1.5rem;    /* 24px */
+  --space-lg:  2.25rem;   /* 36px */
+  --space-xl:  3.5rem;    /* 56px */
+  --space-2xl: 5.5rem;    /* 88px */
+  --space-3xl: 8rem;      /* 128px */
+  --space-4xl: 12rem;     /* 192px */
 
   --container-max:    1280px;
   --container-narrow: 760px;
@@ -193,6 +236,8 @@
 
   /* ==============================================================
      10. RADIUS
+     Small radii dominate — this is a control room, not a
+     soft-cornered consumer app. --radius-full is for pills only.
      ============================================================== */
   --radius-xs:   3px;
   --radius-sm:   6px;
@@ -203,6 +248,9 @@
 
   /* ==============================================================
      11. MOTION
+     Editorial easing is the default — a slow start, a confident
+     settle. Sharp easing is reserved for state changes on
+     interactive controls (buttons, toggles).
      ============================================================== */
   --ease-smooth:    cubic-bezier(0.16, 1, 0.3, 1);
   --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
@@ -214,64 +262,80 @@
   --duration-slow:   550ms;
   --duration-slower: 900ms;
 
+  /* Long-running loops — scanning sweeps, live pulses */
   --duration-scan:  2400ms;
   --duration-pulse: 1800ms;
 
   /* ==============================================================
      12. ATMOSPHERE — kept quiet by default
+     These are the "air" of the interface: a faint grid, a whisper
+     of scanlines, film grain, and a spotlight that can follow the
+     cursor. Every value here is deliberately subtle.
      ============================================================== */
   --grid-line-color:  rgba(0, 229, 255, 0.05);
   --grid-line-size:   44px;
   --scanline-opacity: 0.04;
   --vignette-opacity: 0.55;
 
-  /* Fine film-grain texture, applied at very low opacity for depth */
+  /* Fine film-grain texture — an inline feTurbulence SVG applied
+     at very low opacity for depth. No external asset required. */
   --grain-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'%3E%3C/feTurbulence%3E%3CfeColorMatrix type='saturate' values='0'%3E%3C/feColorMatrix%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'%3E%3C/rect%3E%3C/svg%3E");
-  --grain-opacity: 0.035;
+  --grain-opacity:    0.035;
 
   /* Soft light that can follow the cursor across a dark panel */
-  --spotlight-size:  520px;
-  --spotlight-color: rgba(0, 229, 255, 0.07);
+  --spotlight-size:   520px;
+  --spotlight-color:  rgba(0, 229, 255, 0.07);
 
   /* ==============================================================
      13. CURSOR / RETICLE
+     Custom crosshair cursor. The large ring is the reticle; the
+     dot is the exact aim point. Colors stay on-brand — cyan at
+     rest, green when a target is acquired.
      ============================================================== */
-  --cursor-size:       26px;
-  --cursor-size-lg:    58px;
-  --cursor-dot:        4px;
-  --cursor-color:      var(--accent-cyan);
-  --cursor-color-alt:  var(--accent-green);
-  --cursor-ring-width: 1px;
+  --cursor-size:        26px;
+  --cursor-size-lg:     58px;
+  --cursor-dot:         4px;
+  --cursor-color:       var(--accent-cyan);
+  --cursor-color-alt:   var(--accent-green);
+  --cursor-ring-width:  1px;
 
   /* ==============================================================
      14. IMAGE TREATMENT
-     Photography stays desaturated at rest, resolves to full color
-     on hover/focus — reads as "footage coming online."
+     Photography stays desaturated at rest and resolves to full
+     color on hover/focus — reads as "footage coming online."
      ============================================================== */
   --image-filter-rest:  grayscale(0.55) contrast(1.05) brightness(0.92);
   --image-filter-hover: grayscale(0) contrast(1.02) brightness(1);
 
   /* ==============================================================
      15. Z-INDEX SCALE
+     Layered so that overlays never fight each other. Cursor sits
+     above everything — it is the user's presence in the UI.
      ============================================================== */
-  --z-base:     1;
-  --z-content:  5;
-  --z-panel:    10;
-  --z-header:   60;
-  --z-overlay:  100;
-  --z-modal:    1000;
-  --z-toast:    1100;
-  --z-cursor:   9999;
+  --z-base:    1;
+  --z-content: 5;
+  --z-panel:   10;
+  --z-header:  60;
+  --z-overlay: 100;
+  --z-modal:   1000;
+  --z-toast:   1100;
+  --z-cursor:  9999;
 
   /* ==============================================================
      16. FOCUS / ACCESSIBILITY
+     Cyan double-ring for keyboard focus. The outer dark ring
+     separates the cyan from any background, ensuring visibility
+     on both obsidian and glass surfaces.
      ============================================================== */
   --focus-ring:      0 0 0 2px var(--bg-base), 0 0 0 4px var(--accent-cyan);
   --focus-ring-soft: 0 0 0 3px var(--accent-cyan-soft);
 }
 
 /* ==================================================================
-   REDUCED MOTION — respects user preference
+   REDUCED MOTION
+   Respects the user's system preference. All duration tokens
+   collapse to 0ms so any transition or animation becomes
+   instantaneous without removing it from the cascade.
    ================================================================== */
 @media (prefers-reduced-motion: reduce) {
   :root {
@@ -286,13 +350,22 @@
 
 /* ==================================================================
    HIGH CONTRAST MODE
+   Raises text brightness, strengthens borders, and makes glass
+   surfaces near-opaque so panels remain readable when the user
+   has requested increased contrast at the OS level.
    ================================================================== */
 @media (prefers-contrast: more) {
   :root {
-    --text-primary:   #ffffff;
-    --text-secondary: #d6dfec;
-    --border-default: rgba(214, 223, 236, 0.35);
-    --glass-bg:        rgba(7, 8, 11, 0.9);
+    --text-primary:    #ffffff;
+    --text-secondary:  #d6dfec;
+    --text-tertiary:   #b6c1d2;
+
+    --border-subtle:   rgba(214, 223, 236, 0.18);
+    --border-default:  rgba(214, 223, 236, 0.35);
+    --border-strong:   rgba(214, 223, 236, 0.55);
+
+    --glass-bg:        rgba(7, 8, 11, 0.90);
     --glass-bg-strong: rgba(7, 8, 11, 0.97);
+    --glass-border:    rgba(214, 223, 236, 0.28);
   }
 }
