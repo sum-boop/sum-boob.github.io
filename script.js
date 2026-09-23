@@ -1,239 +1,401 @@
 /* ==========================================================================
-   1. CYBER TRAILING CURSOR
+   CCTV COMMAND CENTER — script.js
+   Interactive Systems
+   Cursor · Clock · Particles · Tilt · Filters · Modals · Reveals · Spy
    ========================================================================== */
-const cursorDot = document.querySelector('.cursor-dot');
-const cursorRing = document.querySelector('.cursor-ring');
-const supportsFinePointer = window.matchMedia('(pointer: fine)').matches;
+'use strict';
 
-if (cursorDot && cursorRing && supportsFinePointer) {
-  let mouseX = 0, mouseY = 0;
-  let ringX = 0, ringY = 0;
+/* ==========================================================================
+   0. ENVIRONMENT + UTILITIES
+   ========================================================================== */
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const supportsFinePointer  = window.matchMedia('(pointer: fine)').matches;
 
-  window.addEventListener('mousemove', (e) => {
+const $  = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+const CONTACT_EMAIL = 'sa8518430@gmail.com';
+
+/* Selectors that trigger the reticle "lock-on" state */
+const HOVER_SELECTOR = [
+  'a',
+  'button',
+  '[role="button"]',
+  '.op-card',
+  '.tech-tag-span',
+  '.nav-links a',
+  '.feed-filter-btn'
+].join(',');
+
+/* Selectors that switch the cursor into text-caret mode */
+const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
+
+/* ==========================================================================
+   1. CURSOR — crosshair reticle with state machine
+   ========================================================================== */
+(function initCursor() {
+  const dot  = $('.cursor-dot');
+  const ring = $('.cursor-ring');
+  if (!dot || !ring || !supportsFinePointer) return;
+
+  let mouseX = window.innerWidth  / 2;
+  let mouseY = window.innerHeight / 2;
+  let ringX  = mouseX;
+  let ringY  = mouseY;
+  let rafId  = null;
+  const EASE = 0.18;
+
+  /* Dot snaps to the pointer with zero lag — precise point of aim */
+  const onPointerMove = (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
-    // Dot snaps exactly to the pointer — precise, zero-lag point of aim
-    cursorDot.style.left = `${mouseX}px`;
-    cursorDot.style.top = `${mouseY}px`;
-  }, { passive: true });
+    dot.style.left = `${mouseX}px`;
+    dot.style.top  = `${mouseY}px`;
+  };
 
-  function renderCursor() {
-    // Ring eases toward the pointer — gives the reticle a "tracking" feel
-    ringX += (mouseX - ringX) * 0.2;
-    ringY += (mouseY - ringY) * 0.2;
-    cursorRing.style.left = `${ringX}px`;
-    cursorRing.style.top = `${ringY}px`;
-    requestAnimationFrame(renderCursor);
-  }
-  requestAnimationFrame(renderCursor);
+  /* Ring eases toward the pointer — creates a tracking reticle feel */
+  const tick = () => {
+    ringX += (mouseX - ringX) * EASE;
+    ringY += (mouseY - ringY) * EASE;
+    ring.style.left = `${ringX}px`;
+    ring.style.top  = `${ringY}px`;
+    rafId = requestAnimationFrame(tick);
+  };
 
-  document.querySelectorAll('a, button, .op-card, .glass-card').forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+  window.addEventListener('mousemove', onPointerMove, { passive: true });
+
+  /* Pause the render loop when the tab is hidden to save cycles */
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    } else if (rafId === null) {
+      rafId = requestAnimationFrame(tick);
+    }
   });
-}
 
-/* ==========================================================================
-   2. SCROLL PROGRESS
-   ========================================================================== */
-const progressBar = document.getElementById('progress-bar');
+  rafId = requestAnimationFrame(tick);
 
-if (progressBar) {
-  window.addEventListener('scroll', () => {
-    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
-    progressBar.style.width = `${progress}%`;
+  /* --- State classes ------------------------------------------ */
+  document.addEventListener('mouseover', (e) => {
+    const target = e.target;
+    if (target.closest?.(HOVER_SELECTOR)) document.body.classList.add('cursor-hover');
+    if (target.closest?.(TEXT_SELECTOR))  document.body.classList.add('cursor-text');
   }, { passive: true });
-}
+
+  document.addEventListener('mouseout', (e) => {
+    const from = e.target;
+    const to   = e.relatedTarget;
+
+    if (from.closest?.(HOVER_SELECTOR)) {
+      const stillInside = to && to.closest?.(HOVER_SELECTOR);
+      if (!stillInside) document.body.classList.remove('cursor-hover');
+    }
+
+    if (from.closest?.(TEXT_SELECTOR)) {
+      const stillInside = to && to.closest?.(TEXT_SELECTOR);
+      if (!stillInside) document.body.classList.remove('cursor-text');
+    }
+  }, { passive: true });
+
+  document.addEventListener('mousedown', () => document.body.classList.add('cursor-active'));
+  document.addEventListener('mouseup',   () => document.body.classList.remove('cursor-active'));
+
+  document.addEventListener('mouseleave', () => document.body.classList.add('cursor-hidden'));
+  document.addEventListener('mouseenter', () => document.body.classList.remove('cursor-hidden'));
+})();
 
 /* ==========================================================================
-   3. CONSTELLATION / MATRIX CANVAS PARTICLES
+   2. SCROLL PROGRESS BAR
    ========================================================================== */
-const canvas = document.getElementById('particles-canvas');
+(function initProgressBar() {
+  const bar = document.getElementById('progress-bar');
+  if (!bar) return;
 
-if (canvas) {
-  const ctx = canvas.getContext('2d');
-  let particlesArray = [];
+  let ticking = false;
 
-  // Pull live theme colors from the CSS custom properties instead of
-  // hardcoding hex values, so the canvas always matches variables.css
+  const update = () => {
+    const doc = document.documentElement;
+    const scrollTop  = doc.scrollTop || document.body.scrollTop;
+    const scrollable = doc.scrollHeight - doc.clientHeight;
+    const progress   = scrollable > 0 ? (scrollTop / scrollable) * 100 : 0;
+    bar.style.width = `${progress}%`;
+    bar.setAttribute('aria-valuenow', Math.round(progress));
+    ticking = false;
+  };
+
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }, { passive: true });
+
+  update();
+})();
+
+/* ==========================================================================
+   3. PARTICLE CONSTELLATION — hero background canvas
+   ========================================================================== */
+(function initParticles() {
+  const canvas = document.getElementById('particles-canvas');
+  if (!canvas || prefersReducedMotion) return;
+
+  const ctx = canvas.getContext('2d', { alpha: true });
+  if (!ctx) return;
+
+  /* Pull theme colors from CSS variables so canvas stays in sync */
   const rootStyles = getComputedStyle(document.documentElement);
+  const parseColor = (hex, fallback) => {
+    const clean = (hex || '').trim().replace('#', '');
+    if (!clean) return fallback;
+    const n = parseInt(clean, 16);
+    if (Number.isNaN(n)) return fallback;
+    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+  };
 
-  function hexToRgb(hex) {
-    const clean = hex.trim().replace('#', '');
-    const bigint = parseInt(clean, 16);
-    return { r: (bigint >> 16) & 255, g: (bigint >> 8) & 255, b: bigint & 255 };
-  }
+  const DOT  = parseColor(rootStyles.getPropertyValue('--neon-cyan'),   { r: 0,   g: 229, b: 255 });
+  const LINE = parseColor(rootStyles.getPropertyValue('--neon-violet'), { r: 157, g: 77,  b: 255 });
 
-  const dotColor = hexToRgb(rootStyles.getPropertyValue('--neon-cyan') || '#00e5ff');
-  const lineColor = hexToRgb(rootStyles.getPropertyValue('--neon-violet') || '#9d4dff');
+  const MAX_DIST = 120;
+  const COUNT    = 55;
 
-  function initCanvas() {
-    canvas.width = canvas.parentElement.clientWidth;
-    canvas.height = canvas.parentElement.clientHeight;
-  }
-  window.addEventListener('resize', initCanvas, { passive: true });
-  initCanvas();
+  let W = 0;
+  let H = 0;
+  let dpr = 1;
+  let particles = [];
+
+  const resize = () => {
+    const rect = canvas.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = rect.width;
+    H = rect.height;
+    canvas.width  = Math.floor(W * dpr);
+    canvas.height = Math.floor(H * dpr);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+  };
 
   class Particle {
-    constructor() {
-      this.x = Math.random() * canvas.width;
-      this.y = Math.random() * canvas.height;
-      this.size = Math.random() * 2 + 1;
-      this.speedX = (Math.random() - 0.5) * 0.8;
-      this.speedY = (Math.random() - 0.5) * 0.8;
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.size = Math.random() * 1.8 + 0.8;
+      this.vx = (Math.random() - 0.5) * 0.6;
+      this.vy = (Math.random() - 0.5) * 0.6;
     }
-    update() {
-      this.x += this.speedX;
-      this.y += this.speedY;
-      if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-      if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+    step() {
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.x < 0) { this.x = 0; this.vx *= -1; }
+      if (this.x > W) { this.x = W; this.vx *= -1; }
+      if (this.y < 0) { this.y = 0; this.vy *= -1; }
+      if (this.y > H) { this.y = H; this.vy *= -1; }
     }
     draw() {
-      ctx.fillStyle = `rgba(${dotColor.r}, ${dotColor.g}, ${dotColor.b}, 0.6)`;
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${DOT.r}, ${DOT.g}, ${DOT.b}, 0.65)`;
       ctx.fill();
     }
   }
 
-  for (let i = 0; i < 50; i++) {
-    particlesArray.push(new Particle());
-  }
+  const seed = () => {
+    particles = [];
+    for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+  };
 
-  function animateParticles() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 0; i < particlesArray.length; i++) {
-      particlesArray[i].update();
-      particlesArray[i].draw();
+  const frame = () => {
+    ctx.clearRect(0, 0, W, H);
 
-      for (let j = i; j < particlesArray.length; j++) {
-        const dx = particlesArray[i].x - particlesArray[j].x;
-        const dy = particlesArray[i].y - particlesArray[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 120) {
-          ctx.strokeStyle = `rgba(${lineColor.r}, ${lineColor.g}, ${lineColor.b}, ${0.25 - dist / 480})`;
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
-          ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
-          ctx.stroke();
-        }
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+      p.step();
+      p.draw();
+
+      for (let j = i + 1; j < particles.length; j++) {
+        const q = particles[j];
+        const dx = p.x - q.x;
+        const dy = p.y - q.y;
+        const d2 = dx * dx + dy * dy;
+        if (d2 > MAX_DIST * MAX_DIST) continue;
+
+        const dist  = Math.sqrt(d2);
+        const alpha = (1 - dist / MAX_DIST) * 0.28;
+
+        ctx.strokeStyle = `rgba(${LINE.r}, ${LINE.g}, ${LINE.b}, ${alpha})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(q.x, q.y);
+        ctx.stroke();
       }
     }
-    requestAnimationFrame(animateParticles);
-  }
-  requestAnimationFrame(animateParticles);
-}
+
+    requestAnimationFrame(frame);
+  };
+
+  /* Debounced resize */
+  let resizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      resize();
+      seed();
+    }, 180);
+  }, { passive: true });
+
+  resize();
+  seed();
+  requestAnimationFrame(frame);
+})();
 
 /* ==========================================================================
-   4. 3D CARD TILT EFFECT
+   4. SURVEILLANCE TIMESTAMP CLOCK (UTC + IST)
    ========================================================================== */
-if (supportsFinePointer) {
-  document.querySelectorAll('.op-card').forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      const rotateX = (y - centerY) / 12;
-      const rotateY = (centerX - x) / 12;
-      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
-    });
-
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
-    });
-  });
-}
-
-/* ==========================================================================
-   5. SURVEILLANCE TIMESTAMP CLOCK (UTC / IST)
-   ========================================================================== */
-function initSurveillanceClock() {
-  const nav = document.querySelector('nav');
-  if (!nav) return;
-
+(function initSurveillanceClock() {
   let clockEl = document.getElementById('cctv-clock');
+
   if (!clockEl) {
     clockEl = document.createElement('div');
     clockEl.id = 'cctv-clock';
+    clockEl.setAttribute('aria-hidden', 'true');
     clockEl.style.cssText = `
       position: fixed;
-      top: calc(var(--header-height) + 14px);
+      top: calc(var(--header-height, 72px) + 14px);
       right: 20px;
-      z-index: var(--z-overlay);
-      font-family: var(--font-mono);
-      font-size: var(--fs-xs);
-      letter-spacing: var(--ls-wide);
-      color: var(--neon-cyan);
-      text-shadow: var(--text-glow-cyan);
-      background: var(--glass-bg);
-      border: 1px solid var(--border-cyan);
-      border-radius: var(--radius-sm);
+      z-index: var(--z-overlay, 100);
+      font-family: var(--font-mono, monospace);
+      font-size: var(--fs-xs, 0.75rem);
+      letter-spacing: var(--ls-wide, 0.04em);
+      color: var(--neon-cyan, #00e5ff);
+      text-shadow: var(--text-glow-cyan, 0 0 12px rgba(0, 229, 255, 0.45));
+      background: var(--glass-bg, rgba(11, 17, 32, 0.55));
+      border: 1px solid var(--border-cyan, rgba(0, 229, 255, 0.28));
+      border-radius: var(--radius-sm, 4px);
       padding: 5px 12px;
       pointer-events: none;
       white-space: nowrap;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      transition: opacity 240ms ease;
     `;
     document.body.appendChild(clockEl);
   }
 
-  function pad(n) {
-    return String(n).padStart(2, '0');
-  }
+  const pad = (n) => String(n).padStart(2, '0');
 
-  function updateClock() {
+  const update = () => {
     const now = new Date();
-    const utcH = pad(now.getUTCHours());
-    const utcM = pad(now.getUTCMinutes());
-    const utcS = pad(now.getUTCSeconds());
-
-    // IST = UTC + 5:30, computed without mutating the base date
-    const istMillis = now.getTime() + (5.5 * 60 * 60 * 1000);
-    const ist = new Date(istMillis);
-    const istH = pad(ist.getUTCHours());
-    const istM = pad(ist.getUTCMinutes());
-    const istS = pad(ist.getUTCSeconds());
 
     const dateStr = `${now.getUTCFullYear()}-${pad(now.getUTCMonth() + 1)}-${pad(now.getUTCDate())}`;
+    const utcStr  = `${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}`;
 
-    clockEl.textContent = `● REC ${dateStr}  UTC ${utcH}:${utcM}:${utcS}  /  IST ${istH}:${istM}:${istS}`;
-  }
+    /* IST = UTC + 5h 30m — computed from a UTC-derived Date to stay TZ-agnostic */
+    const ist = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
+    const istStr = `${pad(ist.getUTCHours())}:${pad(ist.getUTCMinutes())}:${pad(ist.getUTCSeconds())}`;
 
-  function updateClockVisibility() {
-    clockEl.style.display = window.innerWidth < 640 ? 'none' : 'block';
-  }
+    clockEl.textContent = `● REC ${dateStr}  ·  UTC ${utcStr}  ·  IST ${istStr}`;
+  };
 
-  updateClock();
-  updateClockVisibility();
-  setInterval(updateClock, 1000);
-  window.addEventListener('resize', updateClockVisibility, { passive: true });
-}
-initSurveillanceClock();
+  const syncVisibility = () => {
+    clockEl.style.display = window.innerWidth < 720 ? 'none' : 'block';
+  };
 
-/* ==========================================================================
-   6. PROJECT CATEGORY FILTER
-   ========================================================================== */
-function initProjectFilters() {
-  const grid = document.querySelector('.operations-grid');
-  if (!grid) return;
+  /* Align the first update to the next full second, then run a clean 1 Hz interval */
+  const startTicking = () => {
+    const delay = 1000 - (Date.now() % 1000);
+    setTimeout(() => {
+      update();
+      setInterval(update, 1000);
+    }, delay);
+  };
 
-  const cards = Array.from(grid.querySelectorAll('.op-card'));
-  if (!cards.length) return;
+  update();
+  syncVisibility();
+  startTicking();
 
-  // Derive each card's category from its existing feed badge text
-  cards.forEach(card => {
-    const badge = card.querySelector('.op-card-badge-span');
-    card.dataset.category = badge ? badge.textContent.trim() : 'All';
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) update();
   });
 
-  const categories = ['All', ...new Set(cards.map(c => c.dataset.category))];
+  window.addEventListener('resize', syncVisibility, { passive: true });
+})();
 
-  const filterBar = document.createElement('div');
-  filterBar.id = 'feed-filter-bar';
-  filterBar.style.cssText = `
+/* ==========================================================================
+   5. 3D CARD TILT — feed cards
+   ========================================================================== */
+(function initCardTilt() {
+  if (!supportsFinePointer || prefersReducedMotion) return;
+
+  $$('.op-card').forEach((card) => {
+    let rect = null;
+
+    const onEnter = () => { rect = card.getBoundingClientRect(); };
+
+    const onMove = (e) => {
+      if (!rect) rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = rect.width  / 2;
+      const cy = rect.height / 2;
+      const rotX = ((y - cy) / rect.height) * -8;
+      const rotY = ((x - cx) / rect.width)  *  8;
+      card.style.transform =
+        `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-6px)`;
+    };
+
+    const onLeave = () => {
+      rect = null;
+      card.style.transform = '';
+    };
+
+    card.addEventListener('mouseenter', onEnter);
+    card.addEventListener('mousemove',  onMove);
+    card.addEventListener('mouseleave', onLeave);
+  });
+})();
+
+/* ==========================================================================
+   6. PROJECT CATEGORY FILTER BAR
+   ========================================================================== */
+(function initProjectFilters() {
+  const grid = $('.operations-grid');
+  if (!grid) return;
+
+  const cards = $$('.op-card', grid);
+  if (!cards.length) return;
+
+  /* Map each card's op-key (from its onclick) to a human category label */
+  const CATEGORY_BY_OP = {
+    op1: 'Surveillance',
+    op2: 'Gate Control',
+    op3: 'Compliance',
+    op4: 'Forensics',
+    op5: 'Perimeter',
+    op6: 'Emergency'
+  };
+
+  const getOpKey = (card) => {
+    const attr = card.getAttribute('onclick') || '';
+    const m = attr.match(/openOpModal\(\s*['"]?(\w+)['"]?\s*\)/);
+    return m ? m[1] : null;
+  };
+
+  cards.forEach((card) => {
+    const key = getOpKey(card);
+    card.dataset.category = (key && CATEGORY_BY_OP[key]) || 'Other';
+  });
+
+  const categories = ['All', ...new Set(cards.map((c) => c.dataset.category))];
+
+  /* --- Build the filter bar ------------------------------------- */
+  const bar = document.createElement('div');
+  bar.id = 'feed-filter-bar';
+  bar.className = 'feed-filter-bar';
+  bar.setAttribute('role', 'tablist');
+  bar.setAttribute('aria-label', 'Filter feed deployments');
+  bar.style.cssText = `
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
@@ -241,36 +403,40 @@ function initProjectFilters() {
     margin-bottom: var(--space-lg);
   `;
 
-  function setActiveButton(activeBtn) {
-    filterBar.querySelectorAll('.feed-filter-btn').forEach(btn => {
+  const setActive = (activeBtn) => {
+    $$('.feed-filter-btn', bar).forEach((btn) => {
       const isActive = btn === activeBtn;
-      btn.style.borderColor = isActive ? 'var(--neon-cyan)' : 'var(--border-default)';
-      btn.style.color = isActive ? 'var(--neon-cyan)' : 'var(--text-primary)';
-      btn.style.boxShadow = isActive ? 'var(--glow-cyan-sm)' : 'none';
+      btn.style.borderColor = isActive ? 'var(--neon-cyan)'        : 'var(--border-default)';
+      btn.style.color       = isActive ? 'var(--neon-cyan)'        : 'var(--text-primary)';
+      btn.style.boxShadow   = isActive ? 'var(--glow-cyan-sm)'     : 'none';
+      btn.setAttribute('aria-selected', String(isActive));
     });
-  }
+  };
 
-  function applyFilter(filter) {
-    cards.forEach(card => {
+  const applyFilter = (filter) => {
+    cards.forEach((card) => {
       const match = filter === 'All' || card.dataset.category === filter;
-      card.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+
+      card.style.transition = 'opacity 320ms ease, transform 320ms ease';
+
       if (match) {
         card.style.display = '';
-        requestAnimationFrame(() => {
-          card.style.opacity = '1';
-          card.style.transform = 'scale(1)';
-        });
+        /* Force a reflow before flipping opacity so the transition always runs */
+        void card.offsetWidth;
+        card.style.opacity = '1';
+        card.style.transform = 'scale(1)';
       } else {
         card.style.opacity = '0';
-        card.style.transform = 'scale(0.92)';
-        setTimeout(() => {
+        card.style.transform = 'scale(0.94)';
+        /* Defer display:none until the fade-out completes */
+        window.setTimeout(() => {
           if (card.dataset.category !== filter && filter !== 'All') {
             card.style.display = 'none';
           }
-        }, 350);
+        }, 340);
       }
     });
-  }
+  };
 
   categories.forEach((cat, i) => {
     const btn = document.createElement('button');
@@ -278,68 +444,124 @@ function initProjectFilters() {
     btn.textContent = cat;
     btn.dataset.filter = cat;
     btn.className = 'btn btn-glass feed-filter-btn';
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-selected', 'false');
     btn.style.padding = '0.5rem 1.2rem';
     btn.style.fontSize = 'var(--fs-xs)';
-    filterBar.appendChild(btn);
-    if (i === 0) setActiveButton(btn);
+    bar.appendChild(btn);
+    if (i === 0) setActive(btn);
   });
 
-  filterBar.addEventListener('click', (e) => {
+  bar.addEventListener('click', (e) => {
     const btn = e.target.closest('.feed-filter-btn');
     if (!btn) return;
-    setActiveButton(btn);
+    setActive(btn);
     applyFilter(btn.dataset.filter);
   });
 
-  grid.parentElement.insertBefore(filterBar, grid);
-}
-initProjectFilters();
+  grid.parentElement.insertBefore(bar, grid);
+})();
 
 /* ==========================================================================
-   7. INTERACTIVE MODALS & WORKING "HIRE ME" FORM
+   7. MODAL SYSTEM — universal briefing window
    ========================================================================== */
+let __lastFocusedEl = null;
+
+function openModal(html) {
+  const backdrop = document.getElementById('modal-backdrop');
+  const content  = document.getElementById('modal-content');
+  if (!backdrop || !content) return;
+
+  __lastFocusedEl = document.activeElement;
+
+  content.innerHTML = html;
+  backdrop.classList.add('active');
+  backdrop.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+
+  const closeBtn = backdrop.querySelector('.modal-close-btn');
+  if (closeBtn) closeBtn.focus({ preventScroll: true });
+}
+
+function closeModal() {
+  const backdrop = document.getElementById('modal-backdrop');
+  if (!backdrop) return;
+
+  backdrop.classList.remove('active');
+  backdrop.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+
+  if (__lastFocusedEl && typeof __lastFocusedEl.focus === 'function') {
+    __lastFocusedEl.focus({ preventScroll: true });
+    __lastFocusedEl = null;
+  }
+}
+
+function closeModalOnBackdrop(e) {
+  if (e.target && e.target.id === 'modal-backdrop') closeModal();
+}
+
+/* --- Project briefing data ------------------------------------ */
 const opData = {
   op1: {
-    title: "CP Plus Multi-Channel Surveillance Network",
-    img: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1000&auto=format&fit=crop",
-    desc: "Configured and actively monitored CP Plus multi-channel camera arrays across high-density logistics hubs. Responsible for live feeds, footage archiving, playback investigation during incidents, and preventing stock shrinkage across warehouse zones."
+    title: 'CP Plus Multi-Channel Surveillance Network',
+    img: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1200&auto=format&fit=crop',
+    desc: 'Configured and actively monitored CP Plus multi-channel camera arrays across high-density logistics hubs. Owned live feeds, footage archiving, playback investigation during incidents, and shrink prevention across every warehouse zone.'
   },
   op2: {
-    title: "Digital GIGO Gate & Data Entry Terminal",
-    img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1000&auto=format&fit=crop",
-    desc: "Managed high-density commercial vehicle logging and Goods-In/Goods-Out (GIGO) gate control for Flipkart's Kalash Mega Hub. Performed real-time MS Excel data entry, driver ID audits, dock allocation, and material gate pass clearance with zero operational error."
+    title: 'Digital GIGO Gate Control & Data Terminal',
+    img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop',
+    desc: 'Managed high-density commercial vehicle logging and Goods-In / Goods-Out gate control for the Flipkart Kalash Mega Hub. Executed real-time Excel data entry, driver ID audits, dock allocation, and material gate-pass clearance with zero operational error.'
   },
   op3: {
-    title: "PSARA Compliance & Emergency Safety Protocols",
-    img: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1000&auto=format&fit=crop",
-    desc: "Enforced strict compliance with Private Security Agencies Regulation Act (PSARA) protocols. Conducted fire extinguisher inspections, led emergency evacuation drills, performed security badge audits, and maintained daily shift logs for management review."
+    title: 'PSARA Compliance & Emergency Safety Protocols',
+    img: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1200&auto=format&fit=crop',
+    desc: 'Enforced strict compliance with the Private Security Agencies Regulation Act (PSARA). Ran fire-extinguisher inspections, led emergency evacuation drills, performed badge audits, and produced daily shift reports for management review.'
+  },
+  op4: {
+    title: 'Incident Forensic Review & Footage Reconstruction',
+    img: 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=1200&auto=format&fit=crop',
+    desc: 'Extracted time-stamped footage across multi-camera arrays, documented chain-of-custody for evidentiary review, and reconstructed incident timelines to support loss investigations and disciplinary actions.'
+  },
+  op5: {
+    title: 'Perimeter & Dock Security Operations',
+    img: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=1200&auto=format&fit=crop',
+    desc: 'Coordinated dock-movement verification against inbound / outbound manifests, supervised patrol schedules, and escalated perimeter-breach events with clear reporting to shift command.'
+  },
+  op6: {
+    title: 'Emergency Response Coordination Center',
+    img: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=1200&auto=format&fit=crop',
+    desc: 'Operated alarm-to-action dispatch under live surveillance coverage, routed evacuation paths using camera intelligence, and produced post-incident command-center reports used for compliance audits.'
   }
 };
 
-function openOpModal(opKey) {
-  const data = opData[opKey];
+function openOpModal(key) {
+  const data = opData[key];
   if (!data) return;
 
   const html = `
-    <img src="${data.img}" class="modal-img" alt="${data.title}" />
-    <h2 class="modal-title">${data.title}</h2>
+    <img class="modal-img" src="${data.img}" alt="${data.title}" loading="lazy" decoding="async" />
+    <h2 id="modal-window-title" class="modal-title">${data.title}</h2>
     <p class="modal-body-text">${data.desc}</p>
-    <button class="btn btn-hire" onclick="openHireModal()">
-      <i class="fa-solid fa-paper-plane"></i> <span class="btn-text-span">Discuss Deployment Offer</span>
+    <button type="button" class="btn btn-hire" onclick="openHireModal()">
+      <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+      <span>Discuss Deployment Offer</span>
     </button>
   `;
 
-  document.getElementById('modal-content').innerHTML = html;
-  document.getElementById('modal-backdrop').classList.add('active');
-  document.body.style.overflow = 'hidden';
+  openModal(html);
 }
 
 function openHireModal() {
   const html = `
-    <div style="text-align: center; margin-bottom: 1.8rem;">
+    <div style="text-align:center;margin-bottom:1.8rem;">
       <span class="section-tag-span">Deployment Enquiry</span>
-      <h2 class="modal-title" style="margin-top: 0.4rem;">Hire <span class="highlight-span">Sumit Anand</span></h2>
-      <p style="color: var(--text-muted); font-size: 0.95rem;">Deploy a CCTV Operator & Gate Control Specialist to your hub.</p>
+      <h2 id="modal-window-title" class="modal-title" style="margin-top:0.4rem;">
+        Hire <span class="highlight-span">Sumit Anand</span>
+      </h2>
+      <p style="color:var(--text-muted);font-size:0.95rem;margin-top:0.35rem;">
+        Deploy a CCTV Operator &amp; Gate Control Specialist to your hub.
+      </p>
     </div>
 
     <form onsubmit="handleHireSubmit(event)">
@@ -355,160 +577,181 @@ function openHireModal() {
 
       <div class="form-field">
         <input type="text" id="hire-role" class="form-input" placeholder=" " />
-        <label for="hire-role" class="form-label">Role Title / Location (e.g. CCTV Lead - Mega Hub)</label>
+        <label for="hire-role" class="form-label">Role Title / Location</label>
       </div>
 
       <div class="form-field">
         <textarea id="hire-msg" class="form-input" placeholder=" " required></textarea>
-        <label for="hire-msg" class="form-label">Shift Details & Offer Note</label>
+        <label for="hire-msg" class="form-label">Shift Details &amp; Offer Note</label>
       </div>
 
-      <button type="submit" class="btn btn-hire" style="width: 100%; justify-content: center;">
-        <i class="fa-solid fa-bolt"></i> <span class="btn-text-span">Submit Employment Proposal</span>
+      <button type="submit" class="btn btn-hire" style="width:100%;justify-content:center;">
+        <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+        <span>Submit Employment Proposal</span>
       </button>
     </form>
   `;
 
-  document.getElementById('modal-content').innerHTML = html;
-  document.getElementById('modal-backdrop').classList.add('active');
-  document.body.style.overflow = 'hidden';
+  openModal(html);
 }
 
-function closeModal() {
-  document.getElementById('modal-backdrop').classList.remove('active');
-  document.body.style.overflow = 'auto';
-}
-
-function closeModalOnBackdrop(e) {
-  if (e.target.id === 'modal-backdrop') closeModal();
-}
+/* --- Keyboard affordance for role="button" cards --------------- */
+$$('.op-card[role="button"]').forEach((card) => {
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      card.click();
+    }
+  });
+});
 
 /* ==========================================================================
-   8. FORM SUBMISSION HANDLERS
+   8. FORM SUBMISSION — mailto bridge + toast
    ========================================================================== */
 function handleHireSubmit(e) {
   e.preventDefault();
-  const name = document.getElementById('hire-name').value;
-  const email = document.getElementById('hire-email').value;
-  const role = document.getElementById('hire-role').value;
-  const msg = document.getElementById('hire-msg').value;
 
-  const mailtoSubject = encodeURIComponent(`Hire Proposal for Sumit Anand: ${role || 'Security Specialist'}`);
-  const mailtoBody = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nRole/Location: ${role}\n\nNote:\n${msg}`);
+  const name  = ($('#hire-name')  || {}).value || '';
+  const email = ($('#hire-email') || {}).value || '';
+  const role  = ($('#hire-role')  || {}).value || '';
+  const msg   = ($('#hire-msg')   || {}).value || '';
 
-  window.location.href = `mailto:sa8518430@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
+  const subject = encodeURIComponent(`Hire Proposal — ${role || 'Security Specialist'}`);
+  const body = encodeURIComponent(
+    `Name: ${name}\nEmail: ${email}\nRole / Location: ${role}\n\nNote:\n${msg}`
+  );
 
   closeModal();
-  showToast("Opening email application to send proposal!");
+  window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+  showToast('Opening your mail client — proposal ready to send.');
 }
 
 function handleDirectMessage(e) {
   e.preventDefault();
-  const name = document.getElementById('contact-name').value;
-  const email = document.getElementById('contact-email').value;
-  const msg = document.getElementById('contact-message').value;
 
-  const mailtoSubject = encodeURIComponent(`Portfolio Message from ${name}`);
-  const mailtoBody = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${msg}`);
+  const form  = e.target;
+  const name  = ($('#contact-name')    || {}).value || '';
+  const email = ($('#contact-email')   || {}).value || '';
+  const msg   = ($('#contact-message') || {}).value || '';
 
-  window.location.href = `mailto:sa8518430@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
-  e.target.reset();
-  showToast("Briefing pre-filled in your email application!");
+  const subject = encodeURIComponent(`Portfolio Briefing from ${name}`);
+  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${msg}`);
+
+  window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+  if (form && typeof form.reset === 'function') form.reset();
+  showToast('Briefing pre-filled in your mail client.');
 }
 
-function showToast(msg) {
+function showToast(message) {
   const toast = document.getElementById('toast-popup');
-  document.getElementById('toast-msg').textContent = msg;
+  const msgEl = document.getElementById('toast-msg');
+  if (!toast || !msgEl) return;
+
+  msgEl.textContent = message;
   toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3500);
+
+  clearTimeout(showToast.__timer);
+  showToast.__timer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3500);
 }
 
 /* ==========================================================================
    9. SCROLL REVEAL OBSERVER
    ========================================================================== */
-// Stagger children inside any [data-stagger] container so they cascade in
-// one after another instead of all animating at once.
-document.querySelectorAll('[data-stagger]').forEach(group => {
-  const staggerChildren = Array.from(
-    group.querySelectorAll(':scope > .reveal, :scope > .reveal-left, :scope > .reveal-right, :scope > .reveal-scale, :scope > .reveal-scan')
+(function initReveals() {
+  /* Cascade children inside [data-stagger] containers */
+  $$('[data-stagger]').forEach((group) => {
+    const children = Array.from(group.querySelectorAll(
+      ':scope > .reveal, :scope > .reveal-left, :scope > .reveal-right, :scope > .reveal-scale, :scope > .reveal-scan'
+    ));
+    children.forEach((child, i) => {
+      child.style.transitionDelay = `${i * 90}ms`;
+    });
+  });
+
+  const targets = $$(
+    '.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-scan, .reveal-decode'
   );
-  staggerChildren.forEach((child, i) => {
-    child.style.transitionDelay = `${i * 90}ms`;
-  });
-});
+  if (!targets.length) return;
 
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
       entry.target.classList.add('active');
-      // Animate once, then stop watching — avoids unnecessary work on scroll
-      revealObserver.unobserve(entry.target);
-    }
+      observer.unobserve(entry.target);
+    });
+  }, {
+    threshold: 0.15,
+    rootMargin: '0px 0px -60px 0px'
   });
-}, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
 
-document
-  .querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-scan, .reveal-decode')
-  .forEach(el => revealObserver.observe(el));
+  targets.forEach((el) => observer.observe(el));
+})();
 
 /* ==========================================================================
-   10. HERO PARALLAX ON SCROLL
+   10. HERO PARALLAX
    ========================================================================== */
-const heroContent = document.querySelector('.hero-content');
+(function initHeroParallax() {
+  const heroContent = $('.hero-content');
+  if (!heroContent || !supportsFinePointer || prefersReducedMotion) return;
 
-if (heroContent && supportsFinePointer) {
-  let parallaxTicking = false;
+  let ticking = false;
 
-  function updateParallax() {
-    const scrollY = window.scrollY;
-    heroContent.style.transform = `translateY(${scrollY * 0.15}px)`;
-    heroContent.style.opacity = Math.max(0, 1 - scrollY / 600);
-    parallaxTicking = false;
-  }
+  const update = () => {
+    const y = window.scrollY;
+    heroContent.style.transform = `translate3d(0, ${y * 0.15}px, 0)`;
+    heroContent.style.opacity   = String(Math.max(0, 1 - y / 620));
+    ticking = false;
+  };
 
   window.addEventListener('scroll', () => {
-    if (!parallaxTicking) {
-      requestAnimationFrame(updateParallax);
-      parallaxTicking = true;
-    }
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
   }, { passive: true });
 
-  updateParallax(); // sync immediately in case the page loads mid-scroll
-}
+  update();
+})();
 
 /* ==========================================================================
    11. SCROLL-SPY NAVIGATION
    ========================================================================== */
-const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+(function initScrollSpy() {
+  const links = $$('.nav-links a[href^="#"]');
+  if (!links.length) return;
 
-if (navLinks.length) {
   const sectionMap = new Map();
-  navLinks.forEach(link => {
-    const section = document.querySelector(link.getAttribute('href'));
+  links.forEach((link) => {
+    const id = link.getAttribute('href');
+    if (!id || id === '#') return;
+    const section = document.querySelector(id);
     if (section) sectionMap.set(section, link);
   });
 
-  const spyObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
+  if (!sectionMap.size) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
       const link = sectionMap.get(entry.target);
-      if (!link || !entry.isIntersecting) return;
-      navLinks.forEach(l => l.classList.remove('is-current'));
+      if (!link) return;
+      links.forEach((l) => l.classList.remove('is-current'));
       link.classList.add('is-current');
     });
-  }, { threshold: 0, rootMargin: '-45% 0px -50% 0px' });
+  }, {
+    threshold: 0,
+    rootMargin: '-45% 0px -50% 0px'
+  });
 
-  sectionMap.forEach((_, section) => spyObserver.observe(section));
-}
+  sectionMap.forEach((_link, section) => observer.observe(section));
+})();
 
 /* ==========================================================================
-   12. KEYBOARD SHORTCUTS
+   12. GLOBAL KEYBOARD SHORTCUTS
    ========================================================================== */
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    const backdrop = document.getElementById('modal-backdrop');
-    if (backdrop && backdrop.classList.contains('active')) {
-      closeModal();
-    }
-  }
+  if (e.key !== 'Escape') return;
+  const backdrop = document.getElementById('modal-backdrop');
+  if (backdrop && backdrop.classList.contains('active')) closeModal();
 });
-         
