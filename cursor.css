@@ -48,8 +48,14 @@
 }
 
 @keyframes glowBreathe {
-  0%, 100% { transform: translate3d(-50%, -50%, 0) scale(1); opacity: 0.55; }
-  50%      { transform: translate3d(-50%, -50%, 0) scale(1.18); opacity: 0.85; }
+  0%, 100% {
+    transform: translate3d(-50%, -50%, 0) scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate3d(-50%, -50%, 0) scale(1.18);
+    opacity: 0.85;
+  }
 }
 
 /* ================================================================
@@ -108,7 +114,8 @@
   position: absolute;
   inset: 0;
   opacity: 0.3;
-  transition: opacity var(--duration-base) var(--ease-smooth), background var(--duration-base) var(--ease-smooth);
+  transition: opacity var(--duration-base) var(--ease-smooth),
+              background var(--duration-base) var(--ease-smooth);
   background:
     linear-gradient(90deg, transparent 46%, var(--accent-cyan) 46%, var(--accent-cyan) 54%, transparent 54%) center / 100% 1px no-repeat,
     linear-gradient(0deg, transparent 46%, var(--accent-cyan) 46%, var(--accent-cyan) 54%, transparent 54%) center / 1px 100% no-repeat;
@@ -166,7 +173,8 @@ body.cursor-hover .cursor-glow {
   text-transform: uppercase;
   white-space: nowrap;
   opacity: 0;
-  backdrop-filter: var(--glass-blur);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
   transition: opacity var(--duration-base) var(--ease-smooth),
               transform var(--duration-base) var(--ease-bounce);
 }
@@ -234,6 +242,8 @@ body.cursor-hidden .cursor-label {
 
 /* ================================================================
    10. FALLBACK — touch / coarse pointer
+   base.css sets cursor: none globally, so this restores the
+   native cursor for touch devices and hides the reticle layers.
    ================================================================ */
 @media (hover: none), (pointer: coarse) {
   .cursor-dot,
