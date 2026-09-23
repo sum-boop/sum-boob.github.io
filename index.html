@@ -3,260 +3,529 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sumit Anand | Surveillance & Cyber Security Specialist</title>
+  <meta name="theme-color" content="#04060b" />
+  <meta name="color-scheme" content="dark" />
 
-  <!-- Google Fonts: Inter & JetBrains Mono (matches variables.css font tokens) -->
+  <title>Sumit Anand — CCTV Operator & Surveillance Specialist</title>
+  <meta
+    name="description"
+    content="Sumit Anand — CCTV Operator & Surveillance Specialist. 2+ years of command-center experience across CP Plus multi-channel surveillance, GIGO gate control, PSARA compliance, and loss prevention in mega logistics hubs."
+  />
+  <meta name="author" content="Sumit Anand" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Sumit Anand — CCTV Operator & Surveillance Specialist" />
+  <meta
+    property="og:description"
+    content="Precision monitoring, gate control, and loss prevention across India's largest logistics hubs."
+  />
+  <meta property="og:locale" content="en_IN" />
+
+  <!-- Favicon placeholder -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='none' stroke='%2300e5ff' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%2300e5ff'/%3E%3C/svg%3E" />
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
 
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
 
-  <link rel="stylesheet" href="style.css">
+  <!-- Master stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Application script -->
   <script src="script.js" defer></script>
 </head>
+
 <body>
 
-  <!-- Scanline & Grid Overlays for Surveillance Theme -->
-  <div class="hud-grid-overlay"></div>
-  <div class="scanline"></div>
+  <!-- ============================================================
+       AMBIENT LAYERS — background HUD atmosphere
+       ============================================================ -->
+  <div class="hud-grid-overlay" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="scanline" aria-hidden="true"></div>
 
-  <!-- Ambient Glow Orbs -->
-  <div class="ambient-orb orb-1"></div>
-  <div class="ambient-orb orb-2"></div>
+  <div class="ambient-orb orb-1" aria-hidden="true"></div>
+  <div class="ambient-orb orb-2" aria-hidden="true"></div>
+  <div class="ambient-orb orb-3" aria-hidden="true"></div>
 
-  <!-- Scroll Progress Indicator -->
-  <div id="progress-bar"></div>
+  <!-- Scroll progress indicator -->
+  <div id="progress-bar" role="progressbar" aria-label="Scroll progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
 
-  <!-- Custom Crosshair Cursor -->
-  <div class="cursor-dot"></div>
-  <div class="cursor-ring"></div>
+  <!-- Custom reticle cursor -->
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-ring" aria-hidden="true"></div>
 
-  <!-- Navigation -->
-  <nav>
-    <a href="#hero" class="brand-logo">
-      <span class="dot-span"></span> SUMIT ANAND
+  <!-- Accessibility skip link -->
+  <a href="#hero" class="skip-link">Skip to main content</a>
+
+  <!-- ============================================================
+       NAVIGATION
+       ============================================================ -->
+  <nav aria-label="Primary">
+    <a href="#hero" class="brand-logo" aria-label="Sumit Anand — Home">
+      <span class="dot-span" aria-hidden="true"></span>
+      <span>SUMIT ANAND</span>
     </a>
+
     <ul class="nav-links">
       <li><a href="#about">Expertise</a></li>
-      <li><a href="#operations">Camera Feeds</a></li>
+      <li><a href="#operations">Feeds</a></li>
       <li><a href="#experience">Logbook</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
-    <button class="btn btn-hire" onclick="openHireModal()">
-      <i class="fa-solid fa-bolt"></i> <span class="btn-text-span">Hire Me</span>
+
+    <button
+      type="button"
+      class="btn btn-hire"
+      onclick="openHireModal()"
+      aria-label="Open hire briefing modal"
+    >
+      <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+      <span>Hire Me</span>
     </button>
   </nav>
 
-  <!-- Hero Section -->
-  <section id="hero" class="hero">
-    <canvas id="particles-canvas"></canvas>
+  <main>
 
-    <div class="hero-content">
-      <span class="hud-badge-span">
-        <span class="pulse-dot-span"></span> Active Surveillance & Gate Control Lead
-      </span>
+    <!-- ============================================================
+         HERO — Command Center Uplink
+         ============================================================ -->
+    <section id="hero" class="hero" aria-labelledby="hero-title">
+      <canvas id="particles-canvas" aria-hidden="true"></canvas>
 
-      <h1 class="hero-title reveal-decode">
-        SUMIT <span class="highlight-span">ANAND</span>
-      </h1>
-
-      <p class="hero-subtitle">
-        CCTV Operator & Cyber Systems Specialist with 2+ years of core operational experience in multi-channel <span class="purple-span">CP Plus surveillance</span>, high-volume <span class="highlight-span">GIGO data entry gate control</span>, and loss prevention across mega logistics hubs.
-      </p>
-
-      <div class="hero-btn-group">
-        <button class="btn btn-hire" onclick="openHireModal()">
-          <i class="fa-solid fa-briefcase"></i> <span class="btn-text-span">Hire Me Now</span>
-        </button>
-        <a href="#operations" class="btn btn-glass">
-          <i class="fa-solid fa-eye"></i> <span class="btn-text-span">Explore Operations</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- CCTV Skills / Expertise Section -->
-  <section id="about">
-    <div class="section-header reveal">
-      <span class="section-tag-span">01 / Security Profile</span>
-      <h2 class="section-title reveal-decode">CCTV Skills & Expertise</h2>
-    </div>
-
-    <div class="about-grid">
-      <div class="about-image-wrapper reveal-left">
-        <img src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=800&auto=format&fit=crop" alt="Cyber Security Data & Surveillance Setup" />
-      </div>
-
-      <div class="about-info reveal-right">
-        <h3>Precision Monitoring & <span class="highlight-span">Asset Protection</span></h3>
-        <p>
-          Specializing in real-time camera monitoring, high-speed vehicle & driver data logging, and incident investigation across mega logistics operations including Flipkart Kalash Mega Hub and Ekart Logistics.
-        </p>
-        <p>
-          Expert in operating multi-screen CP Plus CCTV arrays, managing digital GIGO gate entry systems, maintaining zero-error Excel logs, and strictly enforcing PSARA safety protocols to eliminate shrinkage.
-        </p>
-
-        <div class="tech-tags">
-          <span class="tech-tag-span"><i class="fa-solid fa-video"></i> CP Plus CCTV Setup</span>
-          <span class="tech-tag-span"><i class="fa-solid fa-database"></i> GIGO Gate Entry</span>
-          <span class="tech-tag-span"><i class="fa-solid fa-table"></i> MS Excel Data Logging</span>
-          <span class="tech-tag-span"><i class="fa-solid fa-shield-halved"></i> Loss Prevention</span>
-          <span class="tech-tag-span"><i class="fa-solid fa-user-shield"></i> PSARA Regulations</span>
-          <span class="tech-tag-span"><i class="fa-solid fa-fire-extinguisher"></i> Emergency Response</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Camera Feed Projects Section -->
-  <section id="operations">
-    <div class="section-header reveal">
-      <span class="section-tag-span">02 / Key Deployments</span>
-      <h2 class="section-title reveal-decode">Camera Feed Deployments</h2>
-    </div>
-
-    <div class="operations-grid" data-stagger>
-
-      <div class="op-card reveal-scan" onclick="openOpModal('op1')">
-        <div class="op-card-img">
-          <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=800&auto=format&fit=crop" alt="Camera Monitoring" />
-          <span class="op-card-badge-span">Camera Grid</span>
-        </div>
-        <div class="op-card-body">
-          <h3 class="op-card-title">CP Plus Multi-Channel Surveillance</h3>
-          <p class="op-card-desc">24/7 perimeter surveillance, footage playback, anomaly detection, and shrink prevention.</p>
-          <span class="op-link-span">Expand Briefing <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </div>
-
-      <div class="op-card reveal-scan" onclick="openOpModal('op2')">
-        <div class="op-card-img">
-          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop" alt="Data Entry Terminal" />
-          <span class="op-card-badge-span">Data Entry</span>
-        </div>
-        <div class="op-card-body">
-          <h3 class="op-card-title">Digital GIGO Gate & Data Logging</h3>
-          <p class="op-card-desc">High-volume commercial fleet entry/exit logging, credential audits, and real-time Excel tracking.</p>
-          <span class="op-link-span">Expand Briefing <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </div>
-
-      <div class="op-card reveal-scan" onclick="openOpModal('op3')">
-        <div class="op-card-img">
-          <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=800&auto=format&fit=crop" alt="Security Shield" />
-          <span class="op-card-badge-span">Security Audit</span>
-        </div>
-        <div class="op-card-body">
-          <h3 class="op-card-title">PSARA & Fire Safety Protocol</h3>
-          <p class="op-card-desc">Badge access enforcement, emergency evacuation drills, and PSARA regulatory compliance.</p>
-          <span class="op-link-span">Expand Briefing <i class="fa-solid fa-arrow-right"></i></span>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Logbook Timeline (Experience) Section -->
-  <section id="experience">
-    <div class="section-header reveal">
-      <span class="section-tag-span">03 / Duty History</span>
-      <h2 class="section-title reveal-decode">Operational Logbook</h2>
-    </div>
-
-    <div class="timeline" data-stagger>
-
-      <div class="timeline-item reveal-left">
-        <span class="timeline-node-span online"></span>
-        <span class="timeline-date-span">2025 – PRESENT</span>
-        <span class="log-status active">Active Post</span>
-        <h3 class="timeline-role">Security Systems & Gate Control Operator</h3>
-        <p class="timeline-company"><span class="highlight-span">Innovision Limited</span> (Flipkart Kalash Warehouse - Mega Hub) | Patli, Haryana</p>
-        <ul class="timeline-details">
-          <li>Manage end-to-end gate security operations and digital GIGO systems for India's largest Flipkart hub.</li>
-          <li>Execute real-time MS Excel data entry for all inbound/outbound commercial fleets with 100% accuracy.</li>
-          <li>Conduct strict entry/exit verification for dock movement, driver credentials, and security access badges.</li>
-          <li>Perform active surveillance and perimeter monitoring to prevent stock shrinkage across warehouse zones.</li>
-        </ul>
-      </div>
-
-      <div class="timeline-item reveal-right">
-        <span class="timeline-node-span"></span>
-        <span class="timeline-date-span">2023 – 2024</span>
-        <span class="log-status archived">Archived</span>
-        <h3 class="timeline-role">Security Guard & Surveillance Operator</h3>
-        <p class="timeline-company"><span class="purple-span">A.P. Securitas Pvt. Ltd.</span> (Client Site: Ekart Logistics Pvt. Ltd.) | Haryana, India</p>
-        <ul class="timeline-details">
-          <li>Monitored multi-camera CCTV feeds, identifying suspicious activities and enforcing facility safety standards.</li>
-          <li>Conducted regular floor patrols, inventory spot checks, and fire safety inspections.</li>
-          <li>Operated emergency response equipment and maintained daily shift logs for management review.</li>
-        </ul>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Contact / Command Form Section -->
-  <section id="contact">
-    <div class="section-header reveal">
-      <span class="section-tag-span">04 / Transmission</span>
-      <h2 class="section-title reveal-decode">Send Direct Briefing</h2>
-    </div>
-
-    <div class="command-terminal reveal-scale">
-      <div class="command-terminal-header">
-        <span class="terminal-dot-group">
-          <span class="terminal-dot alert"></span>
-          <span class="terminal-dot warning"></span>
-          <span class="terminal-dot online"></span>
+      <div class="hero-content">
+        <span class="hud-badge-span">
+          <span class="pulse-dot-span online" aria-hidden="true"></span>
+          <span>System Online · Post Active</span>
         </span>
-        SECURE_CHANNEL // TRANSMIT
+
+        <h1 id="hero-title" class="hero-title reveal-decode">
+          SUMIT <span class="highlight-span">ANAND</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          <span class="highlight-span">CCTV Operator</span> &amp; Surveillance Specialist — commanding multi-channel
+          <span class="purple-span">CP Plus</span> arrays, high-throughput
+          <span class="highlight-span">GIGO gate control</span>, and end-to-end loss prevention across India's
+          largest logistics hubs.
+        </p>
+
+        <div class="hero-btn-group">
+          <button
+            type="button"
+            class="btn btn-hire"
+            onclick="openHireModal()"
+            aria-label="Request deployment briefing"
+          >
+            <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
+            <span>Request Deployment</span>
+          </button>
+
+          <a href="#operations" class="btn btn-glass" aria-label="View camera feed deployments">
+            <i class="fa-solid fa-eye" aria-hidden="true"></i>
+            <span>View Live Feeds</span>
+          </a>
+        </div>
       </div>
+    </section>
 
-      <form class="command-form" onsubmit="handleDirectMessage(event)">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="contact-name">Name / Organization</label>
-            <input type="text" id="contact-name" name="name" required />
+    <!-- ============================================================
+         ABOUT / SKILLS — Security Profile
+         ============================================================ -->
+    <section id="about" aria-labelledby="about-title">
+      <div class="section-inner">
+
+        <header class="section-header reveal">
+          <span class="section-tag-span">01 / Security Profile</span>
+          <h2 id="about-title" class="section-title reveal-decode">
+            CCTV Skills &amp; Expertise
+          </h2>
+        </header>
+
+        <div class="about-grid">
+          <div class="about-image-wrapper reveal-left">
+            <img
+              src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=900&auto=format&fit=crop"
+              alt="Multi-screen surveillance control room running real-time analytics"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
-          <div class="form-group">
-            <label for="contact-email">Work Email</label>
-            <input type="email" id="contact-email" name="email" required />
+
+          <div class="about-info reveal-right">
+            <h3>
+              Precision Monitoring &amp;
+              <span class="highlight-span">Asset Protection</span>
+            </h3>
+
+            <p>
+              Specializing in real-time multi-camera monitoring, high-speed vehicle &amp; driver
+              data logging, and forensic incident investigation across mega logistics operations —
+              including the <span class="highlight-span">Flipkart Kalash Mega Hub</span> and
+              <span class="purple-span">Ekart Logistics</span>.
+            </p>
+
+            <p>
+              Expert operator of multi-screen CP Plus CCTV arrays, digital GIGO gate entry systems,
+              and zero-error Excel logging pipelines. Strict enforcer of
+              <span class="highlight-span">PSARA safety protocols</span> with a proven record of
+              eliminating shrinkage across high-volume warehouse zones.
+            </p>
+
+            <ul class="tech-tags" role="list" aria-label="Core technical skills">
+              <li class="tech-tag-span">
+                <i class="fa-solid fa-video" aria-hidden="true"></i> CP Plus CCTV Arrays
+              </li>
+              <li class="tech-tag-span">
+                <i class="fa-solid fa-database" aria-hidden="true"></i> GIGO Gate Entry
+              </li>
+              <li class="tech-tag-span">
+                <i class="fa-solid fa-table" aria-hidden="true"></i> Excel Data Logging
+              </li>
+              <li class="tech-tag-span">
+                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Loss Prevention
+              </li>
+              <li class="tech-tag-span">
+                <i class="fa-solid fa-user-shield" aria-hidden="true"></i> PSARA Compliance
+              </li>
+              <li class="tech-tag-span">
+                <i class="fa-solid fa-fire-extinguisher" aria-hidden="true"></i> Emergency Response
+              </li>
+              <li class="tech-tag-span">
+                <i class="fa-solid fa-hard-drive" aria-hidden="true"></i> NVR / DVR Playback
+              </li>
+              <li class="tech-tag-span">
+                <i class="fa-solid fa-clipboard-check" aria-hidden="true"></i> Shift Reporting
+              </li>
+            </ul>
           </div>
         </div>
 
-        <div class="form-group">
-          <label for="contact-message">Deployment Details & Notes</label>
-          <textarea id="contact-message" name="message" rows="5" required></textarea>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         OPERATIONS — Camera Feed Deployments
+         ============================================================ -->
+    <section id="operations" aria-labelledby="operations-title">
+      <div class="section-inner section-inner--wide">
+
+        <header class="section-header reveal">
+          <span class="section-tag-span">02 / Key Deployments</span>
+          <h2 id="operations-title" class="section-title reveal-decode">
+            Camera Feed Deployments
+          </h2>
+        </header>
+
+        <div class="operations-grid" data-stagger>
+
+          <article class="op-card reveal-scan" onclick="openOpModal('op1')" tabindex="0" role="button" aria-label="Open briefing: CP Plus Multi-Channel Surveillance">
+            <div class="op-card-img">
+              <img
+                src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=900&auto=format&fit=crop"
+                alt="Row of security monitoring displays showing warehouse camera feeds"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="op-card-badge-span">CAM_01 · LIVE</span>
+            </div>
+            <div class="op-card-body">
+              <h3 class="op-card-title">CP Plus Multi-Channel Surveillance</h3>
+              <p class="op-card-desc">
+                24/7 perimeter coverage across 32+ cameras. Real-time anomaly detection,
+                forensic playback, and shrink prevention across warehouse zones.
+              </p>
+              <span class="op-link-span">Expand Briefing</span>
+            </div>
+          </article>
+
+          <article class="op-card reveal-scan" onclick="openOpModal('op2')" tabindex="0" role="button" aria-label="Open briefing: Digital GIGO Gate Control">
+            <div class="op-card-img">
+              <img
+                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=900&auto=format&fit=crop"
+                alt="Data logging workstation with spreadsheets and dashboards"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="op-card-badge-span">CAM_02 · LIVE</span>
+            </div>
+            <div class="op-card-body">
+              <h3 class="op-card-title">Digital GIGO Gate Control</h3>
+              <p class="op-card-desc">
+                High-volume commercial fleet entry/exit logging with 100% data accuracy,
+                credential audits, and synchronized Excel gate tracking.
+              </p>
+              <span class="op-link-span">Expand Briefing</span>
+            </div>
+          </article>
+
+          <article class="op-card reveal-scan" onclick="openOpModal('op3')" tabindex="0" role="button" aria-label="Open briefing: PSARA and Fire Safety Protocol">
+            <div class="op-card-img">
+              <img
+                src="https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=900&auto=format&fit=crop"
+                alt="Security access control system with badge reader"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="op-card-badge-span">CAM_03 · LIVE</span>
+            </div>
+            <div class="op-card-body">
+              <h3 class="op-card-title">PSARA &amp; Fire Safety Protocol</h3>
+              <p class="op-card-desc">
+                Badge-access enforcement, scheduled evacuation drills, and full
+                PSARA regulatory compliance reporting for audited facilities.
+              </p>
+              <span class="op-link-span">Expand Briefing</span>
+            </div>
+          </article>
+
+          <article class="op-card reveal-scan" onclick="openOpModal('op4')" tabindex="0" role="button" aria-label="Open briefing: Incident Forensic Review">
+            <div class="op-card-img">
+              <img
+                src="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=900&auto=format&fit=crop"
+                alt="Investigator reviewing footage on multiple screens"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="op-card-badge-span">CAM_04 · LIVE</span>
+            </div>
+            <div class="op-card-body">
+              <h3 class="op-card-title">Incident Forensic Review</h3>
+              <p class="op-card-desc">
+                Time-stamped footage extraction, chain-of-custody documentation,
+                and cross-camera timeline reconstruction for loss investigations.
+              </p>
+              <span class="op-link-span">Expand Briefing</span>
+            </div>
+          </article>
+
+          <article class="op-card reveal-scan" onclick="openOpModal('op5')" tabindex="0" role="button" aria-label="Open briefing: Perimeter and Dock Security">
+            <div class="op-card-img">
+              <img
+                src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=900&auto=format&fit=crop"
+                alt="Warehouse loading dock with security patrol"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="op-card-badge-span">CAM_05 · LIVE</span>
+            </div>
+            <div class="op-card-body">
+              <h3 class="op-card-title">Perimeter &amp; Dock Security</h3>
+              <p class="op-card-desc">
+                Coordinated dock-movement verification, patrol-schedule oversight,
+                and perimeter breach escalation protocols.
+              </p>
+              <span class="op-link-span">Expand Briefing</span>
+            </div>
+          </article>
+
+          <article class="op-card reveal-scan" onclick="openOpModal('op6')" tabindex="0" role="button" aria-label="Open briefing: Emergency Response Coordination">
+            <div class="op-card-img">
+              <img
+                src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=900&auto=format&fit=crop"
+                alt="Emergency coordination control station"
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="op-card-badge-span">CAM_06 · LIVE</span>
+            </div>
+            <div class="op-card-body">
+              <h3 class="op-card-title">Emergency Response Coordination</h3>
+              <p class="op-card-desc">
+                Alarm-to-action dispatch, evacuation routing under live surveillance,
+                and post-incident command-center reporting.
+              </p>
+              <span class="op-link-span">Expand Briefing</span>
+            </div>
+          </article>
+
         </div>
 
-        <button type="submit" class="command-submit-btn">
-          <i class="fa-solid fa-paper-plane"></i> Transmit Briefing
-        </button>
-      </form>
-    </div>
-  </section>
+      </div>
+    </section>
 
-  <!-- Footer -->
+    <!-- ============================================================
+         EXPERIENCE — Operational Logbook
+         ============================================================ -->
+    <section id="experience" aria-labelledby="experience-title">
+      <div class="section-inner">
+
+        <header class="section-header reveal">
+          <span class="section-tag-span">03 / Duty History</span>
+          <h2 id="experience-title" class="section-title reveal-decode">
+            Operational Logbook
+          </h2>
+        </header>
+
+        <ol class="timeline" data-stagger>
+
+          <li class="timeline-item reveal-left">
+            <span class="timeline-node-span online" aria-hidden="true"></span>
+            <span class="timeline-date-span">2025 — PRESENT</span>
+            <span class="log-status active">Active Post</span>
+            <h3 class="timeline-role">Security Systems &amp; Gate Control Operator</h3>
+            <p class="timeline-company">
+              <span class="highlight-span">Innovision Limited</span>
+              — Flipkart Kalash Mega Hub · Patli, Haryana
+            </p>
+            <ul class="timeline-details">
+              <li>Command end-to-end gate security operations and digital GIGO systems for India's largest Flipkart hub.</li>
+              <li>Execute real-time MS Excel data logging for all inbound and outbound commercial fleets with 100% accuracy.</li>
+              <li>Enforce strict entry/exit verification for dock movement, driver credentials, and access badges.</li>
+              <li>Perform active surveillance and perimeter monitoring to prevent shrinkage across warehouse zones.</li>
+            </ul>
+          </li>
+
+          <li class="timeline-item reveal-right">
+            <span class="timeline-node-span offline" aria-hidden="true"></span>
+            <span class="timeline-date-span">2023 — 2024</span>
+            <span class="log-status archived">Archived</span>
+            <h3 class="timeline-role">Security Guard &amp; Surveillance Operator</h3>
+            <p class="timeline-company">
+              <span class="purple-span">A.P. Securitas Pvt. Ltd.</span>
+              — Client Site: Ekart Logistics · Haryana, India
+            </p>
+            <ul class="timeline-details">
+              <li>Monitored multi-camera CCTV feeds, identifying suspicious activity and enforcing facility safety standards.</li>
+              <li>Conducted scheduled floor patrols, inventory spot checks, and fire safety inspections.</li>
+              <li>Operated emergency response equipment and delivered daily shift logs for management review.</li>
+            </ul>
+          </li>
+
+        </ol>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CONTACT — Secure Command Terminal
+         ============================================================ -->
+    <section id="contact" aria-labelledby="contact-title">
+      <div class="section-inner">
+
+        <header class="section-header reveal">
+          <span class="section-tag-span">04 / Transmission</span>
+          <h2 id="contact-title" class="section-title reveal-decode">
+            Send Direct Briefing
+          </h2>
+        </header>
+
+        <div class="command-terminal reveal-scale">
+          <div class="command-terminal-header">
+            <span class="terminal-dot-group" aria-hidden="true">
+              <span class="terminal-dot alert"></span>
+              <span class="terminal-dot warning"></span>
+              <span class="terminal-dot online"></span>
+            </span>
+            <span>SECURE_CHANNEL // TRANSMIT</span>
+          </div>
+
+          <form class="command-form" onsubmit="handleDirectMessage(event)" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contact-name">Name / Organization</label>
+                <input
+                  type="text"
+                  id="contact-name"
+                  name="name"
+                  autocomplete="name"
+                  placeholder="e.g. Operations Lead — Innovision Ltd."
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="contact-email">Work Email</label>
+                <input
+                  type="email"
+                  id="contact-email"
+                  name="email"
+                  autocomplete="email"
+                  placeholder="you@company.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="contact-message">Deployment Details &amp; Notes</label>
+              <textarea
+                id="contact-message"
+                name="message"
+                rows="5"
+                placeholder="Scope of deployment, site location, shift pattern…"
+                required
+              ></textarea>
+            </div>
+
+            <button type="submit" class="command-submit-btn">
+              <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+              <span>Transmit Briefing</span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
   <footer>
-    <p>&copy; 2026 <span class="highlight-span">Sumit Anand</span>. All Rights Reserved. | Rohtak, Haryana, India</p>
+    <p>
+      &copy; 2026 <span class="highlight-span">Sumit Anand</span> · All Rights Reserved ·
+      Rohtak, Haryana, India
+    </p>
   </footer>
 
-  <!-- Universal Interactive Modal (Hire Me & Operations) -->
-  <div class="modal-backdrop" id="modal-backdrop" onclick="closeModalOnBackdrop(event)">
+  <!-- ============================================================
+       MODAL — Universal briefing window
+       ============================================================ -->
+  <div
+    class="modal-backdrop"
+    id="modal-backdrop"
+    onclick="closeModalOnBackdrop(event)"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-window-title"
+  >
     <div class="modal-window" id="modal-window">
-      <button class="modal-close-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+      <button
+        type="button"
+        class="modal-close-btn"
+        onclick="closeModal()"
+        aria-label="Close briefing window"
+      >
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
       <div id="modal-content">
-        <!-- Dynamic Content Inserted via JS -->
+        <!-- Dynamic content injected by script.js -->
       </div>
     </div>
   </div>
 
-  <!-- Toast Notification -->
-  <div class="toast-popup" id="toast-popup">
-    <i class="fa-solid fa-circle-check" style="color: var(--status-online); font-size: 1.2rem;"></i>
-    <span id="toast-msg">Briefing transmitted successfully!</span>
+  <!-- ============================================================
+       TOAST — Transmission confirmation
+       ============================================================ -->
+  <div class="toast-popup" id="toast-popup" role="status" aria-live="polite">
+    <i class="fa-solid fa-circle-check" aria-hidden="true" style="color: var(--status-online); font-size: 1.15rem;"></i>
+    <span id="toast-msg">Briefing transmitted successfully.</span>
   </div>
 
 </body>
