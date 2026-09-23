@@ -560,6 +560,102 @@ footer {
   transform: translateY(0);
 }
 
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity var(--duration-slow) var(--ease-smooth),
+              transform var(--duration-slow) var(--ease-smooth);
+}
+
+.reveal-left.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity var(--duration-slow) var(--ease-smooth),
+              transform var(--duration-slow) var(--ease-smooth);
+}
+
+.reveal-right.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity var(--duration-slow) var(--ease-smooth),
+              transform var(--duration-slow) var(--ease-bounce);
+}
+
+.reveal-scale.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Camera "target-lock" reveal — scanline sweep + border flash on entry */
+.reveal-scan {
+  position: relative;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--duration-slow) var(--ease-smooth),
+              transform var(--duration-slow) var(--ease-smooth);
+}
+
+.reveal-scan.active {
+  opacity: 1;
+  transform: translateY(0);
+  animation: revealLockFlash var(--duration-slow) var(--ease-smooth) 1;
+}
+
+.reveal-scan::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, var(--neon-cyan-glow-soft), transparent);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 5;
+}
+
+.reveal-scan.active::after {
+  animation: revealScanSweep 0.9s var(--ease-sharp) forwards;
+}
+
+@keyframes revealScanSweep {
+  0%   { transform: translateX(-120%); opacity: 0; }
+  15%  { opacity: 1; }
+  60%  { opacity: 1; }
+  100% { transform: translateX(320%); opacity: 0; }
+}
+
+@keyframes revealLockFlash {
+  0%   { box-shadow: none; }
+  40%  { box-shadow: var(--glow-cyan-md); }
+  100% { box-shadow: none; }
+}
+
+/* Section-title "decode" wipe reveal */
+.reveal-decode {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  transition: opacity 0.2s ease;
+}
+
+.reveal-decode.active {
+  opacity: 1;
+  animation: decodeReveal 0.9s var(--ease-sharp) forwards;
+}
+
+@keyframes decodeReveal {
+  0%   { clip-path: inset(0 100% 0 0); }
+  100% { clip-path: inset(0 0% 0 0); }
+}
+
 /* ==========================================================================
    9. RESPONSIVE
    ========================================================================== */
@@ -593,4 +689,5 @@ footer {
   .about-image-wrapper { border-radius: var(--radius-lg); }
   .op-card-body { padding: var(--space-md); }
   .command-terminal-header { flex-wrap: wrap; }
-     }
+   }
+   
