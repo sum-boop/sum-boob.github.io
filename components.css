@@ -495,5 +495,17 @@ nav {
 
 .nav-links a:hover::after {
   width: 100%;
+}
+
+/* Highlighted by scroll-spy in script.js while its section is in view */
+.nav-links a.is-current {
+  color: var(--neon-cyan);
+  text-shadow: var(--text-glow-cyan);
+}
+
+.nav-links a.is-current::after {
+  width: 100%;
+  background: var(--neon-cyan);
+  box-shadow: 0 0 8px var(--neon-cyan);
    }
    
