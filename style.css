@@ -1,91 +1,21 @@
 /* ==========================================================================
-   1. IMPORTS & BASE CONFIG
+   MASTER STYLESHEET
+   Central importer only — no rules should be added below.
+   Load order matters: tokens first, then base resets, then cursor,
+   then layout, then components.
    ========================================================================== */
+
+/* 1. Design tokens — colors, type scale, spacing, motion */
 @import url('variables.css');
+
+/* 2. Global resets, typography defaults, scrollbars, HUD backdrop */
 @import url('base.css');
+
+/* 3. Custom crosshair/reticle cursor system */
 @import url('cursor.css');
+
+/* 4. Section-level layout: hero, about, feeds, work log, command form */
 @import url('sections-layout.css');
+
+/* 5. Reusable UI components: buttons, badges, cards, modals, nav */
 @import url('components.css');
-/* ==========================================================================
-   2. NAVIGATION & PROGRESS BAR
-   ========================================================================== */
-#progress-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 3px;
-  width: 0%;
-  background: linear-gradient(90deg, var(--neon-purple), var(--neon-cyan), var(--neon-green));
-  z-index: 10000;
-  box-shadow: 0 0 12px var(--neon-cyan);
-}
-
-nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  padding: 1.2rem 8%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 1000;
-  background: rgba(2, 2, 5, 0.82);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.brand-logo {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #fff;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.brand-logo .dot-span {
-  width: 10px;
-  height: 10px;
-  background: var(--neon-cyan);
-  border-radius: 50%;
-  box-shadow: 0 0 12px var(--neon-cyan);
-  display: inline-block;
-}
-
-.nav-links {
-  display: flex;
-  gap: 2.2rem;
-  list-style: none;
-  align-items: center;
-}
-
-.nav-links a {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.92rem;
-  font-weight: 500;
-  transition: var(--ease-smooth);
-  position: relative;
-}
-
-.nav-links a:hover {
-  color: var(--neon-cyan);
-  text-shadow: 0 0 8px var(--neon-cyan-glow);
-}
-
-.nav-links a::after {
-  content: '';
-  position: absolute;
-  bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0%;
-  height: 2px;
-  background: var(--neon-purple);
-  box-shadow: 0 0 8px var(--neon-purple);
-  transition: var(--ease-smooth);
-}
-
-.nav-links a:hover::after { width: 100%; }
