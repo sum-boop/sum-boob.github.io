@@ -1,121 +1,294 @@
 /* ============================================================
-   CURSOR CORE — positioned via mousemove in script.js
-   (top/left set by JS; transform below only handles centering
-   and is re-declared inside each animation's keyframes)
+   CURSOR.CSS — Surveillance Reticle System
+   CCTV Command Center Portfolio
+   Precision crosshair · Lock-on states · Neon glow
+   ============================================================ */
+
+/* ============================================================
+   1. CORE ELEMENTS
+   Positioned via JS (top/left). Transform handles centering
+   + rotation + scale, animated per-state below.
    ============================================================ */
 .cursor-dot,
 .cursor-ring {
-  pointer-events: none;
   position: fixed;
   top: 0;
   left: 0;
-  transform: translate(-50%, -50%);
+  pointer-events: none;
   border-radius: var(--radius-full);
   z-index: var(--z-cursor);
-  will-change: transform;
+  will-change: transform, width, height, box-shadow;
+  transform: translate3d(-50%, -50%, 0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* ============================================================
-   CENTER DOT — precision point of aim
+   2. CENTER DOT — precision point of aim
    ============================================================ */
 .cursor-dot {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
   background: var(--neon-cyan);
-  box-shadow: var(--glow-cyan-md);
-  animation: cursorPulse 2.4s var(--ease-smooth) infinite;
-  transition: background-color var(--duration-base) var(--ease-smooth),
-              box-shadow var(--duration-base) var(--ease-smooth);
+  box-shadow:
+    var(--glow-cyan-sm),
+    0 0 0 1px var(--neon-cyan-glow-soft);
+  transition:
+    background-color var(--duration-fast) var(--ease-smooth),
+    box-shadow var(--duration-fast) var(--ease-smooth),
+    width var(--duration-fast) var(--ease-smooth),
+    height var(--duration-fast) var(--ease-smooth);
+}
+
+.cursor-dot::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: var(--radius-full);
+  background: radial-gradient(
+    circle,
+    var(--neon-cyan-glow-soft) 0%,
+    transparent 70%
+  );
+  opacity: 0.9;
+  pointer-events: none;
 }
 
 /* ============================================================
-   OUTER RING — segmented reticle, slow scan rotation
+   3. OUTER RING — segmented reticle
    ============================================================ */
 .cursor-ring {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border: 1px dashed var(--border-cyan-strong);
-  box-shadow: var(--glow-cyan-sm);
-  animation: cursorScan 14s linear infinite;
-  transition: width var(--duration-base) var(--ease-bounce),
-              height var(--duration-base) var(--ease-bounce),
-              border-color var(--duration-base) var(--ease-smooth),
-              border-style var(--duration-base) var(--ease-smooth),
-              background-color var(--duration-base) var(--ease-smooth),
-              box-shadow var(--duration-base) var(--ease-smooth);
+  box-shadow:
+    var(--glow-cyan-xs),
+    inset 0 0 12px var(--neon-cyan-glow-soft);
+  transition:
+    width var(--duration-base) var(--ease-bounce),
+    height var(--duration-base) var(--ease-bounce),
+    border-color var(--duration-base) var(--ease-smooth),
+    border-style var(--duration-base) var(--ease-smooth),
+    border-radius var(--duration-base) var(--ease-smooth),
+    background-color var(--duration-base) var(--ease-smooth),
+    box-shadow var(--duration-base) var(--ease-smooth),
+    opacity var(--duration-base) var(--ease-smooth);
+  animation: cursorRotate 16s linear infinite;
 }
 
-/* Crosshair lines through the ring's center */
+/* Corner tick marks — 4 HUD brackets around the ring */
 .cursor-ring::before,
 .cursor-ring::after {
-  content: '';
+  content: "";
   position: absolute;
-  top: 50%;
-  left: 50%;
-  background: var(--neon-cyan);
-  opacity: 0.55;
-  transition: background-color var(--duration-base) var(--ease-smooth),
-              opacity var(--duration-base) var(--ease-smooth);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
 }
 
 .cursor-ring::before {
-  width: 12px;
-  height: 1px;
-  transform: translate(-50%, -50%);
+  background:
+    linear-gradient(var(--neon-cyan), var(--neon-cyan)) top left / 6px 1px no-repeat,
+    linear-gradient(var(--neon-cyan), var(--neon-cyan)) top left / 1px 6px no-repeat,
+    linear-gradient(var(--neon-cyan), var(--neon-cyan)) top right / 6px 1px no-repeat,
+    linear-gradient(var(--neon-cyan), var(--neon-cyan)) top right / 1px 6px no-repeat,
+    linear-gradient(var(--neon-cyan), var(--neon-cyan)) bottom left / 6px 1px no-repeat,
+    linear-gradient(var(--neon-cyan), var(--neon-cyan)) bottom left / 1px 6px no-repeat,
+    linear-gradient(var(--neon-cyan), var(--neon-cyan)) bottom right / 6px 1px no-repeat,
+    linear-gradient(var(--neon-cyan), var(--neon-cyan)) bottom right / 1px 6px no-repeat;
+  opacity: 0.75;
+  transition: opacity var(--duration-base) var(--ease-smooth);
 }
 
+/* Center crosshair hairlines */
 .cursor-ring::after {
-  width: 1px;
-  height: 12px;
-  transform: translate(-50%, -50%);
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 40%,
+      var(--neon-cyan) 40%,
+      var(--neon-cyan) 60%,
+      transparent 60%,
+      transparent 100%
+    ) center / 100% 1px no-repeat,
+    linear-gradient(
+      0deg,
+      transparent 0%,
+      transparent 40%,
+      var(--neon-cyan) 40%,
+      var(--neon-cyan) 60%,
+      transparent 60%,
+      transparent 100%
+    ) center / 1px 100% no-repeat;
+  opacity: 0.35;
+  transition: opacity var(--duration-base) var(--ease-smooth);
 }
 
-@keyframes cursorPulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50%      { transform: translate(-50%, -50%) scale(1.35); }
-}
-
-@keyframes cursorScan {
-  from { transform: translate(-50%, -50%) rotate(0deg); }
-  to   { transform: translate(-50%, -50%) rotate(360deg); }
+@keyframes cursorRotate {
+  from { transform: translate3d(-50%, -50%, 0) rotate(0deg); }
+  to   { transform: translate3d(-50%, -50%, 0) rotate(360deg); }
 }
 
 /* ============================================================
-   HOVER / LOCK-ON STATE — toggled via body.cursor-hover in JS
+   4. HOVER STATE — target acquired / lock-on
+   Toggled via body.cursor-hover in JS
    ============================================================ */
 body.cursor-hover .cursor-dot {
+  width: 4px;
+  height: 4px;
   background: var(--neon-green);
-  box-shadow: var(--glow-green-md);
+  box-shadow:
+    var(--glow-green-sm),
+    0 0 0 1px var(--neon-green-glow-soft);
+}
+
+body.cursor-hover .cursor-dot::after {
+  background: radial-gradient(
+    circle,
+    var(--neon-green-glow-soft) 0%,
+    transparent 70%
+  );
 }
 
 body.cursor-hover .cursor-ring {
-  width: 64px;
-  height: 64px;
+  width: 68px;
+  height: 68px;
   border-style: solid;
   border-color: var(--neon-green);
   background: var(--neon-green-glow-soft);
-  box-shadow: var(--glow-green-md);
-  animation-play-state: paused; /* target acquired: reticle holds steady */
+  box-shadow:
+    var(--glow-green-md),
+    inset 0 0 18px var(--neon-green-glow-soft);
+  animation-play-state: paused;
 }
 
-body.cursor-hover .cursor-ring::before,
+body.cursor-hover .cursor-ring::before {
+  background:
+    linear-gradient(var(--neon-green), var(--neon-green)) top left / 10px 1.5px no-repeat,
+    linear-gradient(var(--neon-green), var(--neon-green)) top left / 1.5px 10px no-repeat,
+    linear-gradient(var(--neon-green), var(--neon-green)) top right / 10px 1.5px no-repeat,
+    linear-gradient(var(--neon-green), var(--neon-green)) top right / 1.5px 10px no-repeat,
+    linear-gradient(var(--neon-green), var(--neon-green)) bottom left / 10px 1.5px no-repeat,
+    linear-gradient(var(--neon-green), var(--neon-green)) bottom left / 1.5px 10px no-repeat,
+    linear-gradient(var(--neon-green), var(--neon-green)) bottom right / 10px 1.5px no-repeat,
+    linear-gradient(var(--neon-green), var(--neon-green)) bottom right / 1.5px 10px no-repeat;
+  opacity: 1;
+}
+
 body.cursor-hover .cursor-ring::after {
-  background: var(--neon-green);
+  background:
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 30%,
+      var(--neon-green) 30%,
+      var(--neon-green) 70%,
+      transparent 70%,
+      transparent 100%
+    ) center / 100% 1px no-repeat,
+    linear-gradient(
+      0deg,
+      transparent 0%,
+      transparent 30%,
+      var(--neon-green) 30%,
+      var(--neon-green) 70%,
+      transparent 70%,
+      transparent 100%
+    ) center / 1px 100% no-repeat;
   opacity: 0.85;
 }
 
 /* ============================================================
-   FALLBACK — touch / coarse pointer / no hover support
+   5. ACTIVE STATE — click / trigger
+   Toggled via body.cursor-active in JS
+   ============================================================ */
+body.cursor-active .cursor-ring {
+  width: 32px;
+  height: 32px;
+  border-color: var(--neon-cyan);
+  background: var(--neon-cyan-glow-soft);
+  box-shadow:
+    var(--glow-cyan-md),
+    inset 0 0 14px var(--neon-cyan-glow-soft);
+  transition-duration: var(--duration-fast);
+}
+
+body.cursor-active .cursor-dot {
+  transform: translate3d(-50%, -50%, 0) scale(1.4);
+  box-shadow: var(--glow-cyan-lg);
+}
+
+body.cursor-active.cursor-hover .cursor-ring {
+  border-color: var(--neon-green);
+  background: var(--neon-green-glow-soft);
+  box-shadow:
+    var(--glow-green-md),
+    inset 0 0 14px var(--neon-green-glow-soft);
+}
+
+/* ============================================================
+   6. TEXT STATE — over paragraphs / inputs
+   Toggled via body.cursor-text in JS
+   ============================================================ */
+body.cursor-text .cursor-ring {
+  width: 4px;
+  height: 32px;
+  border-radius: var(--radius-xs);
+  border-style: solid;
+  border-color: var(--neon-cyan);
+  background: transparent;
+  box-shadow: var(--glow-cyan-sm);
+  animation-play-state: paused;
+}
+
+body.cursor-text .cursor-ring::before,
+body.cursor-text .cursor-ring::after {
+  opacity: 0;
+}
+
+body.cursor-text .cursor-dot {
+  opacity: 0;
+}
+
+/* ============================================================
+   7. HIDDEN STATE — when leaving the viewport
+   Toggled via body.cursor-hidden in JS
+   ============================================================ */
+body.cursor-hidden .cursor-dot,
+body.cursor-hidden .cursor-ring {
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-smooth);
+}
+
+/* ============================================================
+   8. FALLBACK — touch / coarse pointer
    ============================================================ */
 @media (hover: none), (pointer: coarse) {
   .cursor-dot,
   .cursor-ring {
-    display: none;
+    display: none !important;
   }
-  body {
+
+  body,
+  button,
+  a {
     cursor: auto;
   }
 }
 
-/* Reduced-motion users already get animations frozen globally
-   in base.css; no duplicate override needed here. */
+/* ============================================================
+   9. REDUCED MOTION — freeze animation loops
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-ring {
+    animation: none;
+  }
+
+  .cursor-dot,
+  .cursor-ring {
+    transition: none;
+  }
+}
