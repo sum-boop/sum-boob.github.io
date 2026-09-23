@@ -1,30 +1,121 @@
-    .cursor-dot, .cursor-ring {
-      pointer-events: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      z-index: 99999;
-      transition: opacity 0.3s ease;
-    }
-    .cursor-dot {
-      width: 8px;
-      height: 8px;
-      background-color: var(--neon-cyan);
-      box-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
-    }
-    .cursor-ring {
-      width: 44px;
-      height: 44px;
-      border: 1.5px solid var(--neon-purple);
-      box-shadow: 0 0 15px var(--neon-purple-glow);
-      transition: width 0.25s var(--ease-bounce), height 0.25s var(--ease-bounce), border-color 0.25s ease, background-color 0.25s ease;
-    }
-    body.cursor-hover .cursor-ring {
-      width: 68px;
-      height: 68px;
-      border-color: var(--neon-cyan);
-      background-color: rgba(0, 243, 255, 0.08);
-      box-shadow: 0 0 25px var(--neon-cyan-glow);
-    }
+/* ============================================================
+   CURSOR CORE — positioned via mousemove in script.js
+   (top/left set by JS; transform below only handles centering
+   and is re-declared inside each animation's keyframes)
+   ============================================================ */
+.cursor-dot,
+.cursor-ring {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  border-radius: var(--radius-full);
+  z-index: var(--z-cursor);
+  will-change: transform;
+}
+
+/* ============================================================
+   CENTER DOT — precision point of aim
+   ============================================================ */
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--neon-cyan);
+  box-shadow: var(--glow-cyan-md);
+  animation: cursorPulse 2.4s var(--ease-smooth) infinite;
+  transition: background-color var(--duration-base) var(--ease-smooth),
+              box-shadow var(--duration-base) var(--ease-smooth);
+}
+
+/* ============================================================
+   OUTER RING — segmented reticle, slow scan rotation
+   ============================================================ */
+.cursor-ring {
+  width: 40px;
+  height: 40px;
+  border: 1px dashed var(--border-cyan-strong);
+  box-shadow: var(--glow-cyan-sm);
+  animation: cursorScan 14s linear infinite;
+  transition: width var(--duration-base) var(--ease-bounce),
+              height var(--duration-base) var(--ease-bounce),
+              border-color var(--duration-base) var(--ease-smooth),
+              border-style var(--duration-base) var(--ease-smooth),
+              background-color var(--duration-base) var(--ease-smooth),
+              box-shadow var(--duration-base) var(--ease-smooth);
+}
+
+/* Crosshair lines through the ring's center */
+.cursor-ring::before,
+.cursor-ring::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: var(--neon-cyan);
+  opacity: 0.55;
+  transition: background-color var(--duration-base) var(--ease-smooth),
+              opacity var(--duration-base) var(--ease-smooth);
+}
+
+.cursor-ring::before {
+  width: 12px;
+  height: 1px;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-ring::after {
+  width: 1px;
+  height: 12px;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes cursorPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.35); }
+}
+
+@keyframes cursorScan {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to   { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ============================================================
+   HOVER / LOCK-ON STATE — toggled via body.cursor-hover in JS
+   ============================================================ */
+body.cursor-hover .cursor-dot {
+  background: var(--neon-green);
+  box-shadow: var(--glow-green-md);
+}
+
+body.cursor-hover .cursor-ring {
+  width: 64px;
+  height: 64px;
+  border-style: solid;
+  border-color: var(--neon-green);
+  background: var(--neon-green-glow-soft);
+  box-shadow: var(--glow-green-md);
+  animation-play-state: paused; /* target acquired: reticle holds steady */
+}
+
+body.cursor-hover .cursor-ring::before,
+body.cursor-hover .cursor-ring::after {
+  background: var(--neon-green);
+  opacity: 0.85;
+}
+
+/* ============================================================
+   FALLBACK — touch / coarse pointer / no hover support
+   ============================================================ */
+@media (hover: none), (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+  body {
+    cursor: auto;
+  }
+}
+
+/* Reduced-motion users already get animations frozen globally
+   in base.css; no duplicate override needed here. */
