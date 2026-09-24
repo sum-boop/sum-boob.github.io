@@ -1,20 +1,59 @@
 /* ==========================================================================
    COMPONENTS.CSS
    CCTV Command Center — UI Component Library
-   Buttons · Badges · Cards · Log Markers · Modals · Forms · Nav · Toast
+
+   Buttons · Badges · Site Badge · Cards · Log Markers · Readout Composition
+   Modals · Forms · Navigation · Mobile Drawer · Progress Bar · Toasts
+   Boot Terminal · Career Footprint & Topology · Focus · Accessibility
 
    Color discipline (carried over from variables.css):
-   → CYAN  = the one working accent. Primary actions, focus, active states.
-   → GREEN = "operational / online." Success, live, healthy status.
-   → VIOLET = rare, single-use inline emphasis only. Never on buttons,
-              never on anything repeatedly interactive.
+   → CYAN  = the one working accent. Primary actions, focus, active states,
+             the "current" role, the hovered thing.
+   → GREEN = "operational / online." Success, live, healthy status,
+             a certification that checks out.
+   → VIOLET = rare. One appearance per view, never on anything a visitor
+              presses repeatedly. Its component homes are the flagship
+              client-site badge, the training chip and the inline
+              .purple-span — pick one per view, not all three.
    → RED / AMBER = alert and warning status only, never decoration.
+
+   One vocabulary: a "live" status looks the same whether it is a badge,
+   a dot, a timeline node or a toast. Status is never re-invented per
+   component.
+
+   Signal discipline:
+   → Exactly one .btn-signal per page. If two are visible, the design has
+     failed. (sections-layout.css carries a form-specific twin,
+     .contact-submit — use one or the other, never both.)
+   → Only .btn-hire and .btn-signal may use the large cyan glows.
+   → Bounce belongs to modal entry and the cursor click. Everything else
+     uses --ease-out-expo or --ease-smooth.
+
+   Contrast: --text-muted sits below AA on obsidian and is decoration only.
+   Wherever text carries information — labels, help text, status chips,
+   ghost buttons — this file uses --text-tertiary or brighter.
+
+   Glass-on-glass is dangerous. Inside modals, toasts and nested panels use
+   .glass-card--flat.
+
+   Load-order note: sections-layout.css also styles the boot overlay
+   (.boot). Both files share .boot-terminal, .boot-line and .boot-skip, so
+   the two agree on look; use one overlay class per page.
    ========================================================================== */
 
 /* ==========================================================================
    1. BUTTONS
-   Two core buttons only: a solid primary CTA and a glass secondary.
-   Motion happens on interaction — never a perpetual loop on a button.
+   Four buttons, each with one job:
+     .btn-hire    solid gradient CTA — the site's main invitation
+     .btn-glass   glass outline — the quiet second option
+     .btn-signal  the single signal CTA — the brightest thing on the page
+     .btn-ghost   text and arrow — inline navigation ("View all")
+   plus .btn-icon for anything square or round with only a glyph in it.
+   Motion happens on interaction — never a perpetual loop on a button —
+   and buttons no longer bounce: lift and settle on the expo curve.
+
+   The .btn base gets its stacking context from z-index: 1 on a positioned
+   element, which is all the sheen layers (z-index: -1) need.
    ========================================================================== */
 .btn {
   position: relative;
@@ -34,9 +73,8 @@
   cursor: none;
   outline: none;
   overflow: hidden;
-  isolation: isolate;
   z-index: 1;
-  transition: transform var(--duration-base) var(--ease-bounce),
+  transition: transform var(--duration-base) var(--ease-out-expo),
               box-shadow var(--duration-base) var(--ease-smooth),
               border-color var(--duration-base) var(--ease-smooth),
               background-color var(--duration-base) var(--ease-smooth),
@@ -48,13 +86,11 @@
   transition-duration: var(--duration-fast);
 }
 
-.btn:focus-visible {
-  outline: 2px solid var(--accent-cyan);
-  outline-offset: 3px;
-  box-shadow: var(--focus-ring-soft);
-}
-
-/* --- Primary CTA: solid, static gradient — no perpetual motion --- */
+/* --- Primary CTA: solid, static gradient — no perpetual motion ---
+   The sheen fires once per hover: it is parked off the left edge with
+   NO transition, sweeps across only when the hover begins, and snaps
+   back unseen when it ends. On press it stays parked at the far side so
+   the sweep cannot stutter under the click. */
 .btn-hire {
   color: var(--text-on-accent);
   background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-green) 100%);
@@ -69,7 +105,7 @@
   pointer-events: none;
   background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
   transform: translateX(-120%);
-  transition: transform var(--duration-slower) var(--ease-sharp);
+  transition: none;
 }
 
 .btn-hire:hover {
@@ -79,13 +115,32 @@
 
 .btn-hire:hover::after {
   transform: translateX(120%);
+  transition: transform var(--duration-slower) var(--ease-sharp);
 }
 
 .btn-hire:active {
   box-shadow: var(--glow-cyan-sm);
 }
 
-/* --- Secondary: glass outline --- */
+.btn-hire:active::after {
+  transform: translateX(120%);
+  transition: none;
+}
+
+/* Layer promotion is spent only while a pointer is actually hovering. */
+@media (hover: hover) {
+  .btn-hire:hover,
+  .btn-hire:hover::after,
+  .btn-signal:hover,
+  .btn-signal:hover::after {
+    will-change: transform;
+  }
+}
+
+/* --- Secondary: glass outline ---
+   On hover a soft cyan tint rises from the top edge, so the glass feels
+   like it is responding, not merely recolouring. The tint is a layer of
+   its own so it can fade rather than snap. */
 .btn-glass {
   color: var(--text-primary);
   background: var(--glass-bg);
@@ -93,6 +148,17 @@
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   box-shadow: var(--shadow-hairline);
+}
+
+.btn-glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, var(--accent-cyan-soft), var(--glass-bg-hover));
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-out-expo);
 }
 
 .btn-glass:hover {
@@ -103,13 +169,148 @@
   box-shadow: var(--glow-cyan-sm), var(--shadow-hairline);
 }
 
+.btn-glass:hover::before {
+  opacity: 1;
+}
+
 .btn-glass:active {
   transform: translateY(-1px) scale(0.98);
   background: var(--glass-bg);
   box-shadow: none;
 }
 
-/* --- Inline accent spans --- */
+/* --- Signal CTA ---
+   Signal CTA — reserved for exactly one action per page. If more than one
+   is visible, the design has failed.
+   Filled cyan, dark type, and on hover the only large signal glow in the
+   library. Its sheen is narrower and quicker than the hire button's —
+   a sharp pass, not a soft one. */
+.btn-signal {
+  color: var(--text-on-accent);
+  background: var(--accent-cyan);
+  font-weight: var(--fw-bold);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), var(--glow-cyan-sm);
+}
+
+.btn-signal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.6) 50%, transparent 65%);
+  transform: translateX(-120%);
+  transition: none;
+}
+
+.btn-signal:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5), var(--glow-signal);
+}
+
+.btn-signal:hover::after {
+  transform: translateX(120%);
+  transition: transform var(--duration-slow) var(--ease-sharp);
+}
+
+.btn-signal:active {
+  box-shadow: var(--glow-cyan-sm);
+}
+
+.btn-signal:active::after {
+  transform: translateX(120%);
+  transition: none;
+}
+
+/* --- Ghost ---
+   Text and an arrow, nothing else: no fill, no border. Muted at rest,
+   cyan on hover with the arrow leaning 4px forward. For "View all",
+   "Read more", and anything that is navigation rather than action.
+   Stands alone — do not combine it with .btn. The arrow is drawn here. */
+.btn-ghost,
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: var(--space-3xs) 0;
+  background: none;
+  border: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--text-tertiary);
+  cursor: none;
+  transition: color var(--duration-base) var(--ease-out-expo);
+}
+
+.btn-ghost::after,
+.nav-cta::after {
+  content: "→";
+  content: "→" / "";
+  transition: transform var(--duration-base) var(--ease-out-expo);
+}
+
+.btn-ghost:hover,
+.nav-cta:hover {
+  color: var(--accent-cyan);
+}
+
+.btn-ghost:hover::after,
+.nav-cta:hover::after {
+  transform: translateX(4px);
+}
+
+/* --- Icon button ---
+   The one primitive for a glyph inside a circle: modal close, mobile nav
+   toggle, scroll-to-top. 40px, glass, cyan on hover, small glow only.
+   .modal-close-btn composes from it (same rule, own placement below). */
+.btn-icon,
+.modal-close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: var(--radius-full);
+  background: var(--glass-bg);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  font-size: var(--fs-lg);
+  line-height: 1;
+  cursor: none;
+  backdrop-filter: blur(var(--glass-blur-soft));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft));
+  transition: background var(--duration-base) var(--ease-out-expo),
+              border-color var(--duration-base) var(--ease-out-expo),
+              color var(--duration-base) var(--ease-out-expo),
+              transform var(--duration-base) var(--ease-out-expo),
+              box-shadow var(--duration-base) var(--ease-out-expo);
+}
+
+.btn-icon--square {
+  border-radius: var(--radius-md);
+}
+
+.btn-icon:hover {
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+  background: var(--glass-bg-hover);
+  box-shadow: var(--glow-cyan-sm);
+}
+
+.btn-icon:active {
+  transform: scale(0.94);
+  transition-duration: var(--duration-fast);
+}
+
+/* ==========================================================================
+   2. INLINE ACCENTS
+   ========================================================================== */
 .highlight-span {
   color: var(--accent-cyan);
   font-weight: var(--fw-semibold);
@@ -124,9 +325,16 @@
 }
 
 /* ==========================================================================
-   2. STATUS BADGES & INDICATORS
+   3. STATUS BADGES & INDICATORS
    One status vocabulary used everywhere: a pulsing dot plus a mono
    pill. Same tokens power badges, dots and timeline nodes.
+
+   Aliasing: "online" and "live" mean the same thing and now share one
+   set of styles. .online stays for backward compatibility; .live is
+   the name to use in new markup.
+
+   Career variants: .current marks the role being worked now, .past a
+   role that has ended, and .client-site the site a role was served on.
    ========================================================================== */
 .hud-badge-span {
   display: inline-flex;
@@ -158,7 +366,8 @@
   animation: pulseGlow var(--duration-pulse) ease-in-out infinite;
 }
 
-.pulse-dot-span.online {
+.pulse-dot-span.online,
+.pulse-dot-span.live {
   background: var(--status-online);
   box-shadow: 0 0 10px var(--status-online);
 }
@@ -207,14 +416,16 @@
   -webkit-backdrop-filter: blur(var(--glass-blur-soft));
 }
 
-.status-badge.online {
+/* .live is the alias of .online — one set of styles, two names. */
+.status-badge.online,
+.status-badge.live {
   color: var(--status-online);
   background: rgba(var(--status-online-rgb), 0.10);
   border-color: var(--border-green);
 }
 
 .status-badge.offline {
-  color: var(--text-muted);
+  color: var(--text-tertiary);
   background: rgba(var(--status-offline-rgb), 0.14);
   border-color: var(--border-subtle);
 }
@@ -236,10 +447,100 @@
   height: 6px;
 }
 
+/* Current — the role being worked right now (Innovision). Cyan fill,
+   a brighter edge and a small ● in the accent. */
+.status-badge.current {
+  color: var(--text-cyan);
+  background: var(--accent-cyan-soft);
+  border-color: var(--border-cyan-strong);
+}
+
+.status-badge.current::before {
+  content: "●";
+  content: "●" / "";
+  color: var(--accent-cyan);
+  font-size: 0.9em;
+  line-height: 1;
+}
+
+/* Past — a role that has ended (A.P. Securitas). Quiet by design:
+   no pulse, no glow, nothing asking to be looked at. */
+.status-badge.past {
+  color: var(--text-tertiary);
+  background: var(--glass-bg-soft);
+  border-color: var(--border-subtle);
+  box-shadow: none;
+}
+
+.status-badge.past .pulse-dot-span {
+  animation: none;
+  box-shadow: none;
+  opacity: 0.5;
+}
+
+/* Client site — the label naming where a role was served
+   (Flipkart Kalash Mega Hub, Ekart Logistics). Violet, and violet is
+   single-use: spend it on the ONE flagship label in a view. Anywhere the
+   site name repeats — card lists, timeline entries — use .site-badge
+   (section 4) instead. No pulse. */
+.status-badge.client-site {
+  color: var(--accent-violet);
+  background: var(--accent-violet-soft);
+  border-color: rgba(var(--accent-violet-rgb), 0.35);
+  box-shadow: none;
+}
+
 /* ==========================================================================
-   3. GLASS / CAMERA-FEED CARDS
+   4. SITE BADGE
+   Metadata, not status: "CLIENT SITE · FLIPKART KALASH MEGA HUB". A small
+   mono pill that says where the work happened and asks for nothing.
+   No pulse, no glow. The prefix is drawn here in the muted step (it is
+   decoration; the site name is what carries the meaning) and is
+   announced to screen readers as "Client site:". It wakes up a little on
+   hover, when it is a link.
+   ========================================================================== */
+.site-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--text-secondary);
+  transition: border-color var(--duration-base) var(--ease-out-expo),
+              color var(--duration-base) var(--ease-out-expo);
+}
+
+.site-badge::before {
+  content: "Client site ·";
+  content: "Client site ·" / "Client site:";
+  color: var(--text-muted);
+}
+
+.site-badge:hover {
+  border-color: var(--border-cyan);
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   5. GLASS / CAMERA-FEED CARDS
    General-purpose reusable panel with a hairline top highlight and
    an optional viewfinder overlay that appears on hover.
+
+   Hover is calibrated, not bouncy: a 3px lift on the expo curve, a
+   faint inward cyan tint, and a cyan thread that lights the top edge.
+   None of it applies on touch screens, where "hover" only ever means
+   a stuck state.
+
+   Three roles, three modifiers:
+     --readout   a stat block that holds a .readout; no lift
+     --monitor   a surveillance-feed card with a persistent top strip
+     --flat      border only, for use inside modals and nested panels
    ========================================================================== */
 .glass-card {
   position: relative;
@@ -251,10 +552,10 @@
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   box-shadow: var(--shadow-panel);
-  transition: border-color var(--duration-slow) var(--ease-smooth),
-              box-shadow var(--duration-slow) var(--ease-smooth),
-              transform var(--duration-slow) var(--ease-smooth),
-              background-color var(--duration-slow) var(--ease-smooth);
+  transition: border-color var(--duration-slow) var(--ease-out-expo),
+              box-shadow var(--duration-slow) var(--ease-out-expo),
+              transform var(--duration-slow) var(--ease-out-expo),
+              background-color var(--duration-slow) var(--ease-out-expo);
 }
 
 .glass-card::before {
@@ -268,11 +569,36 @@
   background: linear-gradient(90deg, transparent 0%, var(--glass-highlight) 50%, transparent 100%);
 }
 
-.glass-card:hover {
-  border-color: var(--border-cyan-strong);
-  background: var(--glass-bg-hover);
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-hover);
+/* The hover thread — a 1px cyan line along the top edge, brightest at
+   the centre, hidden until the card is hovered. */
+.glass-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent 0%, var(--accent-cyan) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-out-expo);
+}
+
+@media (hover: hover) {
+  .glass-card:hover {
+    border-color: var(--border-cyan-strong);
+    background: var(--glass-bg-hover);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover), inset 0 0 48px rgba(var(--accent-cyan-rgb), 0.04);
+  }
+
+  .glass-card:hover::after {
+    opacity: 0.6;
+  }
+
+  .glass-card:hover .feed-frame {
+    opacity: 0.85;
+  }
 }
 
 .glass-card-monitor-header {
@@ -286,7 +612,7 @@
   font-size: var(--fs-2xs);
   letter-spacing: var(--ls-widest);
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-tertiary);
 }
 
 .glass-card-monitor-header .pulse-dot-span {
@@ -301,7 +627,7 @@
   z-index: 3;
   pointer-events: none;
   opacity: 0;
-  transition: opacity var(--duration-slow) var(--ease-smooth);
+  transition: opacity var(--duration-slow) var(--ease-out-expo);
   background-image:
     linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
     linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
@@ -312,12 +638,101 @@
   background-repeat: no-repeat;
 }
 
-.glass-card:hover .feed-frame {
-  opacity: 0.85;
+/* Readout — for stat and measurement blocks (Axiom-style). Tighter
+   padding, no top highlight, and a faint bottom rule where the card
+   edge would be. Holds a .readout from base.css. On hover there is
+   no lift, only a soft glow along that bottom edge. */
+.glass-card--readout {
+  padding: var(--space-md);
+  border-color: transparent;
+  border-bottom-color: var(--border-subtle);
+  border-radius: var(--radius-lg);
+  background: var(--glass-bg-soft);
+  box-shadow: none;
+}
+
+.glass-card--readout::before,
+.glass-card--readout::after {
+  display: none;
+}
+
+.glass-card--readout .readout {
+  padding-block: 0;
+  border-bottom: 0;
+}
+
+@media (hover: hover) {
+  .glass-card--readout:hover {
+    transform: none;
+    background: var(--glass-bg-soft);
+    border-bottom-color: var(--border-cyan);
+    box-shadow: 0 10px 24px -14px rgba(var(--accent-cyan-rgb), 0.4);
+  }
+}
+
+/* Monitor — a surveillance-feed card. The header strip is always on:
+     <div class="glass-card-monitor-header">
+       <span class="monitor-rec">● REC</span>
+       <span>CAM_02</span>
+       <time class="monitor-time">…</time>
+     </div>
+   REC on the left in alert red, camera ID beside it, timestamp pushed
+   to the right. The viewfinder brackets from .feed-frame stay faintly
+   visible instead of waiting for hover. Used on the About and Career
+   Footprint sections. */
+.glass-card--monitor {
+  padding-top: var(--space-md);
+}
+
+.glass-card--monitor .glass-card-monitor-header {
+  margin-bottom: var(--space-md);
+}
+
+.monitor-rec {
+  font-weight: var(--fw-bold);
+  color: var(--status-live);
+}
+
+.monitor-time {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--ls-wider);
+  color: var(--text-secondary);
+}
+
+.glass-card--monitor .feed-frame {
+  opacity: 0.45;
+}
+
+/* Flat — no glass, no shadow, just a border. Glass stacked on glass turns
+   muddy, so anything nested inside a modal, toast or another panel uses
+   this instead. */
+.glass-card--flat {
+  padding: var(--space-md);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.glass-card--flat::before,
+.glass-card--flat::after {
+  display: none;
+}
+
+@media (hover: hover) {
+  .glass-card--flat:hover {
+    transform: none;
+    background: var(--bg-surface);
+    border-color: var(--border-strong);
+    box-shadow: none;
+  }
 }
 
 /* ==========================================================================
-   4. OPERATIONAL LOG MARKERS
+   6. OPERATIONAL LOG MARKERS
    Base .timeline-node-span structure and its .online modifier live in
    sections-layout.css (they belong to the timeline's own layout). This
    section adds the remaining status states so one status vocabulary
@@ -358,7 +773,15 @@
   50%      { box-shadow: 0 0 24px var(--status-alert); }
 }
 
-/* Small mono status chip used to tag a log entry's lifecycle */
+/* Small mono status chip used to tag a log entry's lifecycle.
+     active     in progress            cyan
+     current    the role right now     cyan, brighter, ● prefix
+     completed  finished               green
+     certified  a credential that      green, ✓ prefix
+                verifies
+     training   a course in progress   violet — rare, see the colour
+                                       discipline at the top
+     archived   filed away             quiet */
 .log-status {
   display: inline-flex;
   align-items: center;
@@ -372,7 +795,7 @@
   font-weight: var(--fw-semibold);
   letter-spacing: var(--ls-widest);
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-tertiary);
   backdrop-filter: blur(var(--glass-blur-soft));
   -webkit-backdrop-filter: blur(var(--glass-blur-soft));
 }
@@ -383,8 +806,23 @@
   background: var(--accent-cyan-soft);
 }
 
+.log-status.current {
+  color: var(--text-cyan);
+  border-color: var(--border-cyan-strong);
+  background: var(--accent-cyan-soft);
+  box-shadow: var(--glow-cyan-sm);
+}
+
+.log-status.current::before {
+  content: "●";
+  content: "●" / "";
+  color: var(--accent-cyan);
+  font-size: 0.9em;
+  line-height: 1;
+}
+
 .log-status.archived {
-  color: var(--text-muted);
+  color: var(--text-tertiary);
   border-color: var(--border-subtle);
   background: var(--glass-bg-soft);
 }
@@ -395,11 +833,81 @@
   background: rgba(var(--status-online-rgb), 0.10);
 }
 
+.log-status.training {
+  color: var(--accent-violet);
+  border-color: rgba(var(--accent-violet-rgb), 0.35);
+  background: var(--accent-violet-soft);
+}
+
+.log-status.certified {
+  color: var(--status-online);
+  border-color: var(--border-green);
+  background: rgba(var(--status-online-rgb), 0.10);
+}
+
+.log-status.certified::before {
+  content: "✓";
+  content: "✓" / "";
+  color: var(--accent-green);
+}
+
 /* ==========================================================================
-   5. MODALS
+   7. READOUT COMPOSITION
+   The .readout primitive lives in base.css. This section only arranges
+   readouts: a row of three or four divided by vertical hairlines, and one
+   emphasised variant that trades mono for the display serif.
+   ========================================================================== */
+.readout-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.readout-row .readout {
+  padding-block: 0;
+  border-bottom: 0;
+}
+
+/* A 1px × 16px cyan rule that fades out at both ends — the divider between
+   readouts in a row. Place it between two .readout elements. */
+.hairline-vertical {
+  flex: none;
+  width: 1px;
+  height: 16px;
+  background: linear-gradient(180deg, transparent, var(--border-cyan), transparent);
+  opacity: 0.5;
+}
+
+/* Primary — the one readout in a section that gets the serif. Use once
+   per section at most. The display face runs optically small next to
+   mono, so the size is stepped up from --fs-xl rather than matching it. */
+.readout--primary {
+  --readout-value-font: var(--font-display);
+  --readout-value-size: calc(var(--fs-xl) * 1.35);
+  --readout-value-weight: var(--fw-regular);
+}
+
+/* ==========================================================================
+   8. MODALS
    Full-screen blurred backdrop, glass window with cyan-tinted border,
    and a rotating close control. Enters with a soft bounce, never
-   with a perpetual motion.
+   with a perpetual motion — the modal is one of the two places in the
+   library where bounce is allowed.
+
+   Markup contract (visuals only here; JS traps focus and restores it):
+     <div class="modal-backdrop">
+       <div class="modal-window" role="dialog" aria-modal="true"
+            aria-labelledby="modal-title">
+         <div class="modal-header">
+           <div><p class="modal-eyebrow">…</p><h2 class="modal-title" id="modal-title">…</h2></div>
+           <button class="modal-close-btn" aria-label="Close">×</button>
+         </div>
+         <img class="modal-img"> <div class="modal-meta">…</div>
+         <div class="modal-gallery">…</div> <p class="modal-body-text">…</p>
+         <div class="modal-footer">…</div>
+       </div>
+     </div>
    ========================================================================== */
 .modal-backdrop {
   position: fixed;
@@ -428,6 +936,7 @@
   max-width: 760px;
   max-height: 88vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: var(--space-xl);
   background: var(--glass-bg-strong);
   border: 1px solid var(--border-cyan-strong);
@@ -447,6 +956,11 @@
   opacity: 1;
 }
 
+/* The flagship deployment gets the wider stage. */
+.modal-window--wide {
+  max-width: 960px;
+}
+
 .modal-window::-webkit-scrollbar {
   width: 6px;
 }
@@ -457,30 +971,39 @@
   border-radius: var(--radius-full);
 }
 
+/* Header — an eyebrow above the title on the left, the close control on
+   the right. Inside it the close button sits in the flow instead of
+   floating in the corner. */
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.modal-header .modal-title {
+  margin-bottom: 0;
+}
+
+.modal-eyebrow {
+  margin-bottom: var(--space-3xs);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
 .modal-close-btn {
   position: absolute;
   top: var(--space-md);
   right: var(--space-md);
   z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: var(--radius-full);
-  background: var(--glass-bg);
-  border: 1px solid var(--border-default);
-  color: var(--text-primary);
-  font-size: var(--fs-lg);
-  line-height: 1;
-  cursor: none;
-  backdrop-filter: blur(var(--glass-blur-soft));
-  -webkit-backdrop-filter: blur(var(--glass-blur-soft));
-  transition: background var(--duration-base) var(--ease-smooth),
-              border-color var(--duration-base) var(--ease-smooth),
-              color var(--duration-base) var(--ease-smooth),
-              transform var(--duration-base) var(--ease-smooth),
-              box-shadow var(--duration-base) var(--ease-smooth);
+}
+
+.modal-header .modal-close-btn {
+  position: static;
 }
 
 .modal-close-btn:hover {
@@ -488,13 +1011,7 @@
   border-color: var(--accent-cyan);
   color: var(--text-on-accent);
   transform: rotate(90deg);
-  box-shadow: var(--glow-cyan-md);
-}
-
-.modal-close-btn:focus-visible {
-  outline: 2px solid var(--accent-cyan);
-  outline-offset: 3px;
-  box-shadow: var(--focus-ring-soft);
+  box-shadow: var(--glow-cyan-sm);
 }
 
 .modal-img {
@@ -504,6 +1021,69 @@
   border-radius: var(--radius-lg);
   margin-bottom: var(--space-md);
   border: 1px solid var(--border-subtle);
+  filter: var(--image-filter-hover);
+}
+
+/* Meta — a case-file header directly under the image: site, duration,
+   camera count, as a row of compact .readout blocks with rules between. */
+.modal-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+  padding-block: var(--space-sm);
+  border-block: 1px solid var(--border-subtle);
+}
+
+.modal-meta .readout {
+  --readout-value-size: var(--fs-md);
+  padding-block: 0;
+  border-bottom: 0;
+}
+
+.modal-meta .readout + .readout {
+  padding-left: var(--space-md);
+  border-left: 1px solid var(--readout-divider-color);
+}
+
+/* Gallery — a three-up row of deployment thumbnails. Buttons, figures or
+   bare images all take the same treatment; the active one gets a cyan
+   edge via .is-active. */
+.modal-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+
+.modal-gallery > * {
+  position: relative;
+  display: block;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--bg-inset);
+  cursor: none;
+  transition: border-color var(--duration-base) var(--ease-out-expo);
+}
+
+.modal-gallery img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  filter: var(--image-filter-rest);
+  transition: filter var(--duration-slow) var(--ease-out-expo);
+}
+
+.modal-gallery > *:hover,
+.modal-gallery > .is-active {
+  border-color: var(--accent-cyan);
+}
+
+.modal-gallery > *:hover img,
+.modal-gallery > .is-active img {
   filter: var(--image-filter-hover);
 }
 
@@ -521,19 +1101,57 @@
   margin-bottom: var(--space-lg);
 }
 
+/* Footer — actions, right-aligned under a hairline. Uses the button
+   primitives. Anything panel-like in here should be .glass-card--flat. */
+.modal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-subtle);
+}
+
 /* ==========================================================================
-   6. FORM FIELDS (floating label — used inside modals)
+   9. FORM FIELDS (floating label — used inside modals)
    IMPORTANT: the label must come AFTER the input in the DOM, and every
    input needs placeholder=" " (a single space) so :placeholder-shown
    drives the float. Focus is always paired with a visible border plus
    glow — never removed without a replacement.
+
+   Markup guidance for the HTML writer:
+   → autocomplete: name → "name", email → "email", phone → "tel",
+     company → "organization". Add it; it costs nothing and fills the
+     field for the visitor.
+   → Link help and errors to their control with aria-describedby
+     pointing at the .form-help / .form-error id, and set
+     aria-invalid="true" on the control while it is in error.
+   → Use a real <label> (this file's .form-label) — the floating look is
+     visual only.
    ========================================================================== */
 .form-field {
   position: relative;
   margin-bottom: var(--space-md);
 }
 
-.form-input {
+/* Two fields side by side on desktop (name / email), stacked below
+   640px. The pair carries the spacing; the fields inside do not. */
+.form-field--inline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.form-field--inline > .form-field {
+  margin-bottom: 0;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
   width: 100%;
   padding: 1.15rem 1.4rem 1.05rem;
   background: var(--bg-surface);
@@ -549,26 +1167,56 @@
               box-shadow var(--duration-base) var(--ease-smooth);
 }
 
-.form-input:hover {
+.form-input:hover,
+.form-select:hover,
+.form-textarea:hover {
   border-color: var(--border-strong);
 }
 
-.form-input:focus {
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
   border-color: var(--accent-cyan);
   background: var(--bg-surface-hover);
   box-shadow: var(--glow-cyan-sm);
 }
 
-textarea.form-input {
+textarea.form-input,
+.form-textarea {
   min-height: 150px;
   resize: vertical;
+}
+
+/* A class of its own so the message box can grow independently of the
+   single-line fields. Browsers with field-sizing let it grow with its
+   content, up to a ceiling. */
+.form-textarea {
+  field-sizing: content;
+  max-height: 26rem;
+}
+
+/* Select — same box, custom chevron in cyan, room on the right for it.
+   Its label is always floated: a select always shows a value, so
+   there is no empty state for the label to sit in. */
+.form-select {
+  padding-right: 3rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%2300e5ff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1.25rem center;
+  background-size: 12px 8px;
+  color-scheme: dark;
+}
+
+.form-select option {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
 }
 
 .form-label {
   position: absolute;
   left: 1.4rem;
   top: 1.15rem;
-  color: var(--text-muted);
+  color: var(--text-tertiary);
   font-family: var(--font-mono);
   font-size: var(--fs-sm);
   letter-spacing: var(--ls-wide);
@@ -582,7 +1230,10 @@ textarea.form-input {
 }
 
 .form-input:focus ~ .form-label,
-.form-input:not(:placeholder-shown) ~ .form-label {
+.form-input:not(:placeholder-shown) ~ .form-label,
+.form-textarea:focus ~ .form-label,
+.form-textarea:not(:placeholder-shown) ~ .form-label,
+.form-select ~ .form-label {
   top: -0.55rem;
   left: 1rem;
   padding: 0 0.5rem;
@@ -594,24 +1245,86 @@ textarea.form-input {
   border-radius: var(--radius-sm);
 }
 
-/* ==========================================================================
-   7. NAVIGATION & PROGRESS BAR
-   Fixed glass header with mono nav links and an underline that grows
-   from the center. The scroll-spy adds .is-current via script.js.
-   ========================================================================== */
-#progress-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 2px;
-  width: 0%;
-  z-index: var(--z-toast);
-  background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-green) 100%);
-  box-shadow: var(--glow-cyan-sm);
-  transition: width var(--duration-fast) linear;
-  will-change: width;
+/* Help — a line of mono guidance under a field. */
+.form-help {
+  margin-top: var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wide);
+  color: var(--text-tertiary);
 }
 
+/* Error — red-tinted edge and a mono message beneath. --status-live is
+   spent only here, and only on the border and the message: the label
+   stays cyan on focus even when the field is wrong, so the eye is never
+   told two things at once. */
+.form-field.has-error .form-input,
+.form-field.has-error .form-select,
+.form-field.has-error .form-textarea,
+.form-input[aria-invalid="true"],
+.form-select[aria-invalid="true"],
+.form-textarea[aria-invalid="true"] {
+  border-color: var(--border-alert);
+  background: rgba(var(--status-live-rgb), 0.04);
+}
+
+.form-field.has-error .form-input:focus,
+.form-field.has-error .form-select:focus,
+.form-field.has-error .form-textarea:focus,
+.form-input[aria-invalid="true"]:focus,
+.form-select[aria-invalid="true"]:focus,
+.form-textarea[aria-invalid="true"]:focus {
+  border-color: var(--status-live);
+  box-shadow: 0 0 12px rgba(var(--status-live-rgb), 0.25);
+}
+
+.form-error {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  margin-top: var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wide);
+  color: var(--status-live);
+}
+
+.form-error::before {
+  content: "!";
+  content: "!" / "";
+  font-weight: var(--fw-bold);
+}
+
+/* Success — a confirmation banner above the form, in the same green
+   vocabulary as a live badge. Put a .status-badge.live inside it for the
+   label. */
+.form-success {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border-green);
+  border-radius: var(--radius-lg);
+  background: rgba(var(--status-online-rgb), 0.08);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
+  color: var(--text-green);
+}
+
+/* ==========================================================================
+   10. NAVIGATION
+   Fixed glass header with mono nav links and an underline that grows
+   from the center. The scroll-spy adds .is-current via script.js; the
+   scroll handler adds .nav-scrolled, which tightens the bar to its
+   compact height and firms up the glass.
+
+   The bare `nav` selector styles the site header. Anything else that
+   happens to be a <nav> (the footer's, the drawer's inner list) is reset
+   just below so it does not turn into a second fixed header.
+   ========================================================================== */
 nav {
   position: fixed;
   top: 0;
@@ -627,6 +1340,37 @@ nav {
   border-bottom: 1px solid var(--border-subtle);
   backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  transition: height var(--duration-base) var(--ease-out-expo),
+              background var(--duration-base) var(--ease-out-expo),
+              border-color var(--duration-base) var(--ease-out-expo),
+              backdrop-filter var(--duration-base) var(--ease-out-expo),
+              -webkit-backdrop-filter var(--duration-base) var(--ease-out-expo);
+}
+
+footer nav,
+.footer-nav,
+.nav-drawer nav {
+  position: static;
+  top: auto;
+  left: auto;
+  z-index: auto;
+  width: auto;
+  height: auto;
+  padding-inline: 0;
+  background: none;
+  border-bottom: 0;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Scrolled — a shorter bar with firmer glass and a border you can see. */
+nav.nav-scrolled {
+  height: var(--header-height-compact);
+  background: var(--glass-bg-strong);
+  background: color-mix(in srgb, var(--bg-elevated) 94%, transparent);
+  border-bottom-color: var(--border-default);
+  backdrop-filter: blur(calc(var(--glass-blur-strong) + 6px)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur-strong) + 6px)) saturate(var(--glass-saturate));
 }
 
 .brand-logo {
@@ -678,16 +1422,18 @@ nav {
   transition: color var(--duration-base) var(--ease-smooth);
 }
 
+/* The underline grows out from the centre. */
 .nav-links a::after {
   content: "";
   position: absolute;
   bottom: -6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0%;
+  left: 0;
+  width: 100%;
   height: 1px;
   background: var(--accent-cyan);
-  transition: width var(--duration-base) var(--ease-smooth);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--duration-base) var(--ease-out-expo);
 }
 
 .nav-links a:hover {
@@ -695,138 +1441,888 @@ nav {
 }
 
 .nav-links a:hover::after {
-  width: 100%;
+  transform: scaleX(1);
 }
 
-/* Highlighted by scroll-spy in script.js while its section is in view */
+/* Current section — cyan text, the underline held open, and a 4px dot
+   just before the label. */
 .nav-links a.is-current {
   color: var(--accent-cyan);
 }
 
 .nav-links a.is-current::after {
-  width: 100%;
+  transform: scaleX(1);
+}
+
+.nav-links a.is-current::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -10px;
+  width: 4px;
+  height: 4px;
+  border-radius: var(--radius-full);
   background: var(--accent-cyan);
-  box-shadow: 0 0 8px var(--accent-cyan);
+  transform: translateY(-50%);
+}
+
+/* The nav's call to action — a small ghost button, always the last
+   item. Style comes from the shared .btn-ghost rule in section 1. */
+.nav-links > .nav-cta {
+  margin-left: var(--space-xs);
+}
+
+/* Live readout — "● ONLINE · IN-SUMIT-01". A whisper of system status,
+   visible only where there is room for it. */
+.nav-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.nav-status .pulse-dot-span {
+  width: 6px;
+  height: 6px;
 }
 
 /* ==========================================================================
-   8. TOAST
-   Bottom-right glass notification. Slides in with a soft bounce and
-   holds until script.js removes .show.
+   11. MOBILE NAVIGATION
+   Below 768px the link row gives way to a hamburger and a full-height glass
+   drawer that slides in from the right. Drawer links are set large in the
+   display serif with a mono number in front — 01, 02, 03 — counted by CSS,
+   so the markup stays a plain list. The panel moves on the in-out-quart
+   curve, the library's curve for things that open and close.
+
+   Markup: keep the drawer OUT of a bare <nav> (a div or aside is right);
+   put .nav-drawer-backdrop after it; JS toggles .is-open on both and
+   aria-expanded on the toggle. Use .btn-icon for the close button.
    ========================================================================== */
-.toast-popup {
-  position: fixed;
-  bottom: var(--space-lg);
-  right: var(--space-lg);
-  z-index: var(--z-toast);
-  display: flex;
+.nav-toggle {
+  display: none;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: var(--space-sm) var(--space-md);
-  background: var(--glass-bg-strong);
-  border: 1px solid var(--border-green);
-  border-radius: var(--radius-lg);
-  color: var(--text-primary);
-  font-size: var(--fs-sm);
-  box-shadow: var(--shadow-panel-lg), var(--glow-green-sm);
-  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
-  transform: translateY(24px);
-  opacity: 0;
-  pointer-events: none;
-  transition: transform var(--duration-slow) var(--ease-bounce),
-              opacity var(--duration-slow) var(--ease-smooth);
+  justify-content: center;
+  gap: 4px;
 }
 
-.toast-popup.show {
-  transform: translateY(0);
+.nav-toggle-bar {
+  display: block;
+  width: 18px;
+  height: 1.5px;
+  border-radius: var(--radius-full);
+  background: currentColor;
+  transition: transform var(--duration-base) var(--ease-out-expo),
+              opacity var(--duration-fast) var(--ease-out-expo);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) {
+  transform: translateY(5.5px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) {
+  transform: translateY(-5.5px) rotate(-45deg);
+}
+
+.nav-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: auto;
+  z-index: var(--z-overlay);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: min(24rem, 88vw);
+  height: 100vh;
+  height: 100dvh;
+  padding: var(--space-md) var(--space-lg) var(--space-lg);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--glass-bg-strong);
+  border-bottom: 0;
+  border-left: 1px solid var(--border-cyan);
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform var(--duration-slow) var(--ease-in-out-quart),
+              visibility 0s linear var(--duration-slow);
+}
+
+.nav-drawer.is-open {
+  transform: translateX(0);
+  visibility: visible;
+  transition: transform var(--duration-slow) var(--ease-in-out-quart),
+              visibility 0s linear 0s;
+}
+
+.nav-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.nav-drawer-links {
+  display: flex;
+  flex-direction: column;
+  counter-reset: drawer;
+}
+
+.nav-drawer-links a {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+  padding-block: var(--space-xs);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-display);
+  font-size: var(--fs-section);
+  line-height: var(--lh-tight);
+  color: var(--text-secondary);
+  counter-increment: drawer;
+  transition: color var(--duration-base) var(--ease-out-expo),
+              translate var(--duration-base) var(--ease-out-expo);
+}
+
+.nav-drawer-links a::before {
+  content: counter(drawer, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wider);
+  color: var(--accent-cyan);
+}
+
+.nav-drawer-links a:hover,
+.nav-drawer-links a.is-current {
+  color: var(--text-primary);
+  translate: 6px 0;
+}
+
+.nav-drawer-foot {
+  margin-top: auto;
+  padding-top: var(--space-lg);
+}
+
+.nav-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-overlay) - 1);
+  background: rgba(3, 4, 5, 0.6);
+  backdrop-filter: blur(var(--glass-blur-soft));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-slow) var(--ease-smooth);
+}
+
+.nav-drawer-backdrop.is-open {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* ==========================================================================
-   9. RESPONSIVE
-   Hide the nav links on small screens (a mobile menu can be added
-   later); keep every interactive element at least 44px tall.
-   ========================================================================== */
+/* Scroll lock while a drawer or modal is open — JS toggles the class. */
+body.nav-open,
+body.modal-open {
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .nav-status {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .nav-links {
     display: none;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+  }
+}
+
+/* ==========================================================================
+   12. PROGRESS BAR
+   A 2px cyan → green thread along the top of the viewport. The gradient
+   itself is static; a very faint shimmer passes along the bar to show
+   it is live. The width transition stays linear on purpose: it tracks
+   the scrollbar, and any easing would make it lag behind the finger.
+   will-change: width is one of the few justified in the library.
+   ========================================================================== */
+#progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  z-index: var(--z-toast);
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-green) 100%);
+  box-shadow: var(--glow-cyan-sm);
+  transition: width var(--duration-fast) linear;
+  will-change: width;
+}
+
+#progress-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.25;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.9) 50%, transparent 100%);
+  background-size: 50% 100%;
+  background-repeat: no-repeat;
+  animation: progressShimmer var(--duration-scan) linear infinite;
+}
+
+@keyframes progressShimmer {
+  from { background-position: -100% 0; }
+  to   { background-position: 200% 0; }
+}
+
+/* ==========================================================================
+   13. TOASTS
+   Small glass notices in the bottom-right corner: a coloured left edge, a
+   mono label, a line of body text. They confirm; they never interrupt.
+   The container ignores the pointer so it never blocks the page; each
+   toast takes it back for its own close button.
+
+   Status vocabulary again: success is green ✓, alert is red !, info is
+   cyan ●. Give role="status" to success and info toasts and role="alert"
+   to alert toasts. JS adds .enter when a toast is mounted and .exit before
+   removing it. Anything panel-like inside a toast is .glass-card--flat.
+   ========================================================================== */
+.toast-container {
+  position: fixed;
+  right: var(--space-lg);
+  bottom: var(--space-lg);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs);
+  width: min(22rem, calc(100vw - var(--space-lg) * 2));
+  padding: var(--space-sm) var(--space-md);
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--accent-cyan);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  pointer-events: auto;
+}
+
+.toast.enter {
+  animation: toastIn var(--duration-slow) var(--ease-out-expo) both;
+}
+
+.toast.exit {
+  animation: toastOut var(--duration-slow) var(--ease-out-expo) both;
+}
+
+.toast-icon {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-snug);
+  color: var(--accent-cyan);
+}
+
+.toast-icon::before {
+  content: "●";
+  content: "●" / "";
+}
+
+.toast-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.toast-body {
+  margin-top: var(--space-3xs);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--text-secondary);
+}
+
+.toast-close {
+  flex: none;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--text-tertiary);
+  font-size: var(--fs-md);
+  line-height: 1;
+  cursor: none;
+  transition: color var(--duration-base) var(--ease-out-expo);
+}
+
+.toast-close:hover {
+  color: var(--text-primary);
+}
+
+.toast--info {
+  border-left-color: var(--accent-cyan);
+}
+
+.toast--success {
+  border-left-color: var(--status-online);
+}
+
+.toast--success .toast-icon {
+  color: var(--status-online);
+}
+
+.toast--success .toast-icon::before {
+  content: "✓";
+  content: "✓" / "";
+}
+
+.toast--alert {
+  border-left-color: var(--status-live);
+}
+
+.toast--alert .toast-icon {
+  color: var(--status-live);
+}
+
+.toast--alert .toast-icon::before {
+  content: "!";
+  content: "!" / "";
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes toastOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(16px); }
+}
+
+/* ==========================================================================
+   14. BOOT TERMINAL
+   The base terminal primitives live in base.css; this is the opening
+   sequence built from them — a full-screen dark overlay, a mono window,
+   lines that arrive one by one, and a progress bar drawn in characters.
+
+   Mark up each line with data-index (0–11) in reading order. The delay
+   between lines defaults to one terminal beat (--terminal-line-delay);
+   sections-layout.css sets --boot-step to four beats for the full
+   three-second ritual, and this rule honours it. JS writes the ASCII
+   progress and adds .boot-fade-out at the end.
+   ========================================================================== */
+.boot-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gutter);
+  background: var(--terminal-bg);
+  color: var(--terminal-text);
+}
+
+.boot-terminal {
+  width: 100%;
+  max-width: 720px;
+  padding: var(--space-lg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-relaxed);
+  letter-spacing: var(--ls-wide);
+}
+
+.boot-line {
+  display: block;
+  white-space: pre-wrap;
+  animation: bootLineIn var(--duration-base) var(--ease-out-expo) both;
+  animation-delay: calc(var(--boot-step, var(--terminal-line-delay)) * var(--line-index, 0));
+}
+
+.boot-line[data-index="0"]  { --line-index: 0; }
+.boot-line[data-index="1"]  { --line-index: 1; }
+.boot-line[data-index="2"]  { --line-index: 2; }
+.boot-line[data-index="3"]  { --line-index: 3; }
+.boot-line[data-index="4"]  { --line-index: 4; }
+.boot-line[data-index="5"]  { --line-index: 5; }
+.boot-line[data-index="6"]  { --line-index: 6; }
+.boot-line[data-index="7"]  { --line-index: 7; }
+.boot-line[data-index="8"]  { --line-index: 8; }
+.boot-line[data-index="9"]  { --line-index: 9; }
+.boot-line[data-index="10"] { --line-index: 10; }
+.boot-line[data-index="11"] { --line-index: 11; }
+
+@keyframes bootLineIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* [████░░░░] — the filled part in cyan, the empty part in the muted
+   step (it is texture, not information; the percentage carries that). */
+.boot-progress {
+  display: block;
+  margin-top: var(--space-sm);
+  font-family: var(--font-mono);
+  letter-spacing: 0;
+  white-space: pre;
+  color: var(--text-muted);
+}
+
+.boot-progress-fill {
+  color: var(--accent-cyan);
+}
+
+/* SKIP [ENTER] — ghost-button vocabulary: mono, quiet, cyan on hover. */
+.boot-skip {
+  position: absolute;
+  right: var(--space-lg);
+  bottom: var(--space-lg);
+  padding: var(--space-2xs) var(--space-xs);
+  background: none;
+  border: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  cursor: none;
+  transition: color var(--duration-base) var(--ease-out-expo);
+}
+
+.boot-skip:hover {
+  color: var(--accent-cyan);
+}
+
+/* End of the ritual: the overlay fades on the in-out-quart curve and
+   is then taken out of layout entirely — visibility everywhere,
+   display: none where the browser can animate it. */
+.boot-fade-out {
+  pointer-events: none;
+  animation: bootFadeOut var(--duration-slower) var(--ease-in-out-quart) forwards;
+}
+
+@keyframes bootFadeOut {
+  from { opacity: 1; visibility: visible; }
+  to   { opacity: 0; visibility: hidden; display: none; }
+}
+
+/* ==========================================================================
+   15. CAREER FOOTPRINT & TOPOLOGY COMPONENTS
+   The base primitives (.footprint, .topo and their nodes and links) live
+   in base.css and the section layout in sections-layout.css. These are the
+   small pieces that sit on top of the map: what the markers mean, what a
+   marker says when you point at it, and a one-line readout for the
+   network sphere.
+   ========================================================================== */
+
+/* Legend — bottom-centre, one row: a small status dot and a word per
+   marker type. Sits in a translucent pill so it stays legible over the
+   map. Use .pulse-dot-span for the icons. */
+.footprint-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs) var(--space-md);
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  padding: var(--space-xs) var(--space-md);
+  background: var(--glass-bg-soft);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(var(--glass-blur-soft));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft));
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.footprint-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.footprint-legend .pulse-dot-span {
+  width: 6px;
+  height: 6px;
+}
+
+/* Tooltip — the card that appears when a marker is pointed at. JS
+   drives left and top; the card lifts clear above that point. Site name
+   in bold sans, role in muted mono, and a compact readout for duration
+   and camera count. Purely visual unless it is given tabindex, in which
+   case it takes a focus ring like everything else. */
+.footprint-tooltip {
+  position: absolute;
+  z-index: 6;
+  min-width: 12rem;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  translate: -50% calc(-100% - 0.75rem);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-base) var(--ease-out-expo);
+}
+
+.footprint-tooltip.is-visible {
+  opacity: 1;
+}
+
+.footprint-tooltip-name {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-snug);
+  color: var(--text-primary);
+}
+
+.footprint-tooltip-role {
+  margin-top: var(--space-3xs);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.footprint-tooltip .readout {
+  --readout-value-size: var(--fs-md);
+  margin-top: var(--space-xs);
+  padding-block: 0;
+  border-bottom: 0;
+}
+
+/* Topology status — one mono line in the corner of the sphere:
+   NODES: 47 · LINKS: 62 · LATENCY: 4ms. Tabular numerals so the figures
+   do not jitter as they update. */
+.topo-status {
+  position: absolute;
+  left: var(--space-sm);
+  bottom: var(--space-sm);
+  z-index: 5;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   16. FOCUS
+   One treatment for every interactive primitive, identical to base.css:
+   a dark separator inside a cyan band, drawn in box-shadow so it follows
+   each element's own radius, with a transparent outline left in for
+   forced-colors users. Form controls take the inset ring instead, so it
+   is never clipped by a panel edge. Some of these classes (badges, chips)
+   are only focusable when the markup makes them links or buttons; the
+   rule costs nothing otherwise.
+   ========================================================================== */
+.btn:focus-visible,
+.btn-hire:focus-visible,
+.btn-glass:focus-visible,
+.btn-signal:focus-visible,
+.btn-ghost:focus-visible,
+.btn-icon:focus-visible,
+.modal-close-btn:focus-visible,
+.brand-logo:focus-visible,
+.nav-links a:focus-visible,
+.nav-toggle:focus-visible,
+.nav-cta:focus-visible,
+.nav-drawer-links a:focus-visible,
+.tech-tag-span:focus-visible,
+.log-status:focus-visible,
+.status-badge:focus-visible,
+.site-badge:focus-visible,
+.footprint-tooltip:focus-visible,
+.modal-gallery > *:focus-visible,
+.toast-close:focus-visible,
+.boot-skip:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 3px;
+  box-shadow: var(--focus-ring);
+}
+
+.btn-signal:focus-visible {
+  box-shadow: var(--focus-ring), var(--glow-cyan-md);
+}
+
+.form-input:focus-visible,
+.form-select:focus-visible,
+.form-textarea:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  box-shadow: var(--focus-ring-inset), var(--glow-cyan-sm);
+}
+
+/* ==========================================================================
+   17. ACCESSIBILITY & PREFERENCES
+   Reduced motion, reduced transparency, forced colors, narrow forms.
+   Nothing in the library needs motion, blur or glow to be understood.
+   ========================================================================== */
+
+/* Stack the paired form fields on small screens. */
+@media (max-width: 640px) {
+  .form-field--inline {
+    grid-template-columns: 1fr;
   }
 
   .modal-window {
     padding: var(--space-lg);
   }
 
-  .btn {
-    padding: 0.75rem 1.5rem;
-  }
-
-  .toast-popup {
-    left: var(--space-md);
-    right: var(--space-md);
-    bottom: var(--space-md);
+  .modal-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (hover: none), (pointer: coarse) {
-  .btn,
-  .modal-close-btn,
-  .nav-links a,
-  .brand-logo {
-    min-height: 44px;
-  }
-}
-
-/* ==========================================================================
-   10. REDUCED MOTION & COARSE POINTER
-   Freeze every loop, remove hover transforms, and neutralize the
-   modal scale / toast slide so they read as fades.
-   ========================================================================== */
+/* Reduced motion — sheens, lifts, pulses, bounces and staggers all stop.
+   The modal still appears, by fading; toasts are simply there or not;
+   every boot line is on screen immediately. */
 @media (prefers-reduced-motion: reduce) {
-  .pulse-dot-span,
-  .brand-logo .dot-span {
-    animation: none;
+  .btn-hire::after,
+  .btn-signal::after {
+    display: none;
   }
 
+  .btn-glass::before {
+    transition: none;
+  }
+
+  .glass-card:hover {
+    transform: none;
+  }
+
+  .pulse-dot-span,
+  .brand-logo .dot-span,
   .timeline-node-span.alert {
     animation: none;
   }
 
-  .btn-hire::after {
-    display: none;
+  .modal-window,
+  .modal-backdrop.active .modal-window {
+    transform: none;
+    transition: opacity var(--duration-base) var(--ease-smooth);
   }
 
-  .btn:hover,
-  .btn-hire:hover,
-  .btn-glass:hover,
-  .glass-card:hover,
   .modal-close-btn:hover {
     transform: none;
   }
 
-  .modal-window {
-    transform: none;
-    transition: opacity var(--duration-slow) var(--ease-smooth);
+  .toast.enter,
+  .toast.exit {
+    animation: none;
   }
 
-  .modal-backdrop.active .modal-window {
-    transform: none;
+  .toast.exit {
+    display: none;
   }
 
-  .toast-popup,
-  .toast-popup.show {
-    transform: none;
-    transition: opacity var(--duration-slow) var(--ease-smooth);
+  .nav-drawer,
+  .nav-drawer.is-open {
+    transition: none;
+  }
+
+  .nav-toggle-bar {
+    transition: none;
+  }
+
+  #progress-bar::after {
+    animation: none;
+    display: none;
+  }
+
+  .boot-line {
+    animation: none;
+  }
+
+  .boot-fade-out {
+    animation: none;
+    opacity: 0;
+    visibility: hidden;
   }
 }
 
-@media (hover: none), (pointer: coarse) {
-  .btn,
+/* Reduced transparency — no backdrop blur anywhere, and every
+   translucent panel becomes a solid one, so contrast never depends on
+   what happens to be behind it. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass-card,
+  .modal-window,
+  .toast,
+  .btn-glass,
+  .btn-icon,
   .modal-close-btn,
-  .nav-links a,
-  .brand-logo,
-  .glass-card {
-    cursor: auto;
+  nav,
+  .nav-drawer,
+  .nav-drawer-backdrop,
+  .modal-backdrop,
+  .hud-badge-span,
+  .status-badge,
+  .log-status,
+  .footprint-tooltip,
+  .footprint-legend {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .glass-card,
+  .modal-window,
+  .toast,
+  nav,
+  nav.nav-scrolled,
+  .nav-drawer,
+  .footprint-tooltip,
+  .footprint-legend {
+    background: var(--bg-elevated);
+  }
+
+  .modal-backdrop,
+  .nav-drawer-backdrop {
+    background: rgba(3, 4, 5, 0.94);
+  }
+}
+
+/* Forced colors — glass, glow and gradient cannot survive a system
+   palette, so panels and badges become plain bordered boxes, blur is
+   removed, dots become solid system text colour, and the coloured
+   buttons hand themselves over to the system's button colours. */
+@media (forced-colors: active) {
+  .glass-card,
+  .glass-card--readout,
+  .glass-card--flat,
+  .modal-window,
+  .toast,
+  .footprint-tooltip,
+  .footprint-legend,
+  .nav-drawer,
+  .boot-terminal,
+  .hud-badge-span,
+  .status-badge,
+  .log-status,
+  .site-badge,
+  .btn-glass,
+  .btn-icon,
+  .modal-close-btn {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    color: CanvasText;
+  }
+
+  nav {
+    background: Canvas;
+    border-bottom: 1px solid CanvasText;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .modal-backdrop,
+  .nav-drawer-backdrop {
+    background: Canvas;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .pulse-dot-span,
+  .brand-logo .dot-span {
+    background: CanvasText;
+    box-shadow: none;
+    animation: none;
+  }
+
+  .btn-hire,
+  .btn-signal {
+    background: ButtonFace;
+    color: ButtonText;
+    border: 1px solid ButtonText;
+    box-shadow: none;
+  }
+
+  .btn-hire::after,
+  .btn-signal::after,
+  .btn-glass::before,
+  .glass-card::before,
+  .glass-card::after,
+  .feed-frame,
+  #progress-bar::after {
+    display: none;
+  }
+
+  #progress-bar {
+    background: Highlight;
+    box-shadow: none;
+  }
+
+  .toast,
+  .toast--success,
+  .toast--alert,
+  .toast--info {
+    border-left-width: 3px;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    border: 1px solid CanvasText;
+    background: Field;
+    color: FieldText;
+    box-shadow: none;
+  }
+
+  .form-select {
+    background-image: none;
   }
 }
