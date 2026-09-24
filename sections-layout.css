@@ -2,14 +2,25 @@
    SECTIONS-LAYOUT.CSS
    CCTV Command Center — Page Composition
 
-   Hero · About/Skills · Camera Feeds · Work Log · Command Form
-   Footer · Scroll Reveals · Responsive
+   Hero · About/Skills · Deployments · Career Footprint · Work Log
+   Contact / Command Form · Footer · Boot Terminal · Scroll Reveals
+   Rendering · Responsive · Accessibility
 
    Typography note: h1–h6 already carry their full type treatment
    from base.css. This file only adds spacing, color context, and
-   layout — it does not re-declare font-family or font-size on
-   heading elements, so there is one single source of truth for
-   type across the whole site.
+   layout — it never re-declares font-family or font-size on a
+   heading ELEMENT selector, so there is one single source of truth
+   for type across the whole site. Where a hero-scale change is
+   needed at a breakpoint, it is made by overriding the --fs-hero
+   token on the section, never on the h1.
+
+   Contrast note: --text-muted is decoration only (it sits below AA
+   on obsidian). Anything a visitor is meant to read — labels,
+   credentials, status lines — uses --text-tertiary or brighter.
+
+   Signal note: --glow-signal is spent exactly once in this file,
+   on the contact submit button. Every other element competes for
+   attention more quietly.
    ================================================================ */
 
 /* ================================================================
@@ -76,7 +87,21 @@ section {
    Asymmetric editorial grid. Copy on the left, a "live monitor"
    panel on the right that frames the particle canvas like an
    active feed — not a loose full-bleed background.
+
+   The left column reads top to bottom as a system coming up:
+   kicker (craft signal) → eyebrow (live status) → title →
+   subtitle → CTAs → readout strip (measurements) → meta line.
    ================================================================ */
+
+/* Registered so the title can fade from muted grey into its
+   gradient. Where @property is unsupported the colour simply
+   arrives at its final value. */
+@property --title-base {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #f2f5fa;
+}
+
 .hero {
   position: relative;
   min-height: 100vh;
@@ -118,12 +143,28 @@ section {
   text-align: left;
 }
 
-/* Live status eyebrow — a real element, not generated content,
-   so it stays readable to screen readers and search engines */
+/* Kicker — a single mono line of craft above the eyebrow.
+   Purely decorative, which is why it may use the muted step. */
+.hero-kicker {
+  margin-bottom: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Live status eyebrow — a real element, not generated content, so
+   it stays readable to screen readers and search engines. Reads
+   as a system readout:
+     ● SYSTEM ONLINE · PATLI, HARYANA · SHIFT ACTIVE
+   Markup: a .hero-eyebrow-dot followed by one .hero-eyebrow-item
+   per segment. The "·" separators are drawn here, not typed. */
 .hero-eyebrow {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-2xs);
+  gap: var(--space-3xs) var(--space-2xs);
   padding: var(--space-3xs) var(--space-sm);
   margin-bottom: var(--space-lg);
   border: 1px solid var(--border-green);
@@ -148,16 +189,51 @@ section {
   animation: feedLivePulse var(--duration-pulse) ease-in-out infinite;
 }
 
+.hero-eyebrow-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.hero-eyebrow-item + .hero-eyebrow-item {
+  color: var(--text-secondary);
+}
+
+.hero-eyebrow-item + .hero-eyebrow-item::before {
+  content: "·";
+  content: "·" / "";
+  color: var(--text-tertiary);
+}
+
+/* Title — the gradient text arrives on load: grey to full
+   gradient while its glow blooms, over --duration-reveal. */
 .hero-title {
+  --title-base: var(--text-primary);
   margin-bottom: var(--space-md);
-  background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-primary) 55%, var(--accent-cyan) 100%);
+  background: linear-gradient(135deg, var(--title-base) 0%, var(--title-base) 55%, var(--accent-cyan) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 44px var(--accent-cyan-soft));
+  will-change: filter;
+  animation: heroTitleReveal var(--duration-reveal) var(--ease-out-expo) both;
 }
 
+@keyframes heroTitleReveal {
+  from {
+    --title-base: var(--text-muted);
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  to {
+    --title-base: var(--text-primary);
+    filter: drop-shadow(0 0 44px var(--accent-cyan-soft));
+  }
+}
+
+/* The em is the human voice inside the machine: the display
+   serif in italic, carrying the cyan → green gradient. */
 .hero-title em {
+  font-family: var(--font-display);
   font-style: italic;
   background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-green) 100%);
   background-clip: text;
@@ -179,10 +255,65 @@ section {
   flex-wrap: wrap;
 }
 
-/* Monitor panel — the hero's visual anchor, frames the particle
-   canvas like an active camera feed rather than a loose background */
+/* Readout strip — the Axiom lesson: credibility as measurement.
+   Three .readout blocks in a row (e.g. 2+ YRS OPS · 340+ CAMERAS
+   MONITORED · 99.97% UPTIME). Each keeps the base .readout
+   typography; the strip only rearranges them into a ruled row. */
+.hero-readout-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, auto));
+  justify-content: start;
+  margin-top: var(--space-xl);
+}
+
+.hero-readout-strip .readout {
+  --readout-value-size: var(--fs-lg);
+  padding-inline: var(--space-md);
+  border-bottom: 0;
+  border-left: 1px solid var(--readout-divider-color);
+}
+
+.hero-readout-strip .readout:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+/* Meta — three tiny present-tense labels, e.g.
+   INDIA · LOGISTICS SECURITY · CP PLUS / NVR / IP.
+   One .hero-meta-item per label; separators are drawn here. */
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs) var(--space-xs);
+  margin-top: var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.hero-meta-item + .hero-meta-item::before {
+  content: "·";
+  content: "·" / "";
+  margin-right: var(--space-xs);
+}
+
+/* ================================================================
+   3. HERO MONITOR
+   The hero's visual anchor. It has to read as a live feed, not a
+   picture in a frame — so it carries a REC badge and a running
+   timestamp on its two upper corners, a camera ID below, a faint
+   8×8 grid, scanlines, and four crisp corner brackets that lock
+   in one after another when the page loads.
+
+   Layer order, bottom to top:
+     1 grid · 2 particle canvas · 3 scan overlay
+     4 frame + corner brackets · 5 badges and timestamp
+   ================================================================ */
 .hero-monitor {
   position: relative;
+  isolation: isolate;
   aspect-ratio: 4 / 5;
   border-radius: var(--radius-xl);
   overflow: hidden;
@@ -196,7 +327,7 @@ section {
   position: absolute;
   top: var(--space-sm);
   left: var(--space-sm);
-  z-index: 4;
+  z-index: 5;
   padding: 4px 10px;
   border: 1px solid var(--border-alert);
   border-radius: var(--radius-full);
@@ -215,7 +346,7 @@ section {
   position: absolute;
   bottom: var(--space-sm);
   left: var(--space-sm);
-  z-index: 4;
+  z-index: 5;
   padding: 4px 10px;
   border: 1px solid var(--border-default);
   border-radius: var(--radius-full);
@@ -228,10 +359,61 @@ section {
   color: var(--text-secondary);
 }
 
+/* Live timestamp — mirrors the REC badge from the opposite
+   corner. JS writes the text; this only decides how it looks. */
+.hero-monitor-timestamp {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  z-index: 5;
+  padding: 4px 10px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(var(--glass-blur-soft));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft));
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wider);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+/* Grid — an 8×8 field under everything, faint enough to be
+   noticed only when the feed is studied. */
+.hero-monitor-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image:
+    linear-gradient(var(--accent-cyan) 1px, transparent 1px),
+    linear-gradient(90deg, var(--accent-cyan) 1px, transparent 1px);
+  background-size: 12.5% 12.5%;
+}
+
+#particles-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero-monitor-scan {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent 60%, rgba(3, 4, 5, 0.6) 100%),
+    repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0, 229, 255, 0.03) 2px, rgba(0, 229, 255, 0.03) 3px);
+}
+
 .hero-monitor-frame {
   position: absolute;
   inset: 12px;
-  z-index: 3;
+  z-index: 4;
   pointer-events: none;
   background-image:
     linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
@@ -244,23 +426,86 @@ section {
   opacity: 0.5;
 }
 
-.hero-monitor-scan {
+/* Corner brackets — a distinct element, larger and crisper than
+   the frame beneath: 24px arms, 2px thick. Markup is one wrapper
+   holding four empty children, clockwise from top-left, so each
+   corner can lock in on its own beat, 120ms apart:
+     <div class="hero-monitor-corners"><i></i><i></i><i></i><i></i></div>
+   An empty wrapper falls back to all four appearing together. */
+.hero-monitor-corners {
   position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, transparent 60%, rgba(3, 4, 5, 0.6) 100%),
-    repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0, 229, 255, 0.03) 2px, rgba(0, 229, 255, 0.03) 3px);
-}
-
-#particles-canvas {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
+  inset: 12px;
+  z-index: 4;
   pointer-events: none;
 }
 
+.hero-monitor-corners > * {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 0 solid var(--accent-cyan);
+  opacity: 0;
+  animation: cornerLock var(--duration-reveal) var(--ease-out-expo) forwards;
+}
+
+.hero-monitor-corners > :nth-child(1) {
+  top: 0;
+  left: 0;
+  border-top-width: 2px;
+  border-left-width: 2px;
+  animation-delay: 0ms;
+}
+
+.hero-monitor-corners > :nth-child(2) {
+  top: 0;
+  right: 0;
+  border-top-width: 2px;
+  border-right-width: 2px;
+  animation-delay: 120ms;
+}
+
+.hero-monitor-corners > :nth-child(3) {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+  animation-delay: 240ms;
+}
+
+.hero-monitor-corners > :nth-child(4) {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+  animation-delay: 360ms;
+}
+
+.hero-monitor-corners:empty {
+  opacity: 0;
+  background-image:
+    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
+    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
+    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
+    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan));
+  background-position: top left, top left, top right, top right, bottom left, bottom left, bottom right, bottom right;
+  background-size: 24px 2px, 2px 24px, 24px 2px, 2px 24px, 24px 2px, 2px 24px, 24px 2px, 2px 24px;
+  background-repeat: no-repeat;
+  animation: cornerLock var(--duration-reveal) var(--ease-out-expo) forwards;
+}
+
+@keyframes cornerLock {
+  from { opacity: 0;   scale: 0.9; }
+  to   { opacity: 0.9; scale: 1; }
+}
+
+/* ================================================================
+   4. HERO SCROLL CUE
+   A small mono label above a falling line: "scroll to review".
+   Write the label in the markup, or leave the element empty and
+   it will read SCROLL TO REVIEW. Muted on purpose — it is a hint,
+   not a call to action — and hidden on short viewports where it
+   would crowd the fold.
+   ================================================================ */
 .hero-scroll-cue {
   position: absolute;
   bottom: var(--space-lg);
@@ -279,6 +524,10 @@ section {
   opacity: 0.7;
 }
 
+.hero-scroll-cue:empty::before {
+  content: "Scroll to review";
+}
+
 .hero-scroll-cue::after {
   content: "";
   width: 1px;
@@ -293,8 +542,12 @@ section {
   100% { opacity: 0; transform: translateY(14px); }
 }
 
+@media (max-height: 720px) {
+  .hero-scroll-cue { display: none; }
+}
+
 /* ================================================================
-   3. ABOUT / SKILLS
+   5. ABOUT / SKILLS
    Monitor-framed portrait beside narrative copy, then a credibility
    strip. Same camera treatment as the hero so the page feels like
    one coherent system.
@@ -352,12 +605,74 @@ section {
   object-fit: cover;
   filter: var(--image-filter-rest);
   transition: filter var(--duration-slower) var(--ease-smooth),
-              transform var(--duration-slower) var(--ease-smooth);
+              transform var(--duration-slower) var(--ease-smooth),
+              opacity var(--duration-slow) var(--ease-smooth);
 }
 
 .about-image-wrapper:hover img {
   filter: var(--image-filter-hover);
   transform: scale(1.05);
+}
+
+/* Status bar — mirrors the hero monitor's camera label. Two
+   pills along the foot of the frame: the feed ID on the left,
+   the live flag on the right.
+     <div class="about-image-status">
+       <span class="about-image-status-id">CAM_02 · OPERATOR</span>
+       <span class="about-image-status-live">● LIVE</span>
+     </div> */
+.about-image-status {
+  position: absolute;
+  left: var(--space-sm);
+  right: var(--space-sm);
+  bottom: var(--space-sm);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  pointer-events: none;
+}
+
+.about-image-status-id,
+.about-image-status-live {
+  padding: 4px 10px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(var(--glass-blur-soft));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft));
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wider);
+  color: var(--text-secondary);
+}
+
+.about-image-status-live {
+  border-color: var(--border-green);
+  font-weight: var(--fw-bold);
+  color: var(--accent-green);
+}
+
+/* Loading state — while the portrait is still arriving, the frame
+   shows a faint line sweeping down: a feed acquiring signal.
+   CSS only defines the state; JS adds .no-img in the markup and
+   removes it on the image's load event, at which point the photo
+   fades in and the line goes. */
+.about-image-wrapper.no-img {
+  background:
+    linear-gradient(180deg, transparent, var(--accent-cyan-soft) 50%, transparent) 0 -25% / 100% 20% no-repeat,
+    var(--bg-inset);
+  animation: acquireSignal 2.4s var(--ease-smooth) infinite;
+}
+
+.about-image-wrapper.no-img img {
+  opacity: 0;
+}
+
+@keyframes acquireSignal {
+  from { background-position: 0 -25%, 0 0; }
+  to   { background-position: 0 125%, 0 0; }
 }
 
 .about-info {
@@ -373,6 +688,43 @@ section {
 .about-info p strong {
   color: var(--text-cyan);
   font-weight: var(--fw-medium);
+}
+
+/* Credentials — the real sites behind the claims, set as a short
+   log beneath the copy. The → prefix is drawn here, so leave it
+   out of the markup:
+     Innovision Ltd · Flipkart Kalash Mega Hub (2025–Present)
+     A.P. Securitas · Ekart Logistics (2023–2024)
+   Text uses --text-tertiary (AA-safe); hover brightens the line. */
+.about-credentials {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  margin-top: var(--space-xs);
+  padding-left: var(--space-md);
+  border-left: 1px solid var(--border-cyan);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
+  line-height: var(--lh-normal);
+  color: var(--text-tertiary);
+}
+
+.about-credentials li {
+  display: flex;
+  gap: var(--space-2xs);
+  transition: color var(--duration-base) var(--ease-out-expo);
+}
+
+.about-credentials li::before {
+  content: "→";
+  content: "→" / "";
+  flex: none;
+  color: var(--accent-cyan);
+}
+
+.about-credentials li:hover {
+  color: var(--text-primary);
 }
 
 .tech-tags {
@@ -417,7 +769,28 @@ section {
   transform: translateY(-2px);
 }
 
-/* Credibility stat strip — a small editorial detail, not a chart */
+/* Pressed: the pill sinks a pixel and the glow collapses,
+   so a click is felt rather than just registered. */
+.tech-tag-span:active {
+  transform: translateY(1px);
+  box-shadow: none;
+  transition-duration: var(--duration-micro);
+}
+
+/* Primary skills — reserved for the top three (IP Networking,
+   CP Plus CCTV, NVR/DVR Integration). Brighter border, a faint
+   cyan fill and a glow that is already on at rest. */
+.tech-tag-span--primary {
+  background: rgba(var(--accent-cyan-rgb), 0.08);
+  border-color: var(--border-cyan-strong);
+  box-shadow: var(--glow-cyan-sm);
+}
+
+/* Credibility stat strip — a small editorial detail, not a chart.
+   Content for the writer — measurements, not adjectives:
+     2+    Years Ops
+     100%  Data Accuracy
+     24/7  Video Uptime */
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -446,14 +819,16 @@ section {
   font-size: var(--fs-2xs);
   letter-spacing: var(--ls-widest);
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-tertiary);
 }
 
 /* ================================================================
-   4. CAMERA FEEDS (PROJECTS) — asymmetric bento grid
+   6. CAMERA FEEDS / DEPLOYMENTS — asymmetric bento grid
    Six-column grid where the first two cards form a lead pair, the
    third is a full-row case study, and the last three are equal
-   tiles. Reads like a wall of live feeds, not a project list.
+   tiles. Reads like a wall of live feeds — and, in content, like
+   a log of deployments: each card is a site, with the measurement
+   that matters printed on it.
    ================================================================ */
 .operations-grid {
   display: grid;
@@ -491,6 +866,16 @@ section {
   transform: translateY(-4px);
 }
 
+/* Featured — the flagship deployment (the lead card). Already
+   glowing at rest, with a brighter edge and heavier glass, so the
+   eye is told where to start. */
+.op-card--featured {
+  border-color: var(--border-cyan);
+  box-shadow: var(--shadow-panel), var(--glow-cyan-sm);
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+}
+
 /* Featured wide card reads as a horizontal case-study strip:
    image beside copy instead of stacked, matching its full-row span */
 .op-card--wide {
@@ -522,6 +907,7 @@ section {
   height: 100%;
   object-fit: cover;
   filter: var(--image-filter-rest);
+  will-change: transform;
   transition: transform var(--duration-slower) var(--ease-smooth),
               filter var(--duration-slower) var(--ease-smooth);
 }
@@ -531,6 +917,11 @@ section {
   filter: var(--image-filter-hover);
 }
 
+/* Image overlay: three stacked layers — a cyan sweep parked off
+   the left edge, a foot-of-image shade, and scanlines. On hover
+   the sweep crosses the frame once (30% wide, left −30% → 130%)
+   like a scan head passing over the feed. Only the first layer's
+   position ever changes. */
 .op-card-img::after {
   content: "";
   position: absolute;
@@ -538,10 +929,23 @@ section {
   z-index: 2;
   pointer-events: none;
   background:
+    linear-gradient(90deg, transparent, var(--accent-cyan-soft) 50%, transparent) -43% 0 / 30% 100% no-repeat,
     linear-gradient(180deg, transparent 50%, rgba(3, 4, 5, 0.65) 100%),
     repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0, 229, 255, 0.03) 2px, rgba(0, 229, 255, 0.03) 3px);
 }
 
+.op-card:hover .op-card-img::after {
+  animation: opCardSweep var(--duration-slower) var(--ease-smooth) 1;
+}
+
+@keyframes opCardSweep {
+  from { background-position: -43% 0, 0 0, 0 0; }
+  to   { background-position: 186% 0, 0 0, 0 0; }
+}
+
+/* Corner brackets — 12px arms. They do not simply fade: they
+   settle in from a hair's breadth larger (0.98 → 1) on the expo
+   curve, so the lock-on feels deliberate. */
 .op-card-img::before {
   content: "";
   position: absolute;
@@ -549,19 +953,22 @@ section {
   z-index: 3;
   pointer-events: none;
   opacity: 0;
-  transition: opacity var(--duration-slow) var(--ease-smooth);
+  transform: scale(0.98);
+  transition: opacity var(--duration-slow) var(--ease-out-expo),
+              transform var(--duration-slow) var(--ease-out-expo);
   background-image:
     linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
     linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
     linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
     linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan));
   background-position: top left, top left, top right, top right, bottom left, bottom left, bottom right, bottom right;
-  background-size: 16px 1.5px, 1.5px 16px, 16px 1.5px, 1.5px 16px, 16px 1.5px, 1.5px 16px, 16px 1.5px, 1.5px 16px;
+  background-size: 12px 1.5px, 1.5px 12px, 12px 1.5px, 1.5px 12px, 12px 1.5px, 1.5px 12px, 12px 1.5px, 1.5px 12px;
   background-repeat: no-repeat;
 }
 
 .op-card:hover .op-card-img::before {
   opacity: 0.9;
+  transform: scale(1);
 }
 
 .op-card-badge-span {
@@ -600,6 +1007,7 @@ section {
 }
 
 .op-card-body {
+  position: relative;
   padding: var(--space-lg);
   display: flex;
   flex-direction: column;
@@ -613,6 +1021,53 @@ section {
   line-height: var(--lh-relaxed);
   margin-bottom: var(--space-sm);
   flex: 1;
+}
+
+/* Site line — one mono row of facts beneath the description:
+     SITE: FLIPKART KALASH · DURATION: 18 MO · CAMERAS: 48
+   One child element per fact; the "·" separators are drawn here.
+   Tabular numerals keep the figures aligned from card to card. */
+.op-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs) var(--space-xs);
+  margin-bottom: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wider);
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.op-card-meta > * + *::before {
+  content: "·";
+  content: "·" / "";
+  margin-right: var(--space-xs);
+}
+
+/* Card stat — one large figure per deployment (340+, 99.97%, 24/7):
+   the Axiom-style measurement anchor. Set top-right of the body and
+   nudged so its baseline meets the title's first line. It is
+   positioned rather than gridded so the body's flex column —
+   description pushing the link to the foot of the card — stays
+   undisturbed; the title gives up room to it. The baseline match
+   is an approximation from the two type tokens. */
+.op-card-stat {
+  position: absolute;
+  top: max(var(--space-3xs), calc(var(--space-lg) + var(--fs-xl) * 0.85 - var(--fs-display) * 0.8));
+  right: var(--space-lg);
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  font-weight: var(--fw-regular);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--text-primary);
+}
+
+.op-card-body:has(> .op-card-stat) > :is(h1, h2, h3, h4, h5, h6) {
+  padding-inline-end: clamp(5.5rem, 12vw, 9rem);
 }
 
 .op-link-span {
@@ -643,10 +1098,166 @@ section {
 }
 
 /* ================================================================
-   5. WORK LOG — center-rail alternating timeline
+   7. CAREER FOOTPRINT — the deployment map
+   Career Footprint — the operator's deployment map. Sites across
+   regions, one continuous watch. Rendered by JS; styles here.
+   (The weevolveit-inspired globe, recontextualised: not where a
+   company has offices, but where one operator has kept watch.)
+
+   Markup order:
+     .footprint
+       .footprint-stage
+         .footprint-map        canvas / globe renders inside
+         .footprint-panel      detail card, floats over one side
+       .footprint-legend       sits after the stage
+
+   The section itself is full-bleed and at least 80vh tall, with
+   its content centred. The map takes the same camera treatment
+   as the hero monitor — brackets, a LIVE MAP badge — so the page
+   keeps one visual language.
+   ================================================================ */
+.footprint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.footprint-stage {
+  position: relative;
+  width: 100%;
+  max-width: var(--container-wide);
+  margin-inline: auto;
+}
+
+.footprint-map {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--border-cyan);
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(0, 229, 255, 0.05), transparent 65%),
+    var(--bg-inset);
+  box-shadow: var(--shadow-panel-lg), var(--glow-cyan-sm);
+}
+
+.footprint-map canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.footprint-map::before {
+  content: "● LIVE MAP";
+  position: absolute;
+  top: var(--space-sm);
+  left: var(--space-sm);
+  z-index: 4;
+  padding: 4px 10px;
+  border: 1px solid var(--border-green);
+  border-radius: var(--radius-full);
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(var(--glass-blur-soft));
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft));
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-widest);
+  color: var(--accent-green);
+}
+
+.footprint-map::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
+    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
+    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
+    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan));
+  background-position: top left, top left, top right, top right, bottom left, bottom left, bottom right, bottom right;
+  background-size: 18px 1.5px, 1.5px 18px, 18px 1.5px, 1.5px 18px, 18px 1.5px, 1.5px 18px, 18px 1.5px, 1.5px 18px;
+  background-repeat: no-repeat;
+}
+
+/* Detail panel — compose with .panel in the markup. It floats
+   over the right side of the map and carries the hovered or
+   selected site: name, role, duration, camera count. Type inside
+   is set by the elements used; only spacing and colour are set
+   here. */
+.footprint-panel {
+  position: absolute;
+  top: 50%;
+  right: var(--space-lg);
+  z-index: 5;
+  width: min(20rem, 38%);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  transform: translateY(-50%);
+}
+
+.footprint-panel-eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--text-cyan);
+}
+
+.footprint-panel-name {
+  color: var(--text-primary);
+  line-height: var(--lh-snug);
+}
+
+.footprint-panel-meta {
+  display: grid;
+  gap: var(--space-3xs);
+  margin-top: var(--space-2xs);
+  padding-top: var(--space-xs);
+  border-top: 1px solid var(--readout-divider-color);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+/* Legend — what the markers mean: ● ACTIVE · ○ PAST · ◐ SHARED.
+   Write the glyph and word together in each item. */
+.footprint-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-xs) var(--space-md);
+  margin-top: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.footprint-legend-item--active { color: var(--text-cyan); }
+.footprint-legend-item--shared { color: var(--text-secondary); }
+
+/* ================================================================
+   8. WORK LOG — center-rail alternating timeline
    Odd items sit left with right-aligned text; even items sit right
    with left-aligned text. Bullets sit on the correct side of each
    item so there is no leftover padding.
+
+   The rail carries a slow travelling highlight, top to bottom,
+   as if the log were being written live. The current role
+   (.timeline-item--current) gets an online node wrapped in a
+   breathing double ring.
    ================================================================ */
 .timeline {
   position: relative;
@@ -672,6 +1283,29 @@ section {
   );
   box-shadow: var(--glow-cyan-sm);
   border-radius: var(--radius-full);
+}
+
+/* Travelling highlight — one bright bead, ~8s per pass. */
+.timeline::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--accent-cyan);
+  box-shadow: var(--glow-cyan-md);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: railTravel 8s var(--ease-smooth) infinite;
+}
+
+@keyframes railTravel {
+  0%   { top: 8px;                opacity: 0; }
+  8%   {                          opacity: 1; }
+  92%  {                          opacity: 1; }
+  100% { top: calc(100% - 8px);   opacity: 0; }
 }
 
 .timeline-item {
@@ -732,375 +1366,775 @@ section {
   50%      { opacity: 0.55; transform: scale(0.85); }
 }
 
+/* Current role — an online node with a second ring outside the
+   first: cyan at 40%, breathing on the pulse period. */
+.timeline-item--current .timeline-node-span {
+  border-color: var(--status-online);
+  box-shadow: var(--glow-green-md);
+  outline: 1px solid rgba(var(--accent-cyan-rgb), 0.4);
+  outline-offset: 4px;
+  animation: nodeRingBreathe var(--duration-pulse) ease-in-out infinite;
+}
+
+.timeline-item--current .timeline-node-span::before {
+  background: var(--status-online);
+}
+
+@keyframes nodeRingBreathe {
+  0%, 100% {
+    outline-color: rgba(var(--accent-cyan-rgb), 0.4);
+    outline-offset: 4px;
+  }
+  50% {
+    outline-color: rgba(var(--accent-cyan-rgb), 0.15);
+    outline-offset: 7px;
+  }
+}
+
 .timeline-date-span {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: var(--space-2xs);
+  margin-bottom: var(--space-2xs);
   font-family: var(--font-mono);
   font-size: var(--fs-xs);
-  font-weight: var(--fw-semibold);
-  letter-spacing: var(--ls-widest);
+  letter-spacing: var(--ls-wider);
   text-transform: uppercase;
-  color: var(--accent-cyan);
-  margin-bottom: var(--space-3xs);
+  color: var(--text-cyan);
 }
 
-.timeline-item:nth-child(odd) .timeline-date-span {
-  justify-content: flex-end;
-}
+.timeline-item:nth-child(odd) .timeline-date-span  { justify-content: flex-end; }
+.timeline-item:nth-child(even) .timeline-date-span { justify-content: flex-start; }
 
 .timeline-role {
-  margin-bottom: var(--space-3xs);
+  font-family: var(--font-body);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+  color: var(--text-primary);
 }
 
-.timeline-company {
-  color: var(--text-muted);
+.timeline-org {
+  margin-top: var(--space-3xs);
   font-family: var(--font-mono);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   letter-spacing: var(--ls-wide);
-  margin-bottom: var(--space-sm);
+  text-transform: uppercase;
+  color: var(--text-secondary);
 }
 
-.timeline-details {
+/* Log entries — each bullet is a mono → in cyan with body copy
+   beside it. Odd items are right-aligned, so their arrow sits on
+   the right edge; even items keep it on the left. Write the
+   bullets without the arrow: it is drawn here. */
+.timeline-body {
   display: flex;
   flex-direction: column;
   gap: var(--space-2xs);
+  margin-top: var(--space-sm);
 }
 
-.timeline-item:nth-child(odd) .timeline-details {
-  align-items: flex-end;
-}
-
-.timeline-details li {
+.timeline-body li {
   position: relative;
-  color: var(--text-secondary);
+  padding-left: 1.6em;
+  font-family: var(--font-body);
   font-size: var(--fs-sm);
   line-height: var(--lh-relaxed);
-  max-width: 42ch;
+  color: var(--text-secondary);
 }
 
-/* Left-aligned items: bullet on the LEFT */
-.timeline-item:nth-child(even) .timeline-details li {
-  padding-left: 1.3rem;
-}
-
-.timeline-item:nth-child(even) .timeline-details li::before {
-  content: "▸";
+.timeline-body li::before {
+  content: "→";
+  content: "→" / "";
   position: absolute;
   left: 0;
-  top: 0;
+  font-family: var(--font-mono);
   color: var(--accent-cyan);
-  font-size: var(--fs-sm);
-  line-height: var(--lh-relaxed);
 }
 
-/* Right-aligned items: bullet on the RIGHT, no left padding */
-.timeline-item:nth-child(odd) .timeline-details li {
+.timeline-item:nth-child(odd) .timeline-body li {
   padding-left: 0;
-  padding-right: 1.3rem;
+  padding-right: 1.6em;
 }
 
-.timeline-item:nth-child(odd) .timeline-details li::before {
-  content: "▸";
+.timeline-item:nth-child(odd) .timeline-body li::before {
+  content: none;
+}
+
+.timeline-item:nth-child(odd) .timeline-body li::after {
+  content: "→";
+  content: "→" / "";
   position: absolute;
   right: 0;
-  top: 0;
+  font-family: var(--font-mono);
   color: var(--accent-cyan);
-  font-size: var(--fs-sm);
-  line-height: var(--lh-relaxed);
-  transform: scaleX(-1);
 }
 
+/* Tag row — reuses .tech-tag-span; only placement is set here. */
+.timeline-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  margin-top: var(--space-sm);
+}
+
+.timeline-item:nth-child(odd) .timeline-tags  { justify-content: flex-end; }
+.timeline-item:nth-child(even) .timeline-tags { justify-content: flex-start; }
+
 /* ================================================================
-   6. COMMAND FORM (CONTACT)
-   Info column + glass form panel. The form reads like an intake
-   console: mono labels, inset fields, cyan focus that signals
-   "channel open".
+   9. CONTACT / COMMAND FORM
+   Copy and direct links on the left; the form, in a strong glass
+   panel, on the right. Everything above it in the page is built
+   to lead here, so this is where the site finally raises its
+   voice — once, and only on the submit button.
    ================================================================ */
-.command-grid {
+.contact-grid {
   display: grid;
-  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   gap: var(--space-2xl);
   align-items: start;
 }
 
-.command-info {
+.contact-copy {
   display: flex;
   flex-direction: column;
-  gap: var(--space-lg);
+  gap: var(--space-sm);
 }
 
-.contact-item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3xs);
-  padding-bottom: var(--space-md);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.contact-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.contact-item .contact-label {
-  font-family: var(--font-mono);
-  font-size: var(--fs-2xs);
-  letter-spacing: var(--ls-widest);
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.contact-item .contact-value {
-  font-size: var(--fs-md);
-  color: var(--text-primary);
-  transition: color var(--duration-base) var(--ease-smooth);
-}
-
-.contact-item:hover .contact-value {
-  color: var(--accent-cyan);
-}
-
-.command-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  padding: var(--space-lg);
-  background: var(--glass-bg-strong);
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  border: 1px solid var(--border-cyan);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-panel-lg);
-}
-
-.form-group {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3xs);
-}
-
-.form-label {
-  font-family: var(--font-mono);
-  font-size: var(--fs-2xs);
-  letter-spacing: var(--ls-widest);
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.form-input {
-  width: 100%;
-  padding: 0.9rem 1rem;
-  background: var(--bg-inset);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  color: var(--text-primary);
-  font-family: var(--font-body);
-  font-size: var(--fs-base);
-  line-height: var(--lh-normal);
-  transition: border-color var(--duration-base) var(--ease-smooth),
-              box-shadow var(--duration-base) var(--ease-smooth),
-              background var(--duration-base) var(--ease-smooth);
-}
-
-.form-input::placeholder {
-  color: var(--text-muted);
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: var(--accent-cyan);
-  box-shadow: var(--focus-ring-soft), var(--glow-cyan-sm);
-  background: var(--bg-elevated);
-}
-
-textarea.form-input {
-  min-height: 150px;
-  resize: vertical;
-}
-
-.form-status {
-  font-family: var(--font-mono);
-  font-size: var(--fs-xs);
-  letter-spacing: var(--ls-wide);
-  text-transform: uppercase;
-  min-height: 1.2em;
-  color: var(--text-muted);
-}
-
-.form-status.success {
-  color: var(--accent-green);
-}
-
-.form-status.error {
-  color: var(--status-live);
-}
-
-/* ================================================================
-   7. FOOTER
-   Quiet close: brand column, nav, system-status chip, then a mono
-   copyright row separated by a fading top border.
-   ================================================================ */
-.footer {
-  position: relative;
-  padding: var(--space-2xl) var(--gutter);
-  border-top: 1px solid var(--border-subtle);
-}
-
-.footer::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  left: 10%;
-  right: 10%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-  opacity: 0.35;
-}
-
-.footer-grid {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr;
-  gap: var(--space-xl);
-  width: 100%;
-  max-width: var(--container-max);
-  margin: 0 auto var(--space-xl);
-}
-
-.footer-brand {
+.contact-links {
   display: flex;
   flex-direction: column;
   gap: var(--space-2xs);
-  max-width: 42ch;
+  margin-top: var(--space-lg);
 }
 
-.footer-brand p {
-  color: var(--text-tertiary);
+/* Each link carries a → that slides right and turns cyan on hover.
+   The arrow is drawn here; leave it out of the markup. */
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: var(--space-xs);
+  padding-block: var(--space-2xs);
+  font-family: var(--font-mono);
   font-size: var(--fs-sm);
-  line-height: var(--lh-relaxed);
+  letter-spacing: var(--ls-wide);
+  color: var(--text-secondary);
+  cursor: none;
+  transition: color var(--duration-base) var(--ease-out-expo);
+}
+
+.contact-link::before {
+  content: "→";
+  content: "→" / "";
+  color: var(--text-tertiary);
+  transition: transform var(--duration-base) var(--ease-out-expo),
+              color var(--duration-base) var(--ease-out-expo);
+}
+
+.contact-link:hover {
+  color: var(--text-primary);
+}
+
+.contact-link:hover::before {
+  transform: translateX(4px);
+  color: var(--accent-cyan);
+}
+
+/* The form itself — compose with .panel--strong in the markup. */
+.contact-form {
+  display: grid;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+}
+
+.contact-field {
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.contact-label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.contact-input,
+.contact-textarea,
+.contact-form :is(input, textarea, select) {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background: var(--bg-inset);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  color: var(--text-primary);
+  caret-color: var(--accent-cyan);
+  transition: border-color var(--duration-base) var(--ease-out-expo),
+              background var(--duration-base) var(--ease-out-expo);
+}
+
+.contact-textarea,
+.contact-form textarea {
+  min-height: 9rem;
+  resize: vertical;
+}
+
+.contact-input::placeholder,
+.contact-textarea::placeholder,
+.contact-form :is(input, textarea)::placeholder {
+  color: var(--text-tertiary);
+}
+
+.contact-input:hover,
+.contact-textarea:hover,
+.contact-form :is(input, textarea, select):hover {
+  border-color: var(--border-strong);
+}
+
+/* Focus: the inset ring from variables.css, so the ring hugs the
+   field's own radius and is never clipped by the panel. The
+   transparent outline stays for forced-colors users. */
+.contact-input:focus-visible,
+.contact-textarea:focus-visible,
+.contact-form :is(input, textarea, select):focus-visible {
+  border-color: var(--border-cyan-strong);
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  box-shadow: var(--focus-ring-inset);
+}
+
+.contact-form :is(input, textarea):user-invalid {
+  border-color: var(--border-alert);
+}
+
+/* Form status line — JS sets data-state to "success" or "error". */
+.contact-status {
+  min-height: 1.5em;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
+  color: var(--text-secondary);
+}
+
+.contact-status[data-state="success"] { color: var(--text-green); }
+.contact-status[data-state="error"]   { color: var(--status-live); }
+
+/* The single signal CTA of the site — the whole page is designed
+   to lead here. Filled cyan, dark type, and the only --glow-signal
+   in the stylesheet. It deliberately shares nothing with the
+   generic button: a sheen crosses it on hover and the arrow leans
+   forward. */
+.contact-submit {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  justify-self: start;
+  padding: 1.05rem 2.25rem;
+  background: var(--accent-cyan);
+  color: var(--text-on-accent);
+  border: 1px solid var(--accent-cyan);
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  cursor: none;
+  transition: transform var(--duration-base) var(--ease-out-expo),
+              box-shadow var(--duration-base) var(--ease-out-expo);
+}
+
+.contact-submit::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%);
+  translate: -120% 0;
+  transition: translate var(--duration-slower) var(--ease-out-expo);
+}
+
+.contact-submit::after {
+  content: "→";
+  content: "→" / "";
+  transition: transform var(--duration-base) var(--ease-out-expo);
+}
+
+.contact-submit:hover {
+  box-shadow: var(--glow-signal);
+  transform: translateY(-2px);
+}
+
+.contact-submit:hover::before {
+  translate: 120% 0;
+}
+
+.contact-submit:hover::after {
+  transform: translateX(4px);
+}
+
+.contact-submit:active {
+  transform: translateY(0) scale(0.985);
+  transition-duration: var(--duration-micro);
+}
+
+.contact-submit:focus-visible {
+  box-shadow: var(--focus-ring), var(--glow-cyan-md);
+}
+
+.contact-submit:disabled {
+  opacity: 0.5;
+  box-shadow: none;
+  transform: none;
+}
+
+/* ================================================================
+   10. FOOTER
+   A control room's last line is a status line. The footer opens
+   with a one-line system readout, resolves into the operator's
+   signature and a short nav, and closes with a quiet hairline
+   and a micro row. Style hangs off <footer class="site-footer">.
+   ================================================================ */
+.site-footer,
+body > footer {
+  position: relative;
+  z-index: var(--z-content);
+  padding: var(--space-xl) var(--gutter) var(--space-lg);
+  border-top: 1px solid var(--border-subtle);
+  background: linear-gradient(180deg, transparent, var(--bg-void) 40%);
+}
+
+.footer-inner {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+}
+
+/* Status strip — SYS.STATUS: NOMINAL · LAST SYNC: [live timestamp]
+   · NODE: IN-SUMIT-01. One .footer-status-item per segment;
+   separators are drawn here. */
+.footer-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3xs) var(--space-xs);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.footer-status-item + .footer-status-item::before {
+  content: "·";
+  content: "·" / "";
+  margin-right: var(--space-xs);
+}
+
+.footer-status-value {
+  color: var(--text-secondary);
+}
+
+.footer-status-value--ok {
+  color: var(--text-green);
+}
+
+.footer-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-xl);
+  padding-block: var(--space-xl);
+}
+
+.footer-signature {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-tight);
+  color: var(--text-primary);
+}
+
+.footer-signature-role {
+  display: block;
+  margin-top: var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
 }
 
 .footer-nav {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-2xs);
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
 }
 
 .footer-nav a {
   color: var(--text-secondary);
-  font-family: var(--font-mono);
-  font-size: var(--fs-sm);
-  letter-spacing: var(--ls-wide);
-  transition: color var(--duration-base) var(--ease-smooth);
+  transition: color var(--duration-base) var(--ease-out-expo);
 }
 
 .footer-nav a:hover {
   color: var(--accent-cyan);
 }
 
-.footer-status {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2xs);
-  font-family: var(--font-mono);
-  font-size: var(--fs-2xs);
-  letter-spacing: var(--ls-widest);
-  text-transform: uppercase;
-  color: var(--accent-green);
-}
-
-.footer-status::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: var(--radius-full);
-  background: var(--status-online);
-  box-shadow: var(--glow-green-sm);
-  animation: feedLivePulse var(--duration-pulse) ease-in-out infinite;
-}
-
 .footer-bottom {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--space-sm);
   flex-wrap: wrap;
-  width: 100%;
-  max-width: var(--container-max);
-  margin: 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2xs) var(--space-md);
   padding-top: var(--space-md);
   border-top: 1px solid var(--border-subtle);
   font-family: var(--font-mono);
   font-size: var(--fs-2xs);
-  letter-spacing: var(--ls-wide);
+  letter-spacing: var(--ls-widest);
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-tertiary);
 }
 
 /* ================================================================
-   8. SCROLL REVEALS
-   Progressive enhancement: the hidden state is scoped under .js so
-   content remains fully visible if JavaScript fails to run.
-   script.js adds the `js` class to <html> and toggles .is-visible
-   via IntersectionObserver, and staggers items with --reveal-delay.
+   11. BOOT TERMINAL
+   Boot sequence — 3 seconds of ritual, then the door opens.
+   Skippable by design.
+
+   A near-black overlay over the whole viewport, with a column of
+   mono lines that arrive one by one. Mark each line up with BOTH
+   .terminal__line (base.css) and .boot-line, and give it a
+   data-index from 0 to 11 in reading order. The step between
+   lines is four terminal beats (--terminal-line-delay × 4),
+   which lands a twelve-line sequence just inside three seconds.
+   JS adds .is-done when the ritual ends or is skipped.
    ================================================================ */
-.js .reveal {
-  opacity: 0;
-  transform: translateY(32px);
-  transition:
-    opacity var(--duration-slower) var(--ease-editorial),
-    transform var(--duration-slower) var(--ease-editorial);
-  transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
+.boot {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  background: var(--terminal-bg);
+  color: var(--terminal-text);
+  transition: opacity var(--duration-slower) var(--ease-in-out-quart),
+              visibility 0s linear var(--duration-slower);
 }
 
-.js .reveal--left  { transform: translateX(-32px); }
-.js .reveal--right { transform: translateX(32px); }
-.js .reveal--scale { transform: scale(0.96); }
+.boot.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
 
-.js .reveal.is-visible {
+.boot-terminal {
+  width: 100%;
+  max-width: 640px;
+  padding: var(--space-lg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-relaxed);
+  letter-spacing: var(--ls-wide);
+}
+
+.boot-line {
+  --boot-step: calc(var(--terminal-line-delay) * 4);
+  animation: bootLineIn var(--duration-base) var(--ease-out-expo) both;
+  animation-delay: calc(var(--boot-step) * var(--line-index, 0));
+}
+
+.boot-line[data-index="0"]  { --line-index: 0; }
+.boot-line[data-index="1"]  { --line-index: 1; }
+.boot-line[data-index="2"]  { --line-index: 2; }
+.boot-line[data-index="3"]  { --line-index: 3; }
+.boot-line[data-index="4"]  { --line-index: 4; }
+.boot-line[data-index="5"]  { --line-index: 5; }
+.boot-line[data-index="6"]  { --line-index: 6; }
+.boot-line[data-index="7"]  { --line-index: 7; }
+.boot-line[data-index="8"]  { --line-index: 8; }
+.boot-line[data-index="9"]  { --line-index: 9; }
+.boot-line[data-index="10"] { --line-index: 10; }
+.boot-line[data-index="11"] { --line-index: 11; }
+
+.boot-line--success {
+  color: var(--text-green);
+  color: color-mix(in srgb, var(--accent-green) 70%, var(--accent-cyan));
+}
+
+.boot-line--success::before {
+  content: "✓ ";
+  content: "✓ " / "";
+  color: var(--accent-green);
+}
+
+@keyframes bootLineIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.boot-skip {
+  position: absolute;
+  right: var(--space-lg);
+  bottom: var(--space-lg);
+  padding: var(--space-2xs) var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  cursor: none;
+  transition: color var(--duration-base) var(--ease-out-expo);
+}
+
+.boot-skip:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-cyan);
+  text-underline-offset: 0.4em;
+}
+
+/* Without scripting nothing would ever dismiss the overlay. */
+@media (scripting: none) {
+  .boot { display: none; }
+}
+
+/* ================================================================
+   12. SCROLL REVEALS
+   Elements arrive quietly: a 24px rise and a fade, slow on the
+   expo curve. JS adds .is-visible when an element enters the
+   viewport; will-change is held only until it has.
+
+   Stagger: on a .reveal-stagger parent, JS sets --stagger-index
+   (0, 1, 2 …) on each child. Delay is index × 80ms.
+
+   .reveal--mask is for hero images: instead of rising, the image
+   is uncovered from the bottom edge upward with a clip-path.
+   ================================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  will-change: opacity, transform;
+  transition: opacity var(--duration-reveal) var(--ease-out-expo),
+              transform var(--duration-reveal) var(--ease-out-expo);
+}
+
+.reveal.is-visible {
   opacity: 1;
-  transform: none;
+  transform: translateY(0);
   will-change: auto;
 }
 
-/* ================================================================
-   9. RESPONSIVE + REDUCED MOTION
-   ================================================================ */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--duration-reveal) var(--ease-out-expo),
+              transform var(--duration-reveal) var(--ease-out-expo);
+  transition-delay: calc(var(--stagger-index, 0) * 80ms);
+}
 
-/* ---------- Tablet landscape / small desktop ---------- */
-@media (max-width: 1100px) {
-  .hero-grid,
-  .about-grid,
-  .command-grid {
+.reveal-stagger.is-visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal--mask {
+  opacity: 1;
+  transform: none;
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path var(--duration-reveal) var(--ease-out-expo);
+}
+
+.reveal--mask.is-visible {
+  clip-path: inset(0 0 0 0);
+}
+
+/* Without scripting nothing would ever add .is-visible. */
+@media (scripting: none) {
+  .reveal,
+  .reveal-stagger > *,
+  .reveal--mask {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+  }
+}
+
+/* ================================================================
+   13. RENDERING & PERFORMANCE
+   content-visibility: auto is a deliberate paint optimization for
+   the heavy below-the-fold sections: the browser skips their
+   layout and paint until they approach the viewport, and
+   contain-intrinsic-size reserves a placeholder height so the
+   scrollbar doesn't jump. Paint containment also clips at the
+   element's edge, so the deployment grid carries its own padding
+   (cancelled by an equal negative margin) to leave room for card
+   lift and glow. will-change lives only on layers that animate:
+   .hero-title, .op-card-img img and .reveal.
+   ================================================================ */
+.operations-grid {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 56rem;
+  padding: var(--space-md);
+  margin: calc(var(--space-md) * -1);
+}
+
+.timeline {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 60rem;
+}
+
+.footprint {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 80vh;
+}
+
+.contact {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 40rem;
+}
+
+/* ================================================================
+   14. RESPONSIVE
+   Four steps, each doing one job:
+     1200  the deployment grid drops from six columns to four
+     1024  everything stacks; the timeline moves to a single rail
+     768   one column of cards; sections tighten
+     480   the smallest screens — smaller hero, single-column strip
+   ================================================================ */
+@media (max-width: 1200px) {
+  .operations-grid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-flow: dense;
+  }
+
+  .op-card:nth-child(1) { grid-column: span 4; }
+  .op-card:nth-child(2) { grid-column: span 2; }
+  .op-card:nth-child(3) { grid-column: span 4; }
+  .op-card:nth-child(4),
+  .op-card:nth-child(5),
+  .op-card:nth-child(6) { grid-column: span 2; }
+}
+
+@media (max-width: 1024px) {
+  .hero-grid {
     grid-template-columns: 1fr;
     gap: var(--space-xl);
   }
 
   .hero-monitor {
-    max-width: 640px;
-    aspect-ratio: 16 / 10;
-    margin-inline: auto;
-    order: 2;
+    width: 100%;
+    max-width: var(--container-narrow);
+    aspect-ratio: 16 / 11;
+  }
+
+  .hero-readout-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--space-sm);
+  }
+
+  .hero-readout-strip .readout:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
   }
 
   .about-image-wrapper {
-    max-width: 520px;
+    width: 100%;
+    max-width: 30rem;
     margin-inline: auto;
   }
 
-  .operations-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .footprint-panel {
+    position: static;
+    width: 100%;
+    margin-top: var(--space-md);
+    transform: none;
   }
 
-  .op-card:nth-child(1),
-  .op-card:nth-child(2),
-  .op-card:nth-child(3),
-  .op-card:nth-child(4),
-  .op-card:nth-child(5),
-  .op-card:nth-child(6) {
-    grid-column: span 1;
+  /* Timeline — a single rail down the left edge; every item sits
+     to its right, text left-aligned, every node on the rail. */
+  .timeline {
+    --rail-x: var(--space-sm);
+    --rail-inset: calc(var(--space-lg) + var(--space-md));
+  }
+
+  .timeline::before,
+  .timeline::after {
+    left: var(--rail-x);
+  }
+
+  .timeline-item,
+  .timeline-item:nth-child(odd),
+  .timeline-item:nth-child(even) {
+    width: auto;
+    margin-left: var(--rail-inset);
+    margin-right: 0;
+    text-align: left;
+  }
+
+  .timeline-item:nth-child(odd) .timeline-node-span,
+  .timeline-item:nth-child(even) .timeline-node-span {
+    right: auto;
+    left: calc(var(--rail-x) - var(--rail-inset) - 9px);
+  }
+
+  .timeline-item:nth-child(odd) .timeline-date-span,
+  .timeline-item:nth-child(odd) .timeline-tags {
+    justify-content: flex-start;
+  }
+
+  .timeline-item:nth-child(odd) .timeline-body li {
+    padding-left: 1.6em;
+    padding-right: 0;
+  }
+
+  .timeline-item:nth-child(odd) .timeline-body li::before {
+    content: "→";
+    content: "→" / "";
+  }
+
+  .timeline-item:nth-child(odd) .timeline-body li::after {
+    content: none;
+  }
+}
+
+@media (max-width: 768px) {
+  section {
+    padding-block: var(--space-xl);
+  }
+
+  .section--tight    { padding-block: var(--space-lg); }
+  .section--spacious { padding-block: var(--space-2xl); }
+
+  .hero-scroll-cue {
+    display: none;
+  }
+
+  .operations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .op-card:nth-child(n) {
+    grid-column: 1 / -1;
   }
 
   .op-card--wide {
@@ -1109,161 +2143,249 @@ textarea.form-input {
 
   .op-card--wide .op-card-img {
     flex: none;
-    width: 100%;
-    height: 240px;
+    height: 15rem;
+  }
+
+  .op-card:nth-child(1) .op-card-img {
+    height: 15rem;
+  }
+
+  .footprint {
+    min-height: auto;
+  }
+
+  .footprint-map {
+    aspect-ratio: 4 / 3;
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-xl);
+  }
+
+  .contact-form {
+    padding: var(--space-lg);
+  }
+
+  .contact-submit {
+    justify-self: stretch;
   }
 }
 
-/* ---------- Tablet portrait / large phone ---------- */
-@media (max-width: 768px) {
-  section {
-    padding-block: var(--space-2xl);
-  }
-
-  .section--spacious {
-    padding-block: var(--space-2xl);
-  }
-
+@media (max-width: 480px) {
   .hero {
-    padding-top: calc(var(--header-height) + var(--space-lg));
+    --fs-hero: clamp(2.25rem, 11vw, 3rem);
+    padding: calc(var(--header-height) + var(--space-md)) var(--gutter) var(--space-xl);
+  }
+
+  .hero-readout-strip {
+    grid-template-columns: 1fr;
+    row-gap: 0;
+  }
+
+  .hero-readout-strip .readout,
+  .hero-readout-strip .readout:nth-child(odd) {
+    padding-left: 0;
+    border-left: 0;
+    border-bottom: 1px solid var(--readout-divider-color);
+  }
+
+  .hero-readout-strip .readout:last-child {
+    border-bottom: 0;
   }
 
   .hero-btn-group {
-    width: 100%;
-  }
-
-  .hero-btn-group > * {
-    flex: 1 1 auto;
-  }
-
-  /* Operations grid collapses to a single column */
-  .operations-grid {
-    grid-template-columns: 1fr;
-    grid-auto-rows: auto;
-  }
-
-  .op-card-img,
-  .op-card:nth-child(1) .op-card-img {
-    height: 220px;
-  }
-
-  /* Timeline switches to a left rail */
-  .timeline::before {
-    left: 10px;
-    transform: none;
-  }
-
-  .timeline-item,
-  .timeline-item:nth-child(odd),
-  .timeline-item:nth-child(even) {
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
-    text-align: left;
-    padding-left: 44px;
-  }
-
-  .timeline-item:nth-child(odd) .timeline-node-span,
-  .timeline-item:nth-child(even) .timeline-node-span {
-    left: 1px;
-    right: auto;
-  }
-
-  .timeline-item:nth-child(odd) .timeline-date-span {
-    justify-content: flex-start;
-  }
-
-  .timeline-item:nth-child(odd) .timeline-details {
-    align-items: flex-start;
-  }
-
-  /* Reset alternating bullets: every item uses a LEFT bullet */
-  .timeline-details li,
-  .timeline-item:nth-child(odd) .timeline-details li {
-    padding-left: 1.3rem;
-    padding-right: 0;
-  }
-
-  .timeline-details li::before,
-  .timeline-item:nth-child(odd) .timeline-details li::before {
-    left: 0;
-    right: auto;
-    transform: none;
-  }
-
-  /* Footer stacks */
-  .footer-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-lg);
-  }
-}
-
-/* ---------- Small phone ---------- */
-@media (max-width: 480px) {
-  .hero-monitor,
-  .about-image-wrapper {
-    border-radius: var(--radius-lg);
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .op-card-body,
-  .command-form {
+  .contact-form {
     padding: var(--space-md);
   }
 
-  .stat-value {
-    font-size: var(--fs-section);
+  .op-card-stat {
+    right: var(--space-md);
   }
 
+  .footer-main,
   .footer-bottom {
     flex-direction: column;
     align-items: flex-start;
-    text-align: left;
-  }
-
-  /* Keep touch targets at least 44px tall */
-  .tech-tag-span,
-  .form-input,
-  .footer-nav a,
-  .op-link-span {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
   }
 }
 
-/* ---------- Reduced motion ---------- */
+/* ================================================================
+   15. ACCESSIBILITY
+   Focus, reduced motion, forced colors. Nothing in the page relies
+   on motion or glow to be understood, and each of these branches
+   proves it by removing them.
+   ================================================================ */
+
+/* Focus — the same ring base.css draws: a dark separator inside a
+   cyan band, done in box-shadow so it follows each element's own
+   radius, with a transparent outline left in for forced-colors. */
+.op-card:focus-visible,
+.timeline-item:focus-visible,
+.contact-link:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 3px;
+  box-shadow: var(--focus-ring);
+}
+
+/* Reduced motion — every loop stops, every reveal lands already
+   finished, and nothing is left travelling, sweeping or staggering. */
 @media (prefers-reduced-motion: reduce) {
+  .hero-title {
+    animation: none;
+  }
+
+  .hero-monitor-corners > *,
+  .hero-monitor-corners:empty {
+    animation: none;
+    opacity: 0.9;
+  }
+
   .hero-eyebrow-dot,
   .op-card-badge-span::before,
-  .footer-status::before,
-  .timeline-node-span::before {
+  .timeline-node-span::before,
+  .timeline-item--current .timeline-node-span {
     animation: none;
   }
 
   .hero-scroll-cue::after {
     animation: none;
+    opacity: 1;
   }
 
-  .js .reveal,
-  .js .reveal--left,
-  .js .reveal--right,
-  .js .reveal--scale {
+  .about-image-wrapper.no-img {
+    animation: none;
+  }
+
+  .op-card:hover .op-card-img::after {
+    animation: none;
+  }
+
+  .op-card-img::before {
+    transition: none;
+  }
+
+  .timeline::after {
+    display: none;
+  }
+
+  .boot-line {
+    animation: none;
+  }
+
+  .boot {
+    transition: none;
+  }
+
+  .reveal,
+  .reveal-stagger > *,
+  .reveal--mask {
     opacity: 1;
     transform: none;
+    clip-path: none;
     transition: none;
     will-change: auto;
   }
 
-  .op-card:hover {
-    transform: none;
+  .contact-submit::before {
+    transition: none;
+  }
+}
+
+/* Forced colors — glass, gradients and glows can't survive a
+   system palette, so they go. Gradient text is the one hazard:
+   its fill is transparent, so it must be handed back to the system
+   text colour or the headline would vanish. Panels become plain
+   1px boxes; badges keep visible text and a border. */
+@media (forced-colors: active) {
+  .hero-title,
+  .hero-title em {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    filter: none;
+    animation: none;
   }
 
-  .tech-tag-span:hover {
-    transform: none;
+  .hero::before,
+  .hero-monitor-grid,
+  .hero-monitor-scan,
+  .hero-monitor-frame,
+  .hero-monitor-corners,
+  .about-image-wrapper::after,
+  .op-card-img::before,
+  .op-card-img::after,
+  .footprint-map::after,
+  .section-tag-span::before,
+  .section-tag-span::after,
+  .contact-submit::before,
+  .timeline::after {
+    display: none;
   }
 
-  .about-image-wrapper:hover img,
-  .op-card:hover .op-card-img img {
-    transform: none;
+  .hero-monitor,
+  .about-image-wrapper,
+  .op-card,
+  .footprint-map,
+  .footprint-panel,
+  .contact-form,
+  .boot-terminal {
+    border: 1px solid CanvasText;
+    box-shadow: none;
+    background: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .hero-eyebrow,
+  .op-card-badge-span,
+  .hero-monitor::before,
+  .hero-monitor::after,
+  .hero-monitor-timestamp,
+  .about-image-wrapper::before,
+  .about-image-status-id,
+  .about-image-status-live,
+  .footprint-map::before,
+  tech-tag-span,
+  .tech-tag-span {
+    border: 1px solid CanvasText;
+    background: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    color: CanvasText;
+  }
+
+  .timeline::before {
+    width: 0;
+    background: none;
+    border-left: 2px solid CanvasText;
+    box-shadow: none;
+  }
+
+  .timeline-node-span,
+  .timeline-item--current .timeline-node-span {
+    border: 2px solid CanvasText;
+    box-shadow: none;
+    outline: none;
+  }
+
+  .contact-input,
+  .contact-textarea,
+  .contact-form :is(input, textarea, select) {
+    border: 1px solid CanvasText;
+    background: Field;
+    color: FieldText;
+  }
+
+  .contact-submit {
+    border: 1px solid ButtonText;
+    background: ButtonFace;
+    color: ButtonText;
+    box-shadow: none;
   }
 }
