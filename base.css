@@ -6,6 +6,32 @@
    moments, clean sans for reading, mono for system readouts.
    Atmosphere (grid / grain / vignette / spotlight) is felt more
    than seen — it should never compete with the content.
+
+   Map of the file:
+   01  Reset & box model
+   02  Body surface & atmosphere
+   03  Terminal / boot sequence
+   04  Typography
+   05  Readouts
+   06  Selection
+   07  Focus states
+   08  Scrollbars
+   09  Tactical grid
+   10  Scanlines
+   11  Ambient orbs
+   12  Panel — the glass primitive
+   13  Hairline
+   14  Experience rail
+   15  Network topology
+   16  Career footprint
+   17  Layout primitives
+   18  Reduced motion
+   19  Forced colors
+   20  Print
+   21  Keyframes
+
+   One glass primitive, one rail, one readout, one terminal.
+   Everything else composes from these — no forks.
    ================================================================ */
 
 /* ================================================================
@@ -97,6 +123,14 @@ hr {
    Obsidian base, two soft radial glows, a cinematic vignette,
    film grain, and an optional cursor spotlight. All overlays are
    pointer-events: none so they never intercept interaction.
+
+   Font features: kerning, standard ligatures and contextual
+   alternates only. Inter's alternate glyph sets are deliberately
+   OFF. Note that in Inter "ss01" is the open-digits set, not a
+   single-story "a" (that is "cv11"), and either one would make
+   long-form body copy read as more stylised without making it
+   more legible. Tabular numerals are also off globally — they
+   space prose unevenly — and are opt-in via .text-tnum.
    ================================================================ */
 body {
   position: relative;
@@ -131,7 +165,9 @@ body::before {
   pointer-events: none;
 }
 
-/* Fine film grain — real texture, not a flat gradient */
+/* Fine film grain — real texture, not a flat gradient.
+   Blend mode and opacity both come from variables.css so the
+   grain can be retuned in one place. */
 body::after {
   content: "";
   position: fixed;
@@ -140,7 +176,7 @@ body::after {
   background-image: var(--grain-texture);
   background-size: 180px 180px;
   opacity: var(--grain-opacity);
-  mix-blend-mode: overlay;
+  mix-blend-mode: var(--grain-blend-mode, overlay);
   pointer-events: none;
 }
 
@@ -167,7 +203,52 @@ body.spotlight-active .cursor-spotlight {
 }
 
 /* ================================================================
-   3. TYPOGRAPHY SYSTEM
+   3. TERMINAL / BOOT SEQUENCE
+   The entry ritual — friction as a feature, softened. A few
+   seconds of "initializing surveillance network…" before the
+   site opens: enough to set the register, short enough to skip.
+   This is foundation only. The full boot component lives in
+   components.css and consumes these three primitives; JS sets
+   --line-index on each line and the stagger falls out of
+   --terminal-line-delay.
+   ================================================================ */
+.terminal {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-relaxed);
+  letter-spacing: var(--ls-wide);
+  background: var(--terminal-bg);
+  color: var(--terminal-text);
+  text-shadow: var(--terminal-text-shadow);
+}
+
+.terminal__line {
+  display: block;
+  white-space: pre-wrap;
+  /* Per-line rhythm. JS writes --line-index (0, 1, 2 …); the
+     reveal offset is computed here so timing stays in the tokens. */
+  --line-delay: var(--terminal-line-delay);
+  --line-index: 0;
+  --line-reveal-at: calc(var(--line-delay) * var(--line-index));
+}
+
+/* Secondary lines — timestamps, handshakes, "ok" acknowledgements */
+.terminal__line--muted {
+  color: var(--terminal-text-muted);
+  text-shadow: none;
+}
+
+.terminal__cursor {
+  display: inline-block;
+  width: 1ch;
+  height: 1.1em;
+  vertical-align: text-bottom;
+  background: var(--terminal-cursor-color);
+  animation: terminal-blink var(--terminal-cursor-blink) step-end infinite;
+}
+
+/* ================================================================
+   4. TYPOGRAPHY SYSTEM
    Display serif → h1 / h2 narrative moments only
    Body sans     → h3–h5, paragraphs, everything read at length
    Mono          → h6, eyebrows, system labels
@@ -276,6 +357,12 @@ pre {
   letter-spacing: var(--ls-wide);
 }
 
+/* Opt-in tabular numerals — for readout blocks, counters and
+   timestamps where digits must line up. Never applied to prose. */
+.text-tnum {
+  font-variant-numeric: tabular-nums;
+}
+
 .text-eyebrow {
   font-family: var(--font-mono);
   font-size: var(--fs-2xs);
@@ -295,25 +382,74 @@ pre {
 }
 
 /* ================================================================
-   4. SELECTION
-   Cyan signal fill so highlighting reads as part of the system.
+   5. READOUTS
+   Measurement-first copy, rendered as instrument data:
+   "48 cameras · 12 sites · 99.97% uptime". The value is mono and
+   bright; the label is tiny, tracked-out and quiet. Every stat
+   block on the site is this one component — decided once here so
+   it never drifts. Only a value that genuinely updates live
+   earns the cyan.
+   ================================================================ */
+.readout {
+  display: grid;
+  gap: var(--space-3xs);
+  padding-block: var(--space-xs);
+  border-bottom: 1px solid var(--readout-divider-color);
+}
+
+.readout__value {
+  font-family: var(--readout-value-font);
+  font-size: var(--readout-value-size);
+  font-weight: var(--readout-value-weight);
+  line-height: var(--lh-tight);
+  color: var(--readout-value-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.readout__label {
+  font-family: var(--font-mono);
+  font-size: var(--readout-label-size);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--readout-label-tracking);
+  text-transform: uppercase;
+  color: var(--readout-label-color);
+}
+
+.readout--live .readout__value {
+  color: var(--readout-live-color);
+  text-shadow: var(--text-glow-cyan);
+}
+
+/* ================================================================
+   6. SELECTION
+   A cyan wash so highlighting still reads as part of the system —
+   but a quiet one. The fill drops from --accent-cyan-mid to
+   --accent-cyan-soft so a selection never outshouts the glow
+   system around it. At that weight the old dark on-accent text
+   would disappear, so selected text now stays bright.
    ================================================================ */
 ::selection {
-  background: var(--accent-cyan-mid);
-  color: var(--text-on-accent);
+  background: var(--accent-cyan-soft);
+  color: var(--text-primary);
   text-shadow: none;
 }
 
 ::-moz-selection {
-  background: var(--accent-cyan-mid);
-  color: var(--text-on-accent);
+  background: var(--accent-cyan-soft);
+  color: var(--text-primary);
   text-shadow: none;
 }
 
 /* ================================================================
-   5. FOCUS STATES
-   Accessible and on-theme. The default outline is removed ONLY
-   because a visible cyan ring replaces it on :focus-visible.
+   7. FOCUS STATES
+   Accessible and on-theme. The ring is drawn with box-shadow —
+   the --focus-ring token, a dark separator inside a cyan band —
+   so it follows each element's own border radius and reads on
+   both obsidian and glass. The outline stays in the rule as a
+   TRANSPARENT one: invisible normally, but it is what forced-colors
+   users see, and it is the fallback if box-shadow is unavailable.
+   (An earlier version forced border-radius on focus; that reshaped
+   pill buttons mid-interaction and has been removed.)
    ================================================================ */
 :focus {
   outline: none;
@@ -325,20 +461,56 @@ input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid var(--accent-cyan);
-  outline-offset: 3px;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--focus-ring-soft);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: var(--focus-ring);
+}
+
+/* Inset variant — for inputs, interactive panels and anything
+   flush with an edge or inside an overflow-hidden parent, where an
+   outward ring would be clipped. Hugs the element's own radius. */
+.focus-inset:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  box-shadow: var(--focus-ring-inset);
+}
+
+@supports not (box-shadow: 0 0 0 2px #000) {
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible,
+  .focus-inset:focus-visible {
+    outline-color: var(--accent-cyan);
+  }
 }
 
 /* ================================================================
-   6. CUSTOM SCROLLBARS
+   8. CUSTOM SCROLLBARS
    Thin, cyan-accented, glowing on hover — reads as a system
    readout rather than chrome.
+
+   The standard scrollbar-width / scrollbar-color properties are
+   only applied where ::-webkit-scrollbar is NOT supported
+   (Firefox). Modern Chromium disables every ::-webkit-scrollbar
+   rule when the standard properties are set, which would silently
+   kill the hover glow below.
+
+   .scrollbar-live swaps cyan for --status-live, with a slow pulse.
+   Reserved for the boot sequence and alert-mode states. Apply it
+   to <html> or to a scoped scrolling container.
    ================================================================ */
-html {
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent-cyan) var(--bg-void);
+@supports not selector(::-webkit-scrollbar) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-cyan) var(--bg-void);
+  }
+
+  .scrollbar-live {
+    scrollbar-color: var(--status-live) var(--bg-void);
+  }
 }
 
 ::-webkit-scrollbar {
@@ -373,8 +545,25 @@ html {
   background: var(--bg-void);
 }
 
+/* Live variant — the pulse reuses topo-pulse and is progressive
+   enhancement: browsers that don't animate scrollbar parts simply
+   show the steady red thumb. */
+.scrollbar-live::-webkit-scrollbar-thumb {
+  background: var(--status-live);
+  border-color: var(--border-alert);
+  --node-glow-rest: 0 0 0 0 transparent;
+  --node-glow-peak: var(--glow-alert-md);
+  animation: topo-pulse var(--topo-pulse-duration) ease-in-out infinite;
+}
+
+.scrollbar-live::-webkit-scrollbar-thumb:hover {
+  background: var(--status-live);
+  border-color: var(--status-live);
+  box-shadow: var(--glow-alert-md);
+}
+
 /* ================================================================
-   7. TACTICAL GRID OVERLAY
+   9. TACTICAL GRID OVERLAY
    A faint two-direction grid, masked so it fades toward the edges.
    Felt, not seen — it should register only on the second look.
    ================================================================ */
@@ -400,9 +589,14 @@ html {
 }
 
 /* ================================================================
-   8. SCANLINE
+   10. SCANLINES
    A single, slow horizontal sweep. One line, one pass, no
    repetition stacks — a surveillance tell, not a screensaver.
+
+   Tunable from anywhere via two optional tokens (not required in
+   variables.css; the fallbacks apply until they are defined):
+     --duration-scan-loop           downward sweep   (default 9s)
+     --duration-scan-loop-reverse   upward sweep     (default 18s)
    ================================================================ */
 .scanline {
   position: fixed;
@@ -422,21 +616,43 @@ html {
   );
   opacity: var(--scanline-opacity);
   box-shadow: var(--glow-cyan-sm);
-  animation: scanMove 9s linear infinite;
+  animation: scanMove var(--duration-scan-loop, 9s) linear infinite;
   will-change: top;
 }
 
-@keyframes scanMove {
-  0%   { top: -2%;  opacity: 0; }
-  8%   { opacity: var(--scanline-opacity); }
-  92%  { opacity: var(--scanline-opacity); }
-  100% { top: 102%; opacity: 0; }
+/* A second, slower sweep — felt only on the second glance.
+   It travels upward from the bottom edge at half the opacity of
+   the first, and needs no extra markup: it hangs off the root
+   element. Motion-safe visitors only. */
+@media (prefers-reduced-motion: no-preference) {
+  html::after {
+    content: "";
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    z-index: var(--z-overlay);
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--accent-cyan-soft) 30%,
+      var(--accent-cyan-soft) 70%,
+      transparent 100%
+    );
+    opacity: 0;
+    animation: scanMoveUp var(--duration-scan-loop-reverse, 18s) linear infinite;
+  }
 }
 
 /* ================================================================
-   9. AMBIENT GLOW ORBS
+   11. AMBIENT GLOW ORBS
    Soft, slow, mostly out of frame. They exist to break the flat
-   black of the background — nothing more.
+   black of the background — nothing more. Screen blending lets
+   them light the obsidian from within rather than lie on top of it.
+
+   will-change: transform lives on the orbs and nowhere else.
    ================================================================ */
 .ambient-orb {
   position: fixed;
@@ -444,6 +660,7 @@ html {
   border-radius: var(--radius-full);
   filter: blur(150px);
   opacity: 0.22;
+  mix-blend-mode: screen;
   pointer-events: none;
   will-change: transform;
   animation: floatOrb 26s ease-in-out infinite alternate;
@@ -476,13 +693,255 @@ html {
   animation-delay: -6s;
 }
 
-@keyframes floatOrb {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  100% { transform: translate3d(60px, 40px, 0) scale(1.1); }
+/* A surveillance tell: a warm amber ember near the top-right of the
+   hero, hinting that not everything is nominal. Near-invisible at
+   rest — if anyone notices it consciously, it is too strong. */
+.orb-4 {
+  width: 280px;
+  height: 280px;
+  top: 8%;
+  right: 6%;
+  background: var(--status-warning);
+  opacity: 0.06;
+  filter: blur(110px);
+  animation-delay: -18s;
 }
 
 /* ================================================================
-   10. LAYOUT PRIMITIVES
+   12. PANEL — the single glass primitive
+   Every glass card on the site starts here; everything else
+   composes from this. Three weights (soft / default / strong) and
+   one interactive behaviour. A 1px inset highlight sits on top of
+   the drop shadow so the edge catches light like a pane of glass.
+   ================================================================ */
+.panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-hairline), var(--shadow-panel);
+}
+
+.panel--strong {
+  background: var(--glass-bg-strong);
+  border-color: var(--glass-border-strong);
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-hairline), var(--shadow-panel-lg);
+}
+
+.panel--soft {
+  background: var(--glass-bg-soft);
+  -webkit-backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur-soft)) saturate(var(--glass-saturate));
+}
+
+.panel--interactive {
+  transition: background var(--duration-base) var(--ease-out-expo),
+              border-color var(--duration-base) var(--ease-out-expo),
+              box-shadow var(--duration-base) var(--ease-out-expo);
+}
+
+.panel--interactive:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-strong);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Without backdrop-filter, translucent glass turns muddy over busy
+   backgrounds — fall back to the heavier tint so text stays legible. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .panel,
+  .panel--soft {
+    background: var(--glass-bg-strong);
+  }
+}
+
+/* ================================================================
+   13. HAIRLINE
+   A 1px rule that fades out at both ends — divides sections
+   without the bluntness of a full <hr>.
+   ================================================================ */
+.hairline {
+  display: block;
+  width: 100%;
+  height: 1px;
+  border: 0;
+  background: linear-gradient(90deg, transparent, var(--border-cyan), transparent);
+  opacity: 0.4;
+}
+
+/* ================================================================
+   14. EXPERIENCE RAIL
+   The visual primitives of the monitor log: a hairline, and dots
+   that stay quiet until their entry scrolls into focus — then one
+   dot, and only one, goes cyan, grows and breathes.
+   Positioning is handled by the component stylesheet; base only
+   defines how these things look.
+   ================================================================ */
+.rail {
+  position: relative;
+}
+
+.rail__line {
+  display: block;
+  width: var(--rail-line-width);
+  background: var(--rail-line-color);
+  transition: background var(--duration-slow) var(--ease-out-expo);
+}
+
+.rail__line--active {
+  background: var(--rail-line-color-active);
+}
+
+.rail__dot {
+  display: block;
+  flex: none;
+  width: var(--rail-dot-size);
+  height: var(--rail-dot-size);
+  border-radius: var(--radius-full);
+  background: var(--rail-dot-color);
+  transition: width var(--duration-base) var(--ease-out-expo),
+              height var(--duration-base) var(--ease-out-expo),
+              background-color var(--duration-base) var(--ease-out-expo),
+              box-shadow var(--duration-base) var(--ease-out-expo);
+}
+
+.rail__dot--active {
+  width: var(--rail-dot-size-active);
+  height: var(--rail-dot-size-active);
+  background: var(--rail-dot-color-active);
+  box-shadow: var(--rail-dot-glow-active);
+  animation: rail-pulse var(--rail-pulse-duration) ease-in-out infinite;
+}
+
+/* ================================================================
+   15. NETWORK TOPOLOGY
+   Visual primitives for the live network map — a slowly turning
+   sphere of camera endpoints around the operator console. Base
+   defines how a node, a link and the core LOOK; where they sit and
+   how the sphere rotates is JS / R3F territory.
+
+   Silence at rest: idle nodes are dim dots that breathe a faint
+   glow, links are hairlines you find only when you look. Cyan
+   brightens for the node under watch, green confirms online, and
+   red — the only thing allowed to be loud — marks signal lost.
+
+   Nodes animate box-shadow only, never transform, so the
+   positioning script owns transform outright. Each state sets its
+   own resting and peak glow through --node-glow-rest / -peak.
+   JS may set --node-depth (from --topo-node-opacity-far up to 1)
+   to fade the far side of the sphere.
+   ================================================================ */
+.topo {
+  position: relative;
+  overflow: hidden;
+}
+
+.topo__node {
+  position: absolute;
+  width: var(--topo-node-size);
+  height: var(--topo-node-size);
+  border-radius: var(--radius-full);
+  background: var(--topo-node-color);
+  opacity: var(--node-depth, 1);
+  --node-glow-rest: 0 0 0 0 transparent;
+  --node-glow-peak: var(--topo-glow-sm);
+  animation: topo-pulse var(--topo-pulse-duration) ease-in-out infinite;
+  transition: background-color var(--duration-slow) var(--ease-out-expo);
+}
+
+.topo__node--active {
+  width: var(--topo-node-size-lg);
+  height: var(--topo-node-size-lg);
+  background: var(--topo-node-color-active);
+  --node-glow-rest: var(--topo-glow-md);
+  --node-glow-peak: var(--topo-glow-lg);
+  box-shadow: var(--topo-glow-md);
+}
+
+.topo__node--online {
+  background: var(--topo-node-color-online);
+  --node-glow-peak: var(--topo-glow-online);
+}
+
+/* Alert — signal lost. The same pulse, at well under half the
+   period: the one place the system raises its voice. */
+.topo__node--alert {
+  background: var(--topo-node-color-alert);
+  --node-glow-peak: var(--topo-glow-alert);
+  animation-duration: calc(var(--topo-pulse-duration) * 0.4);
+}
+
+/* Links work as an HTML element (a 1px bar) or as an SVG
+   line / path — the same class carries both sets of properties. */
+.topo__link {
+  height: 1px;
+  background: var(--topo-link-color);
+  stroke: var(--topo-link-color);
+  stroke-width: 1px;
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+/* An active link carries data: bright dashes travel along a faint
+   base. One dash period is 14px in both renderings so the flow
+   keyframes serve HTML and SVG alike. */
+.topo__link--active {
+  background-color: var(--topo-link-color);
+  background-image: linear-gradient(
+    90deg,
+    var(--topo-link-color-active) 0 50%,
+    transparent 50% 100%
+  );
+  background-size: 14px 1px;
+  stroke: var(--topo-link-color-active);
+  stroke-dasharray: 6 8;
+  animation: topo-link-flow calc(var(--topo-pulse-duration) * 0.75) linear infinite;
+}
+
+/* The operator console — white-hot core, cyan halo. */
+.topo__core {
+  position: absolute;
+  width: var(--topo-core-size);
+  height: var(--topo-core-size);
+  border-radius: var(--radius-full);
+  background: var(--topo-core-color);
+  box-shadow: 0 0 0 1px var(--topo-core-halo), var(--topo-glow-lg);
+}
+
+/* ================================================================
+   16. CAREER FOOTPRINT
+   Deployment sites on the map / globe. A site is a small marker
+   whose color reads as intensity of monitoring coverage — dormant
+   by default, climbing the four-stop cyan ramp with each modifier.
+   An active site breathes with the same glow weight the topology
+   uses; no glow tokens are invented here.
+   ================================================================ */
+.footprint {
+  position: relative;
+}
+
+.footprint__site {
+  display: block;
+  width: var(--topo-node-size-lg);
+  height: var(--topo-node-size-lg);
+  border-radius: var(--radius-full);
+  background: var(--footprint-0);
+  transition: background-color var(--duration-slow) var(--ease-out-expo);
+}
+
+.footprint__site--1 { background: var(--footprint-1); }
+.footprint__site--2 { background: var(--footprint-2); }
+.footprint__site--3 { background: var(--footprint-3); }
+
+.footprint__site--active {
+  animation: footprint-pulse var(--topo-pulse-duration) ease-in-out infinite;
+}
+
+/* ================================================================
+   17. LAYOUT PRIMITIVES
    Container grid, screen-reader-only utilities, and the skip link.
    ================================================================ */
 .container {
@@ -532,8 +991,11 @@ html {
 }
 
 /* ================================================================
-   11. REDUCED MOTION
-   Kill motion, hide decorative atmosphere, honor the user.
+   18. REDUCED MOTION
+   Kill motion, hide decorative atmosphere, honor the user. Every
+   looping instrument is stilled explicitly: nodes stop pulsing,
+   active links stop flowing, the terminal cursor holds steady,
+   and interactive panels stop transitioning.
    ================================================================ */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -552,11 +1014,85 @@ html {
   .cursor-spotlight {
     display: none;
   }
+
+  .topo__node,
+  .footprint__site--active,
+  .rail__dot--active,
+  .terminal__cursor,
+  .scrollbar-live::-webkit-scrollbar-thumb {
+    animation: none;
+  }
+
+  .topo__link--active {
+    animation: none;
+  }
+
+  .panel--interactive {
+    transition: none;
+  }
 }
 
 /* ================================================================
-   12. PRINT
-   Plain black on white. No atmosphere, no overlays.
+   19. FORCED COLORS
+   Windows High Contrast and friends replace our palette with the
+   user's. Glass, glow and gradients can't survive that, so
+   surfaces become plain bordered boxes, the instruments get a
+   system-colored outline, and every purely atmospheric layer
+   is removed.
+   ================================================================ */
+@media (forced-colors: active) {
+  .panel,
+  .readout,
+  .rail__dot,
+  .topo__node {
+    border: 1px solid CanvasText;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .topo__core,
+  .footprint__site {
+    border: 1px solid CanvasText;
+  }
+
+  .rail__dot--active {
+    border-color: Highlight;
+  }
+
+  .rail__line {
+    width: 0;
+    background: none;
+    border-left: var(--rail-line-width) solid CanvasText;
+  }
+
+  .hairline {
+    background: none;
+    border-top: 1px solid CanvasText;
+    opacity: 1;
+  }
+
+  .terminal__cursor {
+    forced-color-adjust: none;
+    background: CanvasText;
+  }
+
+  .scanline,
+  .ambient-orb,
+  .cursor-spotlight,
+  .hud-grid-overlay,
+  .topo__link,
+  body::before,
+  body::after,
+  html::after {
+    display: none;
+  }
+}
+
+/* ================================================================
+   20. PRINT
+   Plain black on white. No atmosphere, no overlays, and the
+   instruments render flat and monochrome-safe: no glow, no
+   gradient, no backdrop-filter, no motion.
    ================================================================ */
 @media print {
   body {
@@ -566,10 +1102,117 @@ html {
 
   body::before,
   body::after,
+  html::after,
   .hud-grid-overlay,
   .scanline,
   .ambient-orb,
-  .cursor-spotlight {
+  .cursor-spotlight,
+  .topo__link,
+  .terminal__cursor {
     display: none !important;
   }
+
+  .panel,
+  .terminal,
+  .readout,
+  .rail,
+  .topo,
+  .footprint {
+    background: none !important;
+    background-image: none !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    animation: none !important;
+  }
+
+  .panel,
+  .readout {
+    border-color: #000 !important;
+  }
+
+  .terminal *,
+  .readout *,
+  .rail *,
+  .topo *,
+  .footprint * {
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    animation: none !important;
+  }
+
+  .rail__dot,
+  .rail__line,
+  .topo__node,
+  .topo__core,
+  .footprint__site {
+    background: #000 !important;
+  }
+
+  .hairline {
+    background: #000 !important;
+    opacity: 1;
+  }
+}
+
+/* ================================================================
+   21. KEYFRAMES
+   All motion definitions in one place. The rule: nothing linear
+   unless it is a continuous loop (scanlines, the link flow);
+   everything else eases, slowly.
+   ================================================================ */
+@keyframes scanMove {
+  0%   { top: -2%;  opacity: 0; }
+  8%   { opacity: var(--scanline-opacity); }
+  92%  { opacity: var(--scanline-opacity); }
+  100% { top: 102%; opacity: 0; }
+}
+
+@keyframes scanMoveUp {
+  0%   { transform: translateY(0);      opacity: 0; }
+  10%  { opacity: calc(var(--scanline-opacity) * 0.5); }
+  90%  { opacity: calc(var(--scanline-opacity) * 0.5); }
+  100% { transform: translateY(-102vh); opacity: 0; }
+}
+
+@keyframes floatOrb {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  100% { transform: translate3d(60px, 40px, 0) scale(1.1); }
+}
+
+/* Cursor blink — a hard on/off, not a fade. Paired with step-end. */
+@keyframes terminal-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+/* Node pulse — a breath of glow, driven per-state by
+   --node-glow-rest and --node-glow-peak. Box-shadow only, so the
+   positioning script keeps sole ownership of transform. */
+@keyframes topo-pulse {
+  0%, 100% { box-shadow: var(--node-glow-rest, 0 0 0 0 transparent); }
+  50%      { box-shadow: var(--node-glow-peak, var(--topo-glow-sm)); }
+}
+
+/* Link flow — one dash period (14px) per cycle. Moves the
+   dashes along both an HTML bar and an SVG stroke. */
+@keyframes topo-link-flow {
+  to {
+    stroke-dashoffset: -14;
+    background-position: 14px 0;
+  }
+}
+
+@keyframes footprint-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50%      { box-shadow: var(--topo-glow-md); }
+}
+
+/* Active rail dot — the glow breathes between medium and small. */
+@keyframes rail-pulse {
+  0%, 100% { box-shadow: var(--rail-dot-glow-active); }
+  50%      { box-shadow: var(--glow-cyan-sm); }
 }
