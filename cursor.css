@@ -5,14 +5,74 @@
    Four quiet layers instead of one busy one: a precise dot, a
    restrained ring, a soft trailing glow for depth, and a small
    mono label that surfaces context on hover ("VIEW", "OPEN").
-   No perpetual spin — the reticle only moves when you do.
+   The reticle only moves when you do.
+
+   Division of labour: JS owns POSITION (top / left, lerped per
+   layer for depth). CSS owns APPEARANCE. Nothing here animates
+   position, and no layer transitions top or left.
+
+   State classes, all toggled on <body> by script.js:
+     (none)            idle      system at rest
+     cursor-hover      armed     any interactive element
+     cursor-lock       lock      primary CTAs only
+     cursor-scanning   scanning  topology nodes, footprint markers
+     cursor-text       text      over paragraphs / inputs
+     cursor-active     pressed   mouse down
+     cursor-boot       boot      terminal boot sequence
+     cursor-idle-dim   dimmed    ~4s without movement
+     cursor-hidden     hidden    pointer left the viewport
+
+   Scale, spin and pulse use the individual `scale` property so the
+   `transform` on each layer stays what it is: pure centering.
    ================================================================ */
 
 /* ================================================================
-   1. CORE POSITIONING
+   1. REGISTERED PROPERTIES
+   Typed custom properties let the browser interpolate values that
+   plain CSS cannot animate — the staggered bracket reveal and the
+   crosshair opening up. In a browser without @property support
+   the same values simply snap; nothing breaks.
+   ================================================================ */
+@property --bracket-a {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --bracket-b {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --bracket-w {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 1.5px;
+}
+
+@property --xh-gap {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 5px;
+}
+
+@property --xh-color {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #00e5ff;
+}
+
+/* ================================================================
+   2. CORE POSITIONING
    Positioned via JS (top/left, lerped per-layer for depth).
-   Transform handles centering only, so animated states can add
-   scale/rotation on top without a JS rewrite.
+   Transform handles centering only, so animated states can layer
+   scale on top without a JS rewrite.
+
+   Containment keeps each layer's repaints from touching the page.
+   The ring takes layout + style containment only: paint
+   containment clips to the rounded padding box, which would cut
+   off the corner brackets that sit outside the circle.
    ================================================================ */
 .cursor-dot,
 .cursor-ring,
@@ -25,6 +85,11 @@
   z-index: var(--z-cursor);
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  contain: layout style paint;
+}
+
+.cursor-ring {
+  contain: layout style;
 }
 
 .cursor-dot,
@@ -32,138 +97,176 @@
 .cursor-glow {
   border-radius: var(--radius-full);
   transform: translate3d(-50%, -50%, 0);
-  will-change: transform, width, height, box-shadow;
 }
 
 /* ================================================================
-   2. AMBIENT GLOW — furthest layer, most delay, gives depth
+   3. AMBIENT GLOW — furthest layer, most delay, gives depth
+   Sized off the reticle so it scales with it across breakpoints.
+   The lag comes from JS lerp; the CSS never fights it with a
+   positional transition. Screen blending lets the glow light the
+   obsidian instead of sitting on it. The glow transitions opacity
+   and scale only — no shadows, no filters.
+
+   The breathing loop animates scale alone, so opacity stays free
+   for the states (hover, boot, hidden) to control.
    ================================================================ */
 .cursor-glow {
-  width: 140px;
-  height: 140px;
+  width: calc(var(--cursor-size) * 5.4);
+  height: calc(var(--cursor-size) * 5.4);
   background: radial-gradient(circle, var(--spotlight-color) 0%, transparent 72%);
   filter: blur(6px);
-  opacity: 0.7;
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  will-change: transform, opacity;
   animation: glowBreathe 4.5s var(--ease-smooth) infinite;
-}
-
-@keyframes glowBreathe {
-  0%, 100% {
-    transform: translate3d(-50%, -50%, 0) scale(1);
-    opacity: 0.55;
-  }
-  50% {
-    transform: translate3d(-50%, -50%, 0) scale(1.18);
-    opacity: 0.85;
-  }
+  transition: opacity var(--duration-slow) var(--ease-smooth),
+              transform var(--duration-slow) var(--ease-out-expo);
 }
 
 /* ================================================================
-   3. CENTER DOT — precision point of aim, zero lag
+   4. CENTER DOT — precision point of aim, zero lag
+   One of only two layers allowed to transition a shadow.
    ================================================================ */
 .cursor-dot {
   width: var(--cursor-dot);
   height: var(--cursor-dot);
-  background: var(--accent-cyan);
+  background: var(--cursor-color);
   box-shadow: var(--glow-cyan-sm);
-  transition: background-color var(--duration-fast) var(--ease-smooth),
-              box-shadow var(--duration-fast) var(--ease-smooth),
-              width var(--duration-fast) var(--ease-smooth),
-              height var(--duration-fast) var(--ease-smooth);
-}
-
-/* ================================================================
-   4. OUTER RING — restrained by default, brackets only on lock-on
-   ================================================================ */
-.cursor-ring {
-  width: var(--cursor-size);
-  height: var(--cursor-size);
-  border: var(--cursor-ring-width) solid var(--border-cyan-strong);
-  box-shadow: var(--glow-cyan-sm);
-  transition: width var(--duration-base) var(--ease-bounce),
-              height var(--duration-base) var(--ease-bounce),
-              border-color var(--duration-base) var(--ease-smooth),
-              border-radius var(--duration-base) var(--ease-smooth),
-              background-color var(--duration-base) var(--ease-smooth),
-              box-shadow var(--duration-base) var(--ease-smooth),
+  will-change: transform;
+  transition: width var(--duration-fast) var(--ease-smooth),
+              height var(--duration-fast) var(--ease-smooth),
+              background-color var(--duration-base) var(--ease-smooth) var(--duration-fast),
+              box-shadow var(--duration-base) var(--ease-smooth) var(--duration-fast),
               opacity var(--duration-base) var(--ease-smooth);
 }
 
-/* Corner brackets — invisible at idle, revealed only on target lock */
+/* ================================================================
+   5. RETICLE RING — IDLE MODE
+   Idle = system at rest. Armed = target acquired. The transition
+   between them is the point.
+
+   At rest the ring reads as optics rather than a circle: an outer
+   hairline, a fainter half-width ring inset 3px inside it, and four
+   crosshair ticks that run from a clear centre out to that inner
+   ring — and no further. Nothing is filled, nothing is bracketed.
+
+   Colour is carried by two independent layers so that cyan and
+   green are never on screen together: the BORDER is the cyan ring,
+   the OUTLINE (drawn exactly over the border) is the green one.
+   Idle → armed: cyan leaves in --duration-fast, then green arrives
+   over --duration-base. Armed → idle runs the same sequence back.
+   Each destination state declares its own transition list, which
+   is what orders the two stages.
+   ================================================================ */
+.cursor-ring {
+  --ring-w: var(--cursor-ring-width);
+
+  width: var(--cursor-size);
+  height: var(--cursor-size);
+  border: var(--ring-w) solid var(--border-cyan-strong);
+  outline: var(--ring-w) solid transparent;
+  outline-offset: calc(var(--ring-w) * -1);
+  background-color: transparent;
+  box-shadow: var(--glow-cyan-sm);
+  will-change: transform, width, height;
+
+  /* Returning to idle: green leaves first, then cyan comes back */
+  transition: width var(--duration-base) var(--ease-bounce),
+              height var(--duration-base) var(--ease-bounce),
+              border-width var(--cursor-transition),
+              outline-width var(--cursor-transition),
+              outline-offset var(--cursor-transition),
+              border-radius var(--duration-base) var(--ease-smooth),
+              outline-color var(--duration-fast) var(--ease-smooth),
+              background-color var(--duration-fast) var(--ease-smooth),
+              border-color var(--duration-base) var(--ease-smooth) var(--duration-fast),
+              box-shadow var(--duration-base) var(--ease-smooth) var(--duration-fast),
+              opacity var(--duration-base) var(--ease-smooth);
+}
+
+/* Corner brackets — zero-length at rest, drawn only on target lock.
+   Eight arms, 12px × 1.5px, each pair meeting at its corner.
+   --bracket-a drives the top-left and bottom-right pair,
+   --bracket-b drives top-right and bottom-left. Idle retracts them
+   in a single quick beat. */
 .cursor-ring::before {
   content: "";
   position: absolute;
   inset: 0;
-  opacity: 0;
-  transition: opacity var(--duration-base) var(--ease-smooth);
+  --bracket-a: 0;
+  --bracket-b: 0;
+  --bracket-len: 12px;
+  --bracket-color: var(--cursor-color-alt);
   background:
-    linear-gradient(var(--accent-green), var(--accent-green)) top left / 9px 1.5px no-repeat,
-    linear-gradient(var(--accent-green), var(--accent-green)) top left / 1.5px 9px no-repeat,
-    linear-gradient(var(--accent-green), var(--accent-green)) top right / 9px 1.5px no-repeat,
-    linear-gradient(var(--accent-green), var(--accent-green)) top right / 1.5px 9px no-repeat,
-    linear-gradient(var(--accent-green), var(--accent-green)) bottom left / 9px 1.5px no-repeat,
-    linear-gradient(var(--accent-green), var(--accent-green)) bottom left / 1.5px 9px no-repeat,
-    linear-gradient(var(--accent-green), var(--accent-green)) bottom right / 9px 1.5px no-repeat,
-    linear-gradient(var(--accent-green), var(--accent-green)) bottom right / 1.5px 9px no-repeat;
+    linear-gradient(var(--bracket-color), var(--bracket-color)) top left / calc(var(--bracket-len) * var(--bracket-a)) var(--bracket-w) no-repeat,
+    linear-gradient(var(--bracket-color), var(--bracket-color)) top left / var(--bracket-w) calc(var(--bracket-len) * var(--bracket-a)) no-repeat,
+    linear-gradient(var(--bracket-color), var(--bracket-color)) top right / calc(var(--bracket-len) * var(--bracket-b)) var(--bracket-w) no-repeat,
+    linear-gradient(var(--bracket-color), var(--bracket-color)) top right / var(--bracket-w) calc(var(--bracket-len) * var(--bracket-b)) no-repeat,
+    linear-gradient(var(--bracket-color), var(--bracket-color)) bottom right / calc(var(--bracket-len) * var(--bracket-a)) var(--bracket-w) no-repeat,
+    linear-gradient(var(--bracket-color), var(--bracket-color)) bottom right / var(--bracket-w) calc(var(--bracket-len) * var(--bracket-a)) no-repeat,
+    linear-gradient(var(--bracket-color), var(--bracket-color)) bottom left / calc(var(--bracket-len) * var(--bracket-b)) var(--bracket-w) no-repeat,
+    linear-gradient(var(--bracket-color), var(--bracket-color)) bottom left / var(--bracket-w) calc(var(--bracket-len) * var(--bracket-b)) no-repeat;
+  transition: --bracket-a var(--duration-micro) var(--ease-sharp),
+              --bracket-b var(--duration-micro) var(--ease-sharp),
+              --bracket-w var(--duration-fast) var(--ease-smooth);
 }
 
-/* Fine crosshair hairline through the ring's center — always present,
-   very faint, reads as precision rather than decoration */
+/* The optics layer: an inner ring at half the ring width, inset 3px,
+   and four crosshair ticks that run from a clear centre gap out to
+   that inner ring's edge. Faint by design — it registers as
+   precision, not decoration. */
 .cursor-ring::after {
   content: "";
   position: absolute;
-  inset: 0;
-  opacity: 0.3;
+  inset: 3px;
+  border-radius: var(--radius-full);
+  --xh-color: var(--cursor-color);
+  --xh-gap: 5px;
+  border: calc(var(--cursor-ring-width) * 0.5) solid var(--xh-color);
+  opacity: 0.35;
+  background:
+    linear-gradient(90deg,
+      var(--xh-color) 0 calc(50% - var(--xh-gap)),
+      transparent calc(50% - var(--xh-gap)) calc(50% + var(--xh-gap)),
+      var(--xh-color) calc(50% + var(--xh-gap)) 100%
+    ) center / 100% 1px no-repeat,
+    linear-gradient(0deg,
+      var(--xh-color) 0 calc(50% - var(--xh-gap)),
+      transparent calc(50% - var(--xh-gap)) calc(50% + var(--xh-gap)),
+      var(--xh-color) calc(50% + var(--xh-gap)) 100%
+    ) center / 1px 100% no-repeat;
   transition: opacity var(--duration-base) var(--ease-smooth),
-              background var(--duration-base) var(--ease-smooth);
-  background:
-    linear-gradient(90deg, transparent 46%, var(--accent-cyan) 46%, var(--accent-cyan) 54%, transparent 54%) center / 100% 1px no-repeat,
-    linear-gradient(0deg, transparent 46%, var(--accent-cyan) 46%, var(--accent-cyan) 54%, transparent 54%) center / 1px 100% no-repeat;
+              inset var(--duration-slow) var(--ease-out-expo),
+              --xh-gap var(--duration-slow) var(--ease-out-expo),
+              --xh-color var(--duration-base) var(--ease-smooth) var(--duration-fast);
 }
 
 /* ================================================================
-   5. HOVER STATE — target acquired / lock-on
-   Toggled via body.cursor-hover in JS
-   ================================================================ */
-body.cursor-hover .cursor-dot {
-  width: calc(var(--cursor-dot) - 1px);
-  background: var(--accent-green);
-  box-shadow: var(--glow-green-sm);
-}
+   6. LABEL — small context tag next to the reticle
+   Content + visibility set via JS (data-cursor-text on the target).
+   It surfaces in every state that has something to say: armed,
+   lock, scanning and boot.
 
-body.cursor-hover .cursor-ring {
-  width: var(--cursor-size-lg);
-  height: var(--cursor-size-lg);
-  border-color: var(--accent-green);
-  background: var(--accent-green-soft);
-  box-shadow: var(--glow-green-md);
-}
+   A 4px caret sits at the leading edge, pointing back at the
+   reticle, so the tag reads as attached to the cursor rather than
+   floating beside it. The caret lives inside the label's padding
+   because the label is paint-contained.
 
-body.cursor-hover .cursor-ring::before {
-  opacity: 1;
-}
-
-body.cursor-hover .cursor-ring::after {
-  opacity: 0.55;
-  background:
-    linear-gradient(90deg, transparent 38%, var(--accent-green) 38%, var(--accent-green) 62%, transparent 62%) center / 100% 1px no-repeat,
-    linear-gradient(0deg, transparent 38%, var(--accent-green) 38%, var(--accent-green) 62%, transparent 62%) center / 1px 100% no-repeat;
-}
-
-body.cursor-hover .cursor-glow {
-  opacity: 0.5;
-  filter: blur(4px);
-}
-
-/* ================================================================
-   6. LABEL — small context tag next to the reticle on hover
-   Content + visibility set via JS (data-cursor-text on the target)
+   The label never overlaps the reticle: its offset is always at
+   least half the armed ring plus 8px on both axes. It carries no
+   will-change — it does not move on every frame — and it does not
+   transition a shadow; a glow appears with the state.
    ================================================================ */
 .cursor-label {
-  transform: translate(16px, 16px) scale(0.9);
-  padding: 0.3rem 0.7rem;
+  --label-offset: calc(var(--cursor-size-lg) / 2 + 8px);
+  --label-border: var(--border-cyan);
+  --label-caret: var(--accent-cyan);
+
+  transform: translate(var(--label-offset), var(--label-offset));
+  scale: 0.9;
+  padding: 0.3rem 0.7rem 0.3rem 1.15rem;
   background: var(--glass-bg-strong);
-  border: 1px solid var(--border-cyan);
+  border: 1px solid var(--label-border);
   border-radius: var(--radius-full);
   color: var(--text-cyan);
   font-family: var(--font-mono);
@@ -176,49 +279,266 @@ body.cursor-hover .cursor-glow {
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
   transition: opacity var(--duration-base) var(--ease-smooth),
-              transform var(--duration-base) var(--ease-bounce);
+              transform var(--duration-base) var(--ease-bounce),
+              scale var(--duration-base) var(--ease-bounce),
+              color var(--cursor-transition),
+              border-color var(--cursor-transition);
 }
 
-body.cursor-hover .cursor-label {
+.cursor-label::before {
+  content: "";
+  position: absolute;
+  left: 0.45rem;
+  top: 50%;
+  translate: 0 -50%;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-right: 4px solid var(--label-caret);
+}
+
+body:is(.cursor-hover, .cursor-lock, .cursor-scanning, .cursor-boot) .cursor-label {
   opacity: 1;
-  transform: translate(16px, 16px) scale(1);
+  scale: 1;
 }
 
 /* ================================================================
-   7. ACTIVE STATE — click / trigger, sharp and immediate
-   Toggled via body.cursor-active in JS
+   7. ARMED MODE — hover over any interactive element
+   Armed = target acquired. The ring opens up, the corner brackets
+   snap in, and green takes over — but only after the cyan has
+   gone. Cyan fades out over --duration-fast, green fades in over
+   --duration-base; the two are never visible together.
+
+   Brackets arrive in two beats: top-left and bottom-right first,
+   top-right and bottom-left ~60ms behind, so they snap into place
+   rather than fading up as one. The crosshair opens outward at
+   --duration-slow on the expo curve.
+
+   Lock (section 8) is built on this state and refines it, so the
+   two share these rules.
+   ================================================================ */
+body:is(.cursor-hover, .cursor-lock) .cursor-dot {
+  width: calc(var(--cursor-dot) - 1px);
+  background: var(--cursor-color-alt);
+  box-shadow: var(--glow-green-sm);
+}
+
+body:is(.cursor-hover, .cursor-lock) .cursor-ring {
+  width: var(--cursor-size-lg);
+  height: var(--cursor-size-lg);
+  border-color: transparent;
+  outline-color: var(--cursor-color-alt);
+  background-color: var(--accent-green-soft);
+  box-shadow: var(--glow-green-md);
+
+  /* Going armed: cyan leaves first, then green arrives */
+  transition: width var(--duration-base) var(--ease-bounce),
+              height var(--duration-base) var(--ease-bounce),
+              border-width var(--cursor-transition),
+              outline-width var(--cursor-transition),
+              outline-offset var(--cursor-transition),
+              border-radius var(--duration-base) var(--ease-smooth),
+              border-color var(--duration-fast) var(--ease-smooth),
+              outline-color var(--duration-base) var(--ease-smooth) var(--duration-fast),
+              background-color var(--duration-base) var(--ease-smooth) var(--duration-fast),
+              box-shadow var(--duration-base) var(--ease-smooth) var(--duration-fast),
+              opacity var(--duration-base) var(--ease-smooth);
+}
+
+body:is(.cursor-hover, .cursor-lock) .cursor-ring::before {
+  --bracket-a: 1;
+  --bracket-b: 1;
+  transition: --bracket-a var(--duration-fast) var(--ease-out-expo) var(--duration-fast),
+              --bracket-b var(--duration-fast) var(--ease-out-expo) calc(var(--duration-fast) + 60ms),
+              --bracket-w var(--duration-fast) var(--ease-out-expo);
+}
+
+body:is(.cursor-hover, .cursor-lock) .cursor-ring::after {
+  --xh-color: var(--cursor-color-alt);
+  --xh-gap: 8px;
+  inset: 1px;
+  opacity: 0.6;
+}
+
+body:is(.cursor-hover, .cursor-lock) .cursor-glow {
+  opacity: 0.35;
+  filter: blur(4px);
+}
+
+body.cursor-hover .cursor-label {
+  --label-border: var(--border-green);
+  --label-caret: var(--accent-green);
+}
+
+/* ================================================================
+   8. LOCK — primary call-to-action
+   Lock = the operator has committed to an action. Reserved for
+   primary CTAs only — never for secondary buttons.
+
+   Everything armed does, committed harder: the ring grows by
+   --cursor-scale-lock, its line steps up to --cursor-ring-width-lock,
+   the brackets thicken to 2px, and the dot gains a small inner
+   ring so it reads as locked on. The label goes green, heavier and
+   a half-step larger, and steps out to clear the bigger ring.
+   ================================================================ */
+body.cursor-lock .cursor-dot {
+  box-shadow:
+    0 0 0 2px var(--bg-base),
+    0 0 0 3px var(--cursor-color-lock),
+    var(--glow-green-sm);
+}
+
+body.cursor-lock .cursor-ring {
+  --ring-w: var(--cursor-ring-width-lock);
+  width: calc(var(--cursor-size-lg) * var(--cursor-scale-lock));
+  height: calc(var(--cursor-size-lg) * var(--cursor-scale-lock));
+  outline-color: var(--cursor-color-lock);
+}
+
+body.cursor-lock .cursor-ring::before {
+  --bracket-w: 2px;
+  --bracket-color: var(--cursor-color-lock);
+}
+
+body.cursor-lock .cursor-label {
+  --label-offset: calc(var(--cursor-size-lg) * var(--cursor-scale-lock) / 2 + 8px);
+  --label-border: var(--border-green);
+  --label-caret: var(--accent-green);
+  color: var(--text-green);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  box-shadow: var(--glow-green-sm);
+}
+
+/* ================================================================
+   9. SCANNING — reading a node
+   Scanning = the operator is reading a node. The only perpetual
+   motion in the entire cursor system — reserved for topology and
+   footprint interactions.
+
+   A thin arc, bright at its head and fading behind it, travels
+   once around the ring every 3.2 seconds — linear, because it is
+   a continuous loop. The dot breathes on the topology's own pulse
+   period, and the label turns cyan and picks up a soft glow.
+   The state deliberately overrides armed and lock: a node is
+   something to read, not something to press.
+   ================================================================ */
+body.cursor-scanning .cursor-dot {
+  width: var(--cursor-dot);
+  background: var(--cursor-color);
+  box-shadow: var(--glow-cyan-sm);
+  animation: dotPulse var(--topo-pulse-duration, 2600ms) ease-in-out infinite;
+}
+
+body.cursor-scanning .cursor-ring {
+  width: calc(var(--cursor-size) * 1.6);
+  height: calc(var(--cursor-size) * 1.6);
+  border-color: var(--border-cyan-strong);
+  outline-color: transparent;
+  background-color: transparent;
+  box-shadow: var(--glow-cyan-sm);
+}
+
+body.cursor-scanning .cursor-ring::before {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 235deg,
+    var(--accent-cyan) 345deg,
+    transparent 345deg 360deg
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
+  animation: scanArc 3200ms linear infinite;
+  transition: none;
+}
+
+body.cursor-scanning .cursor-ring::after {
+  --xh-color: var(--cursor-color);
+  --xh-gap: 5px;
+  inset: 3px;
+  opacity: 0.35;
+}
+
+body.cursor-scanning .cursor-glow {
+  opacity: 0.5;
+  filter: blur(6px);
+}
+
+body.cursor-scanning .cursor-label {
+  --label-offset: calc(var(--cursor-size-lg) / 2 + 8px);
+  --label-border: var(--border-cyan);
+  --label-caret: var(--accent-cyan);
+  color: var(--accent-cyan);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-medium);
+  box-shadow: var(--glow-cyan-sm);
+}
+
+/* ================================================================
+   10. ACTIVE — click / trigger pull
+   Click = trigger pull. The reticle snaps, the dot fires, the glow
+   dissipates.
+
+   The ring contracts sharply. The dot flashes to 2× and settles
+   back on the bounce curve. The glow goes out as a shockwave —
+   1.4× larger and fainter, expanding rather than flashing.
    ================================================================ */
 body.cursor-active .cursor-ring {
   width: calc(var(--cursor-size) * 0.7);
   height: calc(var(--cursor-size) * 0.7);
   box-shadow: var(--glow-cyan-md);
-  transition-duration: var(--duration-fast);
+  transition: width var(--duration-fast) var(--ease-smooth),
+              height var(--duration-fast) var(--ease-smooth),
+              border-color var(--duration-fast) var(--ease-smooth),
+              outline-color var(--duration-fast) var(--ease-smooth),
+              background-color var(--duration-fast) var(--ease-smooth),
+              box-shadow var(--duration-fast) var(--ease-smooth),
+              opacity var(--duration-base) var(--ease-smooth);
 }
 
-body.cursor-active .cursor-dot {
-  transform: translate3d(-50%, -50%, 0) scale(1.5);
-}
-
-body.cursor-active.cursor-hover .cursor-ring {
+body.cursor-active:is(.cursor-hover, .cursor-lock) .cursor-ring {
   width: calc(var(--cursor-size-lg) * 0.75);
   height: calc(var(--cursor-size-lg) * 0.75);
   box-shadow: var(--glow-green-md);
 }
 
+body.cursor-active.cursor-lock .cursor-ring {
+  width: calc(var(--cursor-size-lg) * var(--cursor-scale-lock) * 0.75);
+  height: calc(var(--cursor-size-lg) * var(--cursor-scale-lock) * 0.75);
+}
+
+body.cursor-active .cursor-dot {
+  animation: triggerPull var(--duration-base) var(--ease-bounce) 1;
+}
+
+body.cursor-active .cursor-glow {
+  transform: translate3d(-50%, -50%, 0) scale(1.4);
+  opacity: 0.2;
+}
+
 /* ================================================================
-   8. TEXT STATE — over paragraphs / inputs, becomes an I-beam
-   Toggled via body.cursor-text in JS
+   11. TEXT — over paragraphs and inputs, becomes an I-beam
+   Toggled via body.cursor-text in JS. The optics layer, the
+   brackets and every trace of green fall away so only a fine
+   cyan beam remains.
    ================================================================ */
 body.cursor-text .cursor-ring {
+  --ring-w: var(--cursor-ring-width);
   width: var(--cursor-ring-width);
   height: 30px;
   border-radius: var(--radius-xs);
   border-color: var(--accent-cyan);
-  background: var(--accent-cyan);
+  outline-color: transparent;
+  background-color: var(--accent-cyan);
   box-shadow: var(--glow-cyan-sm);
 }
 
-body.cursor-text .cursor-ring::before,
+body.cursor-text .cursor-ring::before {
+  --bracket-a: 0;
+  --bracket-b: 0;
+}
+
 body.cursor-text .cursor-ring::after {
   opacity: 0;
 }
@@ -229,8 +549,69 @@ body.cursor-text .cursor-glow {
 }
 
 /* ================================================================
-   9. HIDDEN STATE — cursor left the viewport
-   Toggled via body.cursor-hidden in JS
+   12. BOOT — the terminal is the subject
+   During the boot ritual the reticle hides — the terminal is the
+   subject, not the cursor.
+
+   Dot, ring and glow drop to nothing. The label is forced visible
+   and, if JS leaves it empty, reads SYS.INIT. It is set in the
+   terminal's own green and blinks at the terminal cursor's cadence
+   — a blink of colour, not of position or size.
+   ================================================================ */
+body.cursor-boot .cursor-dot,
+body.cursor-boot .cursor-ring,
+body.cursor-boot .cursor-glow {
+  opacity: 0;
+}
+
+body.cursor-boot .cursor-glow {
+  animation: none;
+}
+
+body.cursor-boot .cursor-label {
+  --label-offset: 16px;
+  --label-border: var(--border-green);
+  --label-caret: var(--accent-green);
+  color: var(--accent-green);
+  text-shadow: var(--terminal-text-shadow);
+  box-shadow: none;
+  animation: labelBlink var(--terminal-cursor-blink) step-end infinite;
+}
+
+body.cursor-boot .cursor-label:empty::after {
+  content: "SYS.INIT";
+}
+
+/* ================================================================
+   13. IDLE DIM — the operator is still
+   The reticle dims when the operator is still. It rewards
+   presence.
+
+   After roughly four seconds without movement, JS adds this class:
+   the reticle settles to 35% and the glow to 25%. The next move
+   removes it, and the base transitions bring everything back to
+   full over --duration-base. Boot, hidden and the I-beam's own
+   dot and glow keep their own rules.
+   ================================================================ */
+body.cursor-idle-dim:not(.cursor-boot):not(.cursor-hidden) .cursor-ring {
+  opacity: 0.35;
+  transition: opacity var(--duration-slower) var(--ease-smooth);
+}
+
+body.cursor-idle-dim:not(.cursor-boot):not(.cursor-hidden):not(.cursor-text) .cursor-dot {
+  opacity: 0.35;
+  transition: opacity var(--duration-slower) var(--ease-smooth);
+}
+
+body.cursor-idle-dim:not(.cursor-boot):not(.cursor-hidden):not(.cursor-text) .cursor-glow {
+  opacity: 0.25;
+  transition: opacity var(--duration-slower) var(--ease-smooth);
+}
+
+/* ================================================================
+   14. HIDDEN — cursor left the viewport
+   Toggled via body.cursor-hidden in JS. Last among the states,
+   so it outranks all of them, boot included.
    ================================================================ */
 body.cursor-hidden .cursor-dot,
 body.cursor-hidden .cursor-ring,
@@ -241,11 +622,48 @@ body.cursor-hidden .cursor-label {
 }
 
 /* ================================================================
-   10. FALLBACK — touch / coarse pointer
-   base.css sets cursor: none globally, so this restores the
-   native cursor for touch devices and hides the reticle layers.
+   15. KEYFRAMES
+   Every loop and one-shot in the system. Only scanArc and the
+   boot blink are perpetual; glowBreathe is the ambient exception,
+   a slow scale swell that never leaves the glow layer.
+   None moves a layer's position — that is JS's job.
    ================================================================ */
-@media (hover: none), (pointer: coarse) {
+@keyframes glowBreathe {
+  0%, 100% { scale: 1; }
+  50%      { scale: 1.18; }
+}
+
+/* The scanning arc — one full turn per 3.2s */
+@keyframes scanArc {
+  to { transform: rotate(360deg); }
+}
+
+/* The scanning dot — 1 → 1.15 → 1 */
+@keyframes dotPulse {
+  0%, 100% { scale: 1; }
+  50%      { scale: 1.15; }
+}
+
+/* Trigger pull — the dot fires to 2× and settles */
+@keyframes triggerPull {
+  0%   { scale: 1; }
+  30%  { scale: 2; }
+  100% { scale: 1; }
+}
+
+/* Boot label — the terminal cursor's cadence, a hard on/off */
+@keyframes labelBlink {
+  0%, 100% { color: var(--accent-green); }
+  50%      { color: var(--terminal-text-muted); }
+}
+
+/* ================================================================
+   16. FALLBACK — touch, coarse and hybrid pointers
+   base.css sets cursor: none globally, so this restores the native
+   cursor and hides the reticle layers. any-pointer covers stylus
+   and hybrid devices, where a coarse input may sit beside a mouse.
+   ================================================================ */
+@media (hover: none), (pointer: coarse), (any-pointer: coarse) {
   .cursor-dot,
   .cursor-ring,
   .cursor-glow,
@@ -259,17 +677,52 @@ body.cursor-hidden .cursor-label {
 }
 
 /* ================================================================
-   11. REDUCED MOTION — freeze all loops and transitions
+   17. FORCED COLORS
+   In Windows High Contrast the reticle cannot keep its palette,
+   and a custom cursor that ignores the system's is worse than none.
+   Every layer goes and the native cursor comes back.
+   ================================================================ */
+@media (forced-colors: active) {
+  .cursor-dot,
+  .cursor-ring,
+  .cursor-glow,
+  .cursor-label {
+    display: none !important;
+  }
+
+  body, a, button {
+    cursor: auto;
+  }
+}
+
+/* ================================================================
+   18. REDUCED MOTION — freeze all loops, snap all transitions
+   The breathing glow, the scanning arc, the dot pulse, the trigger
+   pull and the boot blink all stop. The click shockwave collapses
+   into an instant state change, and no layer keeps a transform
+   transition. The scanning arc stays as a static arc, so the
+   state still reads.
    ================================================================ */
 @media (prefers-reduced-motion: reduce) {
-  .cursor-glow {
-    animation: none;
+  .cursor-glow,
+  body.cursor-boot .cursor-glow,
+  body.cursor-scanning .cursor-dot,
+  body.cursor-scanning .cursor-ring::before,
+  body.cursor-active .cursor-dot,
+  body.cursor-boot .cursor-label {
+    animation: none !important;
+  }
+
+  body.cursor-active .cursor-glow {
+    transform: translate3d(-50%, -50%, 0) !important;
   }
 
   .cursor-dot,
   .cursor-ring,
   .cursor-glow,
-  .cursor-label {
-    transition: none;
+  .cursor-label,
+  .cursor-ring::before,
+  .cursor-ring::after {
+    transition: none !important;
   }
 }
