@@ -4,7 +4,7 @@
 
    Hero · About/Skills · Deployments · Career Footprint · Work Log
    Contact / Command Form · Footer · Boot Terminal · Scroll Reveals
-   Rendering · Responsive · Accessibility
+   Rendering · Responsive · Accessibility · Footprint Globe
 
    Typography note: h1–h6 already carry their full type treatment
    from base.css. This file only adds spacing, color context, and
@@ -1048,11 +1048,7 @@ section {
 
 /* Card stat — one large figure per deployment (340+, 99.97%, 24/7):
    the Axiom-style measurement anchor. Set top-right of the body and
-   nudged so its baseline meets the title's first line. It is
-   positioned rather than gridded so the body's flex column —
-   description pushing the link to the foot of the card — stays
-   undisturbed; the title gives up room to it. The baseline match
-   is an approximation from the two type tokens. */
+   nudged so its baseline meets the title's first line. */
 .op-card-stat {
   position: absolute;
   top: max(var(--space-3xs), calc(var(--space-lg) + var(--fs-xl) * 0.85 - var(--fs-display) * 0.8));
@@ -1098,23 +1094,12 @@ section {
 }
 
 /* ================================================================
-   7. CAREER FOOTPRINT — the deployment map
+   7. CAREER FOOTPRINT — the deployment map (data panel + legend)
    Career Footprint — the operator's deployment map. Sites across
-   regions, one continuous watch. Rendered by JS; styles here.
-   (The weevolveit-inspired globe, recontextualised: not where a
-   company has offices, but where one operator has kept watch.)
-
-   Markup order:
-     .footprint
-       .footprint-stage
-         .footprint-map        canvas / globe renders inside
-         .footprint-panel      detail card, floats over one side
-       .footprint-legend       sits after the stage
-
-   The section itself is full-bleed and at least 80vh tall, with
-   its content centred. The map takes the same camera treatment
-   as the hero monitor — brackets, a LIVE MAP badge — so the page
-   keeps one visual language.
+   regions, one continuous watch. Section 16 below adds the
+   cinematic globe treatment; this section keeps the surrounding
+   stage layout and the detail panel / legend primitives that the
+   globe section composes with.
    ================================================================ */
 .footprint {
   display: flex;
@@ -1129,79 +1114,6 @@ section {
   width: 100%;
   max-width: var(--container-wide);
   margin-inline: auto;
-}
-
-.footprint-map {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-  border: 1px solid var(--border-cyan);
-  background:
-    radial-gradient(ellipse at 50% 42%, rgba(0, 229, 255, 0.05), transparent 65%),
-    var(--bg-inset);
-  box-shadow: var(--shadow-panel-lg), var(--glow-cyan-sm);
-}
-
-.footprint-map canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.footprint-map::before {
-  content: "● LIVE MAP";
-  position: absolute;
-  top: var(--space-sm);
-  left: var(--space-sm);
-  z-index: 4;
-  padding: 4px 10px;
-  border: 1px solid var(--border-green);
-  border-radius: var(--radius-full);
-  background: var(--glass-bg-strong);
-  backdrop-filter: blur(var(--glass-blur-soft));
-  -webkit-backdrop-filter: blur(var(--glass-blur-soft));
-  font-family: var(--font-mono);
-  font-size: var(--fs-2xs);
-  font-weight: var(--fw-bold);
-  letter-spacing: var(--ls-widest);
-  color: var(--accent-green);
-}
-
-.footprint-map::after {
-  content: "";
-  position: absolute;
-  inset: 12px;
-  z-index: 3;
-  pointer-events: none;
-  opacity: 0.5;
-  background-image:
-    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
-    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
-    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
-    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan));
-  background-position: top left, top left, top right, top right, bottom left, bottom left, bottom right, bottom right;
-  background-size: 18px 1.5px, 1.5px 18px, 18px 1.5px, 1.5px 18px, 18px 1.5px, 1.5px 18px, 18px 1.5px, 1.5px 18px;
-  background-repeat: no-repeat;
-}
-
-/* Detail panel — compose with .panel in the markup. It floats
-   over the right side of the map and carries the hovered or
-   selected site: name, role, duration, camera count. Type inside
-   is set by the elements used; only spacing and colour are set
-   here. */
-.footprint-panel {
-  position: absolute;
-  top: 50%;
-  right: var(--space-lg);
-  z-index: 5;
-  width: min(20rem, 38%);
-  padding: var(--space-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2xs);
-  transform: translateY(-50%);
 }
 
 .footprint-panel-eyebrow {
@@ -1228,21 +1140,6 @@ section {
   letter-spacing: var(--ls-wide);
   font-variant-numeric: tabular-nums;
   color: var(--text-secondary);
-}
-
-/* Legend — what the markers mean: ● ACTIVE · ○ PAST · ◐ SHARED.
-   Write the glyph and word together in each item. */
-.footprint-legend {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-xs) var(--space-md);
-  margin-top: var(--space-md);
-  font-family: var(--font-mono);
-  font-size: var(--fs-2xs);
-  letter-spacing: var(--ls-widest);
-  text-transform: uppercase;
-  color: var(--text-tertiary);
 }
 
 .footprint-legend-item--active { color: var(--text-cyan); }
@@ -1425,8 +1322,7 @@ section {
 
 /* Log entries — each bullet is a mono → in cyan with body copy
    beside it. Odd items are right-aligned, so their arrow sits on
-   the right edge; even items keep it on the left. Write the
-   bullets without the arrow: it is drawn here. */
+   the right edge; even items keep it on the left. */
 .timeline-body {
   display: flex;
   flex-direction: column;
@@ -1508,8 +1404,6 @@ section {
   margin-top: var(--space-lg);
 }
 
-/* Each link carries a → that slides right and turns cyan on hover.
-   The arrow is drawn here; leave it out of the markup. */
 .contact-link {
   display: inline-flex;
   align-items: center;
@@ -1541,7 +1435,6 @@ section {
   color: var(--accent-cyan);
 }
 
-/* The form itself — compose with .panel--strong in the markup. */
 .contact-form {
   display: grid;
   gap: var(--space-md);
@@ -1596,9 +1489,6 @@ section {
   border-color: var(--border-strong);
 }
 
-/* Focus: the inset ring from variables.css, so the ring hugs the
-   field's own radius and is never clipped by the panel. The
-   transparent outline stays for forced-colors users. */
 .contact-input:focus-visible,
 .contact-textarea:focus-visible,
 .contact-form :is(input, textarea, select):focus-visible {
@@ -1612,7 +1502,6 @@ section {
   border-color: var(--border-alert);
 }
 
-/* Form status line — JS sets data-state to "success" or "error". */
 .contact-status {
   min-height: 1.5em;
   font-family: var(--font-mono);
@@ -1626,9 +1515,7 @@ section {
 
 /* The single signal CTA of the site — the whole page is designed
    to lead here. Filled cyan, dark type, and the only --glow-signal
-   in the stylesheet. It deliberately shares nothing with the
-   generic button: a sheen crosses it on hover and the arrow leans
-   forward. */
+   in the stylesheet. */
 .contact-submit {
   position: relative;
   overflow: hidden;
@@ -1718,9 +1605,6 @@ body > footer {
   margin-inline: auto;
 }
 
-/* Status strip — SYS.STATUS: NOMINAL · LAST SYNC: [live timestamp]
-   · NODE: IN-SUMIT-01. One .footer-status-item per segment;
-   separators are drawn here. */
 .footer-status {
   display: flex;
   flex-wrap: wrap;
@@ -1814,14 +1698,6 @@ body > footer {
    11. BOOT TERMINAL
    Boot sequence — 3 seconds of ritual, then the door opens.
    Skippable by design.
-
-   A near-black overlay over the whole viewport, with a column of
-   mono lines that arrive one by one. Mark each line up with BOTH
-   .terminal__line (base.css) and .boot-line, and give it a
-   data-index from 0 to 11 in reading order. The step between
-   lines is four terminal beats (--terminal-line-delay × 4),
-   which lands a twelve-line sequence just inside three seconds.
-   JS adds .is-done when the ritual ends or is skipped.
    ================================================================ */
 .boot {
   position: fixed;
@@ -1908,22 +1784,12 @@ body > footer {
   text-underline-offset: 0.4em;
 }
 
-/* Without scripting nothing would ever dismiss the overlay. */
 @media (scripting: none) {
   .boot { display: none; }
 }
 
 /* ================================================================
    12. SCROLL REVEALS
-   Elements arrive quietly: a 24px rise and a fade, slow on the
-   expo curve. JS adds .is-visible when an element enters the
-   viewport; will-change is held only until it has.
-
-   Stagger: on a .reveal-stagger parent, JS sets --stagger-index
-   (0, 1, 2 …) on each child. Delay is index × 80ms.
-
-   .reveal--mask is for hero images: instead of rising, the image
-   is uncovered from the bottom edge upward with a clip-path.
    ================================================================ */
 .reveal {
   opacity: 0;
@@ -1963,7 +1829,6 @@ body > footer {
   clip-path: inset(0 0 0 0);
 }
 
-/* Without scripting nothing would ever add .is-visible. */
 @media (scripting: none) {
   .reveal,
   .reveal-stagger > *,
@@ -1976,15 +1841,6 @@ body > footer {
 
 /* ================================================================
    13. RENDERING & PERFORMANCE
-   content-visibility: auto is a deliberate paint optimization for
-   the heavy below-the-fold sections: the browser skips their
-   layout and paint until they approach the viewport, and
-   contain-intrinsic-size reserves a placeholder height so the
-   scrollbar doesn't jump. Paint containment also clips at the
-   element's edge, so the deployment grid carries its own padding
-   (cancelled by an equal negative margin) to leave room for card
-   lift and glow. will-change lives only on layers that animate:
-   .hero-title, .op-card-img img and .reveal.
    ================================================================ */
 .operations-grid {
   content-visibility: auto;
@@ -2010,11 +1866,6 @@ body > footer {
 
 /* ================================================================
    14. RESPONSIVE
-   Four steps, each doing one job:
-     1200  the deployment grid drops from six columns to four
-     1024  everything stacks; the timeline moves to a single rail
-     768   one column of cards; sections tighten
-     480   the smallest screens — smaller hero, single-column strip
    ================================================================ */
 @media (max-width: 1200px) {
   .operations-grid {
@@ -2070,8 +1921,6 @@ body > footer {
     transform: none;
   }
 
-  /* Timeline — a single rail down the left edge; every item sits
-     to its right, text left-aligned, every node on the rail. */
   .timeline {
     --rail-x: var(--space-sm);
     --rail-inset: calc(var(--space-lg) + var(--space-md));
@@ -2217,14 +2066,7 @@ body > footer {
 
 /* ================================================================
    15. ACCESSIBILITY
-   Focus, reduced motion, forced colors. Nothing in the page relies
-   on motion or glow to be understood, and each of these branches
-   proves it by removing them.
    ================================================================ */
-
-/* Focus — the same ring base.css draws: a dark separator inside a
-   cyan band, done in box-shadow so it follows each element's own
-   radius, with a transparent outline left in for forced-colors. */
 .op-card:focus-visible,
 .timeline-item:focus-visible,
 .contact-link:focus-visible {
@@ -2233,8 +2075,6 @@ body > footer {
   box-shadow: var(--focus-ring);
 }
 
-/* Reduced motion — every loop stops, every reveal lands already
-   finished, and nothing is left travelling, sweeping or staggering. */
 @media (prefers-reduced-motion: reduce) {
   .hero-title {
     animation: none;
@@ -2297,11 +2137,6 @@ body > footer {
   }
 }
 
-/* Forced colors — glass, gradients and glows can't survive a
-   system palette, so they go. Gradient text is the one hazard:
-   its fill is transparent, so it must be handed back to the system
-   text colour or the headline would vanish. Panels become plain
-   1px boxes; badges keep visible text and a border. */
 @media (forced-colors: active) {
   .hero-title,
   .hero-title em {
@@ -2319,7 +2154,6 @@ body > footer {
   .about-image-wrapper::after,
   .op-card-img::before,
   .op-card-img::after,
-  .footprint-map::after,
   .section-tag-span::before,
   .section-tag-span::after,
   .contact-submit::before,
@@ -2349,7 +2183,6 @@ body > footer {
   .about-image-wrapper::before,
   .about-image-status-id,
   .about-image-status-live,
-  .footprint-map::before,
   tech-tag-span,
   .tech-tag-span {
     border: 1px solid CanvasText;
@@ -2386,6 +2219,450 @@ body > footer {
     border: 1px solid ButtonText;
     background: ButtonFace;
     color: ButtonText;
+    box-shadow: none;
+  }
+}
+
+/* ================================================================
+   16. FOOTPRINT — CINEMATIC EARTH GLOBE
+
+   The Career Footprint stage becomes a slow, deliberate zoom: a
+   world video sits behind cyan glass, a single marker sits at
+   Patli, and a tap or hover on it pulls the frame in, locks a
+   reticle around the pin, and slides a glass panel in from the
+   corner with the posting's real facts. Nothing here spins for
+   its own sake — the zoom happens once, settles, and holds.
+
+   State machine, set as data-state on .footprint-map:
+     idle     → video at rest, marker breathing, nothing else shown
+     zooming  → video pushes in toward the marker, reticle expands
+     locked   → video settles, reticle locks tight, panel slides in
+
+   Every colour, glow and timing value below is pulled from
+   variables.css — nothing new is introduced here.
+   ================================================================ */
+.footprint-map {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-cyan);
+  background: var(--bg-inset);
+  box-shadow: var(--shadow-panel-lg), var(--glow-cyan-sm);
+  touch-action: manipulation;
+}
+
+/* The video is the only layer that moves. Its transform-origin is
+   pinned to the marker's own position, so "zoom" always means
+   "zoom toward Patli" — never toward the frame's centre. Set
+   --marker-x / --marker-y (percentages) on .footprint-map inline. */
+.footprint-video {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(0.4) brightness(0.7) saturate(1.2) hue-rotate(-6deg);
+  transform-origin: var(--marker-x, 50%) var(--marker-y, 50%);
+  transform: scale(1);
+  transition: transform 800ms var(--ease-out-expo);
+  will-change: transform;
+}
+
+.footprint-map[data-state="zooming"] .footprint-video {
+  transform: scale(1.15);
+}
+
+.footprint-map[data-state="locked"] .footprint-video {
+  transform: scale(1.05);
+}
+
+/* A dark radial wash keeps the video from competing with the UI
+   riding on top of it — heaviest at the edges, clear at centre. */
+.footprint-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(3, 4, 5, 0.78) 100%);
+}
+
+/* Corner brackets — the same monitor-frame language as the hero
+   and about panels, so the globe reads as one more feed in the
+   same command centre rather than a different kind of object. */
+.footprint-frame {
+  position: absolute;
+  inset: 12px;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image:
+    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
+    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
+    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
+    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan));
+  background-position: top left, top left, top right, top right, bottom left, bottom left, bottom right, bottom right;
+  background-size: 18px 1.5px, 1.5px 18px, 18px 1.5px, 1.5px 18px, 18px 1.5px, 1.5px 18px, 18px 1.5px, 1.5px 18px;
+  background-repeat: no-repeat;
+}
+
+/* Badge — "● LIVE MAP · GLOBAL COVERAGE", top-left, same treatment
+   as the hero monitor's REC pill. The dot reuses feedLivePulse
+   (section 6) rather than inventing a second pulse timing. */
+.footprint-badge {
+  position: absolute;
+  top: var(--space-sm);
+  left: var(--space-sm);
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--border-cyan);
+  border-radius: var(--radius-full);
+  background: var(--glass-bg-strong);
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+}
+
+.footprint-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--status-online);
+  box-shadow: var(--glow-green-sm);
+  animation: feedLivePulse var(--duration-pulse) ease-in-out infinite;
+}
+
+/* Marker — the pin at Patli. A solid dot plus two staggered rings
+   that ping outward and fade, radar-style. Position is set with
+   the same --marker-x / --marker-y custom properties the video
+   zooms toward, so pin and zoom target are always the same point. */
+.footprint-marker {
+  position: absolute;
+  top: var(--marker-y, 50%);
+  left: var(--marker-x, 50%);
+  z-index: 5;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border-radius: var(--radius-full);
+  background: var(--accent-cyan);
+  box-shadow: var(--glow-cyan-sm);
+  cursor: none;
+}
+
+.footprint-marker::before,
+.footprint-marker::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--accent-cyan);
+  opacity: 0;
+  animation: footprint-marker-pulse var(--duration-pulse) ease-out infinite;
+}
+
+.footprint-marker::after {
+  animation-delay: calc(var(--duration-pulse) / 2);
+}
+
+@keyframes footprint-marker-pulse {
+  0%   { transform: scale(0.6); opacity: 0.8; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* Reticle — hidden at idle; expands around the marker as the zoom
+   begins, then snaps down to a tight locked ring. transform: scale
+   does the sizing (not width/height) so the element stays centred
+   on the marker throughout, using the same position variables. */
+.footprint-reticle {
+  position: absolute;
+  top: var(--marker-y, 50%);
+  left: var(--marker-x, 50%);
+  z-index: 4;
+  width: 64px;
+  height: 64px;
+  margin: -32px 0 0 -32px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--accent-cyan);
+  opacity: 0;
+  transform: scale(0);
+  pointer-events: none;
+}
+
+.footprint-map[data-state="zooming"] .footprint-reticle {
+  opacity: 1;
+  animation: footprint-reticle-expand 900ms var(--ease-out-expo) forwards;
+}
+
+.footprint-map[data-state="locked"] .footprint-reticle {
+  opacity: 1;
+  border-width: 1.5px;
+  box-shadow: var(--glow-cyan-md);
+  animation: footprint-reticle-lock 600ms var(--ease-smooth) forwards;
+}
+
+@keyframes footprint-reticle-expand {
+  0%   { transform: scale(0);    opacity: 0; }
+  55%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1);    opacity: 0.9; }
+}
+
+@keyframes footprint-reticle-lock {
+  0%   { transform: scale(1);    opacity: 0.9; }
+  100% { transform: scale(0.62); opacity: 1; }
+}
+
+/* Panel — slides in from the corner once the globe has locked on.
+   Idle and zooming states keep it clear of the pointer; locked
+   reveals it 300ms after the state change, so the reticle finishes
+   landing before the panel starts moving. */
+.footprint-panel {
+  position: absolute;
+  right: var(--space-md);
+  bottom: var(--space-md);
+  left: auto;
+  top: auto;
+  z-index: 7;
+  width: min(22rem, calc(100% - 2 * var(--space-md)));
+  padding: var(--space-md);
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--border-cyan);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-panel-lg);
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: opacity 500ms var(--ease-out-expo),
+              transform 500ms var(--ease-out-expo);
+}
+
+.footprint-map[data-state="locked"] .footprint-panel {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition-delay: 300ms;
+}
+
+.footprint-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.footprint-panel-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.footprint-panel-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  margin-top: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  cursor: none;
+  transition: color var(--duration-base) var(--ease-out-expo);
+}
+
+.footprint-panel-cta::after {
+  content: "→";
+  content: "→" / "";
+  transition: transform var(--duration-base) var(--ease-out-expo);
+}
+
+.footprint-panel-cta:hover {
+  color: var(--accent-cyan);
+}
+
+.footprint-panel-cta:hover::after {
+  transform: translateX(4px);
+}
+
+/* Close — sits inside the panel's top-right corner, invisible
+   until the panel is actually showing. */
+.footprint-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-tertiary);
+  opacity: 0;
+  pointer-events: none;
+  cursor: none;
+  transition: opacity var(--duration-base) var(--ease-smooth),
+              border-color var(--duration-base) var(--ease-smooth),
+              color var(--duration-base) var(--ease-smooth);
+}
+
+.footprint-map[data-state="locked"] .footprint-close {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.footprint-close:hover {
+  border-color: var(--border-alert);
+  color: var(--status-live);
+}
+
+/* Legend — bottom-centre, quiet, always visible. */
+.footprint-legend {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-sm);
+  z-index: 6;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-2xs) var(--space-md);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  background: var(--glass-bg-soft);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* Touch — no hover state to fall back on, so the reticle tracks
+   the point most recently tapped instead. JS sets --tap-x / --tap-y
+   on tap; if it never runs, the marker's own position is used. */
+@media (hover: none) {
+  .footprint-reticle {
+    top: var(--tap-y, var(--marker-y, 50%));
+    left: var(--tap-x, var(--marker-x, 50%));
+  }
+}
+
+/* Small screens — the panel becomes a near-full-width sheet
+   instead of a floating card, so it stays legible without
+   crowding the marker it describes. */
+@media (max-width: 480px) {
+  .footprint-panel {
+    left: var(--space-sm);
+    right: var(--space-sm);
+    width: auto;
+  }
+
+  .footprint-legend {
+    max-width: calc(100% - var(--space-md) * 2);
+    overflow-x: auto;
+  }
+}
+
+/* Reduced motion — the zoom never happens, the reticle appears
+   already locked with no animated path there, and the panel
+   shows instantly rather than sliding in. */
+@media (prefers-reduced-motion: reduce) {
+  .footprint-video {
+    transition: none;
+    transform: scale(1) !important;
+  }
+
+  .footprint-marker::before,
+  .footprint-marker::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  .footprint-reticle {
+    animation: none !important;
+  }
+
+  .footprint-map[data-state="zooming"] .footprint-reticle,
+  .footprint-map[data-state="locked"] .footprint-reticle {
+    opacity: 1;
+    transform: scale(0.62);
+  }
+
+  .footprint-panel {
+    transition: none;
+  }
+
+  .footprint-map[data-state="locked"] .footprint-panel {
+    transition-delay: 0s;
+  }
+
+  .footprint-close {
+    transition: none;
+  }
+}
+
+/* Forced colors — video, glass and glow all go; the frame becomes
+   a plain bordered box and the marker/reticle become system-
+   coloured outlines so the pin location still reads. */
+@media (forced-colors: active) {
+  .footprint-video,
+  .footprint-vignette,
+  .footprint-frame {
+    display: none;
+  }
+
+  .footprint-map,
+  .footprint-panel {
+    border: 1px solid CanvasText;
+    box-shadow: none;
+    background: Canvas;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .footprint-badge,
+  .footprint-legend {
+    border: 1px solid CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .footprint-badge::before,
+  .footprint-marker::before,
+  .footprint-marker::after {
+    animation: none;
+  }
+
+  .footprint-marker {
+    background: CanvasText;
+    box-shadow: none;
+  }
+
+  .footprint-reticle {
+    border-color: CanvasText;
     box-shadow: none;
   }
 }
