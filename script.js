@@ -2,9 +2,10 @@
    CCTV COMMAND CENTER — script.js
 
    Cursor (idle/armed/scanning/lock/boot/idle-dim) · Spotlight · Progress Bar
-   Particles · Surveillance Clock · Card Tilt · Operations Data · Modal System
-   Contact Form (mailto) · Toast · Scroll Reveal · Text Decode · Scroll-Spy
-   Keyboard & Focus Trap · Mobile Nav Drawer · Boot Sequence · Career Footprint
+   Particles · Surveillance Clock · Card Tilt · About Image Loader ·
+   Operations Data · Modal System · Contact Form (mailto) · Toast ·
+   Scroll Reveal · Text Decode · Scroll-Spy · Keyboard & Focus Trap ·
+   Mobile Nav Drawer · Boot Sequence · Career Footprint + Visual ·
    Operations Filter Bar
 
    No backend anywhere in this file. The contact form's only transport is a
@@ -220,6 +221,13 @@ const SCAN_SELECTOR = '.topo__node, .footprint__site, [data-cursor-scan]';
 
 /* ==========================================================================
    3. PARTICLE CONSTELLATION — hero monitor canvas
+
+   FIX: the canvas can measure as zero-size if this runs before the grid's
+   layout has fully settled (e.g. before web fonts swap in and reflow the
+   hero). That leaves the box looking permanently dim/empty even though
+   the loop is running. A ResizeObserver on the canvas's own container
+   catches any later layout shift, and one extra resize after the window's
+   `load` event catches the common font-swap case.
    ========================================================================== */
 (function initParticles() {
   const canvas = document.getElementById('particles-canvas');
@@ -362,6 +370,17 @@ const SCAN_SELECTOR = '.topo__node, .footprint__site, [data-cursor-scan]';
   resize();
   seed();
   start();
+
+  /* --- FIX: re-measure once layout has fully settled --------------- */
+  window.addEventListener('load', () => { resize(); seed(); }, { once: true });
+
+  if ('ResizeObserver' in window) {
+    const ro = new ResizeObserver(() => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => { resize(); seed(); }, 180);
+    });
+    ro.observe(canvas.parentElement || canvas);
+  }
 })();
 
 /* ==========================================================================
@@ -466,6 +485,41 @@ const SCAN_SELECTOR = '.topo__node, .footprint__site, [data-cursor-scan]';
     card.addEventListener('mousemove',  onMove,  { passive: true });
     card.addEventListener('mouseleave', onLeave, { passive: true });
   });
+})();
+
+/* ==========================================================================
+   5.1 ABOUT IMAGE LOADER — NEW
+
+   FIX for the permanently-black About photo box: index.html puts a
+   `.no-img` class on `.about-image-wrapper` to show the "acquiring
+   signal" placeholder state, but nothing ever removed that class once
+   the real photo loaded — so `.no-img img { opacity: 0 }` stayed in
+   effect forever, regardless of whether the image ever arrived.
+
+   This clears `.no-img` on load, and on error it clears it too (so the
+   box doesn't sit in an endless loading animation) while flagging
+   `.img-error` for anyone who wants to style that state later. It does
+   NOT fix a missing photo file — if assets/sumit-monitoring-station.jpg
+   was never uploaded to the deployed site, the box will still show a
+   broken-image icon until a real photo is placed at that path.
+   ========================================================================== */
+(function initAboutImageLoader() {
+  const wrapper = document.querySelector('.about-image-wrapper');
+  const img = wrapper?.querySelector('img');
+  if (!wrapper || !img) return;
+
+  const reveal = () => wrapper.classList.remove('no-img');
+
+  if (img.complete && img.naturalWidth > 0) {
+    reveal();
+  } else {
+    img.addEventListener('load', reveal, { once: true });
+    img.addEventListener('error', () => {
+      wrapper.classList.remove('no-img');
+      wrapper.classList.add('img-error');
+      console.warn('[about-image] failed to load — upload the real photo to', img.src);
+    }, { once: true });
+  }
 })();
 
 /* ==========================================================================
@@ -602,8 +656,6 @@ function getFocusable(container) {
 function ensureModalBackdrop() {
   if (modalBackdrop) return modalBackdrop;
 
-  /* Fallback — builds a minimal backdrop if #modal is ever missing from
-     the page. Not exercised in the shipped markup. */
   const backdrop = document.createElement('div');
   backdrop.id = 'modal-fallback';
   backdrop.className = 'modal-backdrop';
@@ -660,9 +712,6 @@ function closeModalOnBackdrop(e) {
 
 if (modalBackdrop) modalBackdrop.addEventListener('click', closeModalOnBackdrop);
 
-/* Every dismiss control in either template — the × button, the footer's
-   ghost "Close", the "Request Briefing" link — carries this attribute,
-   so one delegated listener covers both templates without rewiring. */
 document.addEventListener('click', (e) => {
   const closer = e.target.closest?.('[data-modal-close]');
   if (closer) closeModal(closer.closest('.modal-backdrop'));
@@ -714,8 +763,6 @@ function openOpModal(key) {
 
   renderGallery(gallery, data.gallery, data.title);
 
-  /* A small tag row, inserted once per open rather than baked into the
-     static template — keeps the shell markup generic. */
   let tagRow = modalWindow.querySelector('.modal-tags');
   if (!tagRow) {
     tagRow = document.createElement('ul');
@@ -789,11 +836,9 @@ function openHireModal() {
   openModal(modalBackdrop);
 }
 
-/* Backward-compatible aliases some markup or older builds may still call */
 function closeHireModal() { closeModal(modalBackdrop); }
 function closeOpModal()   { closeModal(modalBackdrop); }
 
-/* Delegated triggers — no inline onclick anywhere in the page */
 document.addEventListener('click', (e) => {
   const card = e.target.closest?.('[data-modal-id]');
   if (card) { openOpModal(card.dataset.modalId); return; }
@@ -805,20 +850,15 @@ document.addEventListener('click', (e) => {
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Enter' && e.key !== ' ') return;
   const card = e.target.closest?.('[data-modal-id]');
-  if (card && (card.tagName === 'BUTTON' || card.getAttribute('role') === 'button')) {
-    /* Native <button> already fires a click on Enter/Space — only step in
-       for a non-button element carrying role="button". */
-    if (card.tagName !== 'BUTTON') {
-      e.preventDefault();
-      openOpModal(card.dataset.modalId);
-    }
+  if (card && card.tagName !== 'BUTTON' && card.getAttribute('role') === 'button') {
+    e.preventDefault();
+    openOpModal(card.dataset.modalId);
   }
 });
 
-window.showToast     = showToastImpl; /* defined in section 9; hoisted reference is safe here */
-window.openHireModal = openHireModal;
-window.openOpModal   = openOpModal;
-window.closeModal    = closeModal;
+window.openHireModal  = openHireModal;
+window.openOpModal    = openOpModal;
+window.closeModal     = closeModal;
 window.closeHireModal = closeHireModal;
 window.closeOpModal   = closeOpModal;
 
@@ -927,9 +967,7 @@ function attachContactFormHandler(form) {
     }
 
     /* Frontend-only submission — mailto: is the transport. No backend,
-       no third-party service. The ~900ms delay is a deliberate pause,
-       not a network call: it gives the "transmitting" state a moment
-       to register before the mail client takes over. */
+       no third-party service. */
     setTimeout(() => {
       const href = buildMailtoHref(form);
       window.location.href = href;
@@ -948,8 +986,6 @@ function attachContactFormHandler(form) {
   });
 }
 
-/* Wire the page's own contact form immediately (the hire-modal copy is
-   wired at creation time, in openHireModal). */
 attachContactFormHandler($('#contact .contact-form'));
 
 /* ==========================================================================
@@ -986,7 +1022,6 @@ function showToastImpl({ type = 'info', title = '', message = '', duration = 420
     toast.classList.add('exit');
     toast.classList.remove('enter');
     toast.addEventListener('animationend', () => toast.remove(), { once: true });
-    /* Fallback in case the animation never fires (e.g. display:none ancestor) */
     setTimeout(() => toast.remove(), 700);
   };
 
@@ -1006,9 +1041,6 @@ window.showToast = showToastImpl;
 
 /* ==========================================================================
    10. SCROLL REVEAL SYSTEM
-   One-shot IntersectionObserver: an element earns `.is-visible` once and
-   is left alone after. Stagger containers set --stagger-index on each
-   child before observing; the CSS reads that variable for the delay.
    ========================================================================== */
 (function initScrollReveal() {
   const REVEAL_SELECTOR = '.reveal, .reveal-left, .reveal-right, .reveal-scan, .reveal-decode, .reveal-stagger, .reveal--mask';
@@ -1039,8 +1071,6 @@ window.showToast = showToastImpl;
 
 /* ==========================================================================
    11. TEXT DECODE — a scramble-to-resolve reveal for headline text.
-   Only text nodes are touched; child elements (an <em>, a <span>) keep
-   their identity and are recursed into rather than replaced.
    ========================================================================== */
 (function initTextDecode() {
   const targets = $$('.reveal-decode');
@@ -1054,9 +1084,6 @@ window.showToast = showToastImpl;
   const CHARSET = '!@#$%^&*()_+-=<>[]{}/\\|~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const randChar = () => CHARSET[Math.floor(Math.random() * CHARSET.length)];
 
-  /* Collect the element's text nodes once, recording each node plus its
-     final characters, so the animation can rebuild without disturbing
-     sibling elements. */
   function collectTextNodes(root) {
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
     const nodes = [];
@@ -1140,7 +1167,7 @@ window.showToast = showToastImpl;
 })();
 
 /* ==========================================================================
-   12. SCROLL-SPY — highlights the nav link for the section in view
+   12. SCROLL-SPY
    ========================================================================== */
 (function initScrollSpy() {
   const sections = $$('main > section[id]');
@@ -1219,8 +1246,6 @@ window.showToast = showToastImpl;
 
 /* ==========================================================================
    14. KEYBOARD & FOCUS TRAP
-   Escape closes whatever overlay is open (modal, then drawer). Tab is
-   trapped inside an open modal so focus never escapes to the page behind it.
    ========================================================================== */
 (function initKeyboard() {
   document.addEventListener('keydown', (e) => {
@@ -1265,10 +1290,6 @@ window.showToast = showToastImpl;
 
 /* ==========================================================================
    15. BOOT SEQUENCE CONTROLLER
-   A short, skippable ritual: lines reveal on the terminal's own rhythm,
-   an ASCII progress bar tracks alongside, then the overlay fades and is
-   removed from layout. Shown once per session; ?skipboot=1 bypasses it
-   for development.
    ========================================================================== */
 (function initBoot() {
   const boot = document.getElementById('boot-overlay');
@@ -1336,10 +1357,12 @@ window.showToast = showToastImpl;
 
 /* ==========================================================================
    16. CAREER FOOTPRINT / TOPOLOGY COORDINATOR
-   Reads the two verified sites from #sites-data and hands them off via a
-   CustomEvent for a future WebGL globe module to pick up. Until that
-   module exists, this also keeps the detail panel and the topology
-   status line populated so the section is never empty.
+
+   FIX: the "footprint:ready" dispatch now happens on a macrotask
+   (setTimeout 0) instead of synchronously. Previously it fired the
+   instant this IIFE ran — before section 16.1 below had even registered
+   its listener — so the event was dispatched into an empty room and the
+   map visual never got its data.
    ========================================================================== */
 (function initFootprint() {
   const dataEl = document.getElementById('sites-data');
@@ -1353,7 +1376,9 @@ window.showToast = showToastImpl;
     return;
   }
 
-  window.dispatchEvent(new CustomEvent('footprint:ready', { detail: { sites } }));
+  setTimeout(() => {
+    window.dispatchEvent(new CustomEvent('footprint:ready', { detail: { sites } }));
+  }, 0);
 
   const panel   = $('[data-footprint-panel]');
   const nameEl  = $('[data-footprint-name]', panel || document);
@@ -1372,8 +1397,6 @@ window.showToast = showToastImpl;
 
   showSite(sites.find((s) => s.status === 'active') || sites[0]);
 
-  /* No 3D globe module is attached yet — let the two sites take turns in
-     the detail panel so the section still feels alive. */
   if (sites.length > 1) {
     let index = 0;
     setInterval(() => {
@@ -1385,7 +1408,7 @@ window.showToast = showToastImpl;
   const linkCount = Math.max(sites.length - 1, 0);
   if (statusEl) {
     const tick = () => {
-      const latency = 3 + Math.floor(Math.random() * 7); /* 3–9ms */
+      const latency = 3 + Math.floor(Math.random() * 7);
       statusEl.textContent = `NODES: ${sites.length} · LINKS: ${linkCount} · LATENCY: ${latency}ms`;
     };
     tick();
@@ -1394,10 +1417,109 @@ window.showToast = showToastImpl;
 })();
 
 /* ==========================================================================
+   16.1 FOOTPRINT VISUAL — NEW
+
+   FIX for the empty/black Career Footprint box: nothing was ever drawn
+   inside `.footprint-map` — only the surrounding CSS frame (badge, faint
+   grid) existed. This is not a 3D globe (deliberately out of scope), but
+   a light canvas node-map: one core (the operator), one node per site,
+   linked by a soft pulse. It listens for `footprint:ready` (section 16)
+   so the site data has a single source of truth.
+   ========================================================================== */
+(function initFootprintVisual() {
+  const mapEl = document.querySelector('.footprint-map');
+  if (!mapEl) return;
+
+  window.addEventListener('footprint:ready', (e) => {
+    const sites = e.detail?.sites || [];
+    if (!sites.length) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.setAttribute('aria-hidden', 'true');
+    canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:1;';
+    mapEl.prepend(canvas);
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const styles = getComputedStyle(document.documentElement);
+    const cyan  = (styles.getPropertyValue('--accent-cyan')  || '#00e5ff').trim();
+    const green = (styles.getPropertyValue('--accent-green') || '#00ff9c').trim();
+    const core  = (styles.getPropertyValue('--topo-core-color') || '#eafcff').trim();
+
+    let W = 0, H = 0, dpr = 1;
+
+    const resize = () => {
+      const rect = mapEl.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = rect.width;
+      H = rect.height;
+      canvas.width  = Math.floor(W * dpr);
+      canvas.height = Math.floor(H * dpr);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(dpr, dpr);
+    };
+
+    const start = performance.now();
+
+    const draw = (now) => {
+      if (!W || !H) resize();
+      ctx.clearRect(0, 0, W, H);
+
+      const cx = W / 2;
+      const cy = H * 0.38;
+      const pulse = prefersReducedMotion ? 1 : 0.6 + 0.4 * Math.sin((now - start) / 900);
+
+      /* links: core → each site */
+      sites.forEach((site, i) => {
+        const x = W * (i === 0 ? 0.28 : 0.72);
+        const y = H * 0.62;
+        ctx.strokeStyle = site.status === 'active'
+          ? `rgba(0, 229, 255, ${(0.25 + 0.35 * pulse).toFixed(2)})`
+          : 'rgba(0, 229, 255, 0.12)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      });
+
+      /* core node — the operator console */
+      ctx.beginPath();
+      ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+      ctx.fillStyle = core;
+      ctx.shadowColor = cyan;
+      ctx.shadowBlur = 14;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      /* one node per site */
+      sites.forEach((site, i) => {
+        const x = W * (i === 0 ? 0.28 : 0.72);
+        const y = H * 0.62;
+        const active = site.status === 'active';
+        const r = active ? 4 + pulse * 1.5 : 3;
+
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fillStyle = active ? cyan : green;
+        ctx.shadowColor = active ? cyan : 'transparent';
+        ctx.shadowBlur = active ? 10 : 0;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+
+      if (!prefersReducedMotion) requestAnimationFrame(draw);
+    };
+
+    resize();
+    window.addEventListener('resize', () => resize(), { passive: true });
+    requestAnimationFrame(draw);
+  }, { once: true });
+})();
+
+/* ==========================================================================
    17. OPERATIONS FILTER BAR
-   Categories are derived from opData via each card's data-modal-id — no
-   parsing of inline handlers. Built on an idle callback since it isn't
-   needed for first paint.
    ========================================================================== */
 ridle(() => {
   const grid = $('.operations-grid');
@@ -1483,7 +1605,6 @@ ridle(() => {
     applyFilter(btn.dataset.filter);
   });
 
-  /* WAI-ARIA tabs pattern: arrow keys move focus between filters */
   bar.addEventListener('keydown', (e) => {
     if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) return;
     e.preventDefault();
