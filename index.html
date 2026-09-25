@@ -2,29 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#030405" />
   <meta name="color-scheme" content="dark" />
+  <meta name="format-detection" content="telephone=no" />
 
   <title>Sumit Anand — CCTV Operator &amp; Surveillance Specialist</title>
   <meta
     name="description"
-    content="Sumit Anand — CCTV Operator &amp; Surveillance Specialist with 2+ years of command-center experience in CP Plus multi-channel surveillance, GIGO gate control, PSARA compliance, and loss prevention across mega logistics hubs."
+    content="Sumit Anand — CCTV Operator &amp; Surveillance Specialist. 2+ years securing logistics hubs with CP Plus CCTV, GIGO gate control, and IP network monitoring."
   />
   <meta name="author" content="Sumit Anand" />
   <meta name="robots" content="index, follow" />
-  <meta name="keywords" content="CCTV operator, surveillance specialist, security systems operator, GIGO gate control, PSARA compliance, loss prevention, CP Plus CCTV, warehouse security, Haryana" />
+  <meta name="keywords" content="CCTV operator, surveillance specialist, security systems operator, GIGO gate control, loss prevention, fire safety, CP Plus CCTV, warehouse security, Haryana" />
+
+  <!-- Canonical — replace with the real production domain before launch -->
+  <link rel="canonical" href="https://sumitanand.example/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://sumitanand.example/" />
   <meta property="og:title" content="Sumit Anand — CCTV Operator &amp; Surveillance Specialist" />
   <meta property="og:description" content="Precision monitoring, gate control, and loss prevention across India's largest logistics hubs." />
+  <!-- TODO: create /og-cover.jpg — 1200×630, command-center visual, before launch -->
+  <meta property="og:image" content="/og-cover.jpg" />
   <meta property="og:locale" content="en_IN" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Sumit Anand — CCTV Operator &amp; Surveillance Specialist" />
   <meta name="twitter:description" content="Precision monitoring, gate control, and loss prevention across India's largest logistics hubs." />
+  <meta name="twitter:image" content="/og-cover.jpg" />
 
   <!-- Favicon: a cyan reticle matching the site's own cursor -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='none' stroke='%2300e5ff' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%2300e5ff'/%3E%3C/svg%3E" />
@@ -33,11 +41,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
+    rel="preload"
+    as="style"
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+  />
+  <link
     href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet"
   />
 
   <!-- Font Awesome -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -45,24 +59,86 @@
     referrerpolicy="no-referrer"
   />
 
+  <!-- The about portrait is the likely above-the-fold image on mobile -->
+  <link rel="preload" as="image" href="assets/sumit-monitoring-station.jpg" />
+
   <!-- Master stylesheet -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Structured data — real facts only, no embellishment. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Sumit Anand",
+    "jobTitle": "CCTV Operator & Surveillance Specialist",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Patli",
+      "addressRegion": "Haryana",
+      "addressCountry": "IN"
+    },
+    "alumniOf": {
+      "@type": "EducationalOrganization",
+      "name": "B.S.A.M. Panchitthri Sr. Sec. School"
+    },
+    "knowsAbout": [
+      "IP Networking",
+      "IPv4 Subnetting",
+      "TCP/IP",
+      "LAN Configuration",
+      "CLI Diagnostics",
+      "CP Plus CCTV Systems",
+      "NVR/DVR Integration",
+      "Live Multi-Channel Monitoring",
+      "Footage Playback & Archiving",
+      "GIGO Data Logging",
+      "Gate & Access Control",
+      "Fire Safety & First Aid",
+      "Loss Prevention Protocols"
+    ],
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Innovision Limited"
+    },
+    "url": "https://sumitanand.example/"
+  }
+  </script>
 
   <!-- Application script -->
   <script src="script.js" defer></script>
 </head>
 
-<body>
+<!--
+  is-loading is removed by script.js after the boot sequence — used to
+  gate scroll and prevent FOUC. data-theme is a future-proofing hook,
+  in case a second command-center palette is ever added.
+-->
+<body class="is-loading" data-theme="command-center">
 
-  <!-- ============================================================
-       AMBIENT LAYERS — background HUD atmosphere
-       ============================================================ -->
-  <div class="hud-grid-overlay" aria-hidden="true"></div>
-  <div class="scanline" aria-hidden="true"></div>
-  <div class="ambient-orb orb-1" aria-hidden="true"></div>
-  <div class="ambient-orb orb-2" aria-hidden="true"></div>
-  <div class="ambient-orb orb-3" aria-hidden="true"></div>
-  <div class="cursor-spotlight" aria-hidden="true"></div>
+  <!-- Site requires JavaScript for its boot sequence, cursor, and
+       interactive visualizations. A plain resume stays reachable
+       without it. -->
+  <noscript>
+    <div style="position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#07080b;color:#f2f5fa;font-family:sans-serif;text-align:center;padding:2rem;">
+      <p>
+        This site needs JavaScript for its interactive command-center view.
+        You can still read Sumit Anand's résumé as a
+        <a href="assets/sumit-anand-resume.pdf" style="color:#00e5ff;">PDF</a>.
+      </p>
+    </div>
+  </noscript>
+
+  <!-- decorative only -->
+  <div class="ambient-layers" aria-hidden="true">
+    <div class="hud-grid-overlay"></div>
+    <div class="scanline"></div>
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+    <div class="ambient-orb orb-4"></div>
+    <div class="cursor-spotlight"></div>
+  </div>
 
   <!-- Scroll progress indicator -->
   <div
@@ -84,32 +160,89 @@
   <a href="#hero" class="skip-link">Skip to main content</a>
 
   <!-- ============================================================
+       BOOT SEQUENCE — the visitor enters as an operator.
+       Skippable, respectful, under 4 seconds. Carries both `.boot`
+       (sections-layout.css) and `.boot-overlay` (components.css) so
+       either stylesheet's rules for the full-screen ritual apply;
+       script.js adds `.is-done` / `.boot-fade-out` when it ends.
+       ============================================================ -->
+  <div class="boot boot-overlay" id="boot-overlay" role="dialog" aria-label="Initializing surveillance network">
+    <div class="boot-terminal terminal">
+      <p class="terminal__line boot-line" data-index="0">&gt; booting surveillance_os v2.4…</p>
+      <p class="terminal__line boot-line terminal__line--muted" data-index="1">&gt; handshake: NVR_CORE … OK</p>
+      <p class="terminal__line boot-line terminal__line--muted" data-index="2">&gt; handshake: GATE_CONTROL … OK</p>
+      <p class="terminal__line boot-line terminal__line--muted" data-index="3">&gt; camera index loaded … 32 nodes found</p>
+      <p class="terminal__line boot-line boot-line--success" data-index="4">operator: SUMIT ANAND</p>
+      <p class="terminal__line boot-line boot-line--success" data-index="5">clearance: GRANTED</p>
+      <p class="terminal__line boot-line" data-index="6">
+        &gt; initializing command center<span class="terminal__cursor" aria-hidden="true"></span>
+      </p>
+      <span class="boot-progress" aria-hidden="true"><span class="boot-progress-fill">████████</span>░░░░░░░░</span>
+    </div>
+    <button type="button" class="boot-skip" data-boot-skip data-cursor-text="Skip">Skip [Enter]</button>
+  </div>
+
+  <!-- ============================================================
        NAVIGATION
        ============================================================ -->
-  <nav aria-label="Primary">
+  <nav aria-label="Primary navigation">
     <a href="#hero" class="brand-logo" data-cursor-text="Home" aria-label="Sumit Anand — Home">
       <span class="dot-span" aria-hidden="true"></span>
       <span>Sumit Anand</span>
     </a>
 
+    <span class="nav-status" aria-hidden="true">
+      <span class="pulse-dot-span online"></span>
+      <span>Online · IN-SUMIT-01</span>
+    </span>
+
     <ul class="nav-links">
-      <li><a href="#about">Expertise</a></li>
-      <li><a href="#operations">Feeds</a></li>
-      <li><a href="#experience">Logbook</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#about" data-cursor-text="Go">Expertise</a></li>
+      <li><a href="#footprint" data-cursor-text="Go">Footprint</a></li>
+      <li><a href="#operations" data-cursor-text="Go">Feeds</a></li>
+      <li><a href="#experience" data-cursor-text="Go">Logbook</a></li>
+      <li><a href="#contact" class="nav-cta" data-cursor-text="Go">Contact</a></li>
     </ul>
 
     <button
       type="button"
-      class="btn btn-hire"
-      data-cursor-text="Hire"
-      onclick="openHireModal()"
-      aria-label="Open hire briefing modal"
+      class="nav-toggle"
+      aria-expanded="false"
+      aria-controls="nav-drawer"
+      aria-label="Open navigation"
+      data-cursor-text="Menu"
     >
-      <i class="fa-solid fa-bolt" aria-hidden="true"></i>
-      <span>Hire Me</span>
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
+      <span class="nav-toggle-bar" aria-hidden="true"></span>
     </button>
   </nav>
+
+  <!-- Mobile drawer — JS toggles `inert` and `aria-hidden` together with
+       the toggle's `aria-expanded`, and moves focus to the close button
+       on open, back to the toggle on close. -->
+  <div class="nav-drawer" id="nav-drawer" aria-hidden="true" inert>
+    <div class="nav-drawer-head">
+      <span>Navigation</span>
+      <button type="button" class="btn-icon" data-nav-close data-cursor-text="Close" aria-label="Close navigation">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <nav class="nav-drawer-links" aria-label="Mobile navigation">
+      <a href="#about" data-cursor-text="Go">Expertise</a>
+      <a href="#footprint" data-cursor-text="Go">Footprint</a>
+      <a href="#operations" data-cursor-text="Go">Feeds</a>
+      <a href="#experience" data-cursor-text="Go">Logbook</a>
+      <a href="#contact" data-cursor-text="Go">Contact</a>
+    </nav>
+
+    <div class="nav-drawer-foot text-mono text-muted">
+      <p><a href="mailto:sa8518430@gmail.com">sa8518430@gmail.com</a></p>
+      <p><a href="tel:+917206185384">+91 72061 85384 </a></p>
+    </div>
+  </div>
+  <div class="nav-drawer-backdrop" data-nav-backdrop></div>
 
   <main>
 
@@ -120,27 +253,33 @@
       <div class="hero-grid">
 
         <div class="hero-content">
+          <p class="hero-kicker">// Surveillance Command Center — v2.4</p>
+
           <div class="hero-eyebrow">
             <span class="hero-eyebrow-dot" aria-hidden="true"></span>
-            <span>System Online · Post Active</span>
+            <span class="hero-eyebrow-item">System Online</span>
+            <span class="hero-eyebrow-item">Patli, Haryana</span>
+            <span class="hero-eyebrow-item">Shift Active</span>
           </div>
 
-          <h1 id="hero-title" class="hero-title reveal-decode">
+          <h1 id="hero-title" class="hero-title">
             Sumit Anand — <em>eyes</em> on every hub.
           </h1>
 
           <p class="hero-subtitle">
             CCTV Operator &amp; Surveillance Specialist commanding multi-channel
-            <span class="purple-span">CP Plus</span> arrays, high-throughput GIGO gate control,
-            and end-to-end loss prevention across India's largest logistics hubs.
+            <span class="highlight-span">CP Plus</span> arrays, high-throughput GIGO gate control,
+            and IP network monitoring across India's largest logistics hubs.
           </p>
 
           <div class="hero-btn-group">
+            <!-- .btn-signal is reserved for the Contact section — this
+                 stays .btn-hire, the page's primary but not sole CTA. -->
             <button
               type="button"
               class="btn btn-hire"
               data-cursor-text="Deploy"
-              onclick="openHireModal()"
+              data-open-hire
               aria-label="Request deployment briefing"
             >
               <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
@@ -156,17 +295,43 @@
               <span>View Live Feeds</span>
             </a>
           </div>
+
+          <div class="hero-readout-strip">
+            <div class="readout">
+              <span class="readout__value">2+</span>
+              <span class="readout__label">Years Ops</span>
+            </div>
+            <div class="readout">
+              <span class="readout__value">32+</span>
+              <span class="readout__label">Cameras Monitored</span>
+            </div>
+            <div class="readout">
+              <span class="readout__value">100%</span>
+              <span class="readout__label">Log Accuracy</span>
+            </div>
+          </div>
+
+          <div class="hero-meta">
+            <span class="hero-meta-item">India</span>
+            <span class="hero-meta-item">Logistics Security</span>
+            <span class="hero-meta-item">CP Plus / NVR / IP</span>
+          </div>
         </div>
 
         <div class="hero-monitor" aria-hidden="true">
+          <div class="hero-monitor-grid"></div>
           <canvas id="particles-canvas"></canvas>
           <div class="hero-monitor-scan"></div>
           <div class="hero-monitor-frame"></div>
+          <div class="hero-monitor-corners">
+            <i></i><i></i><i></i><i></i>
+          </div>
+          <time class="hero-monitor-timestamp" data-live-timestamp>2025-01-01 00:00:00</time>
         </div>
 
       </div>
 
-      <span class="hero-scroll-cue">Scroll</span>
+      <div class="hero-scroll-cue" aria-hidden="true"></div>
     </section>
 
     <!-- ============================================================
@@ -177,48 +342,64 @@
 
         <header class="section-header reveal">
           <span class="section-tag-span">01 / Security Profile</span>
-          <h2 id="about-title" class="section-title reveal-decode">CCTV Skills &amp; Expertise</h2>
+          <h2 id="about-title" class="section-title">CCTV Skills &amp; Expertise</h2>
         </header>
 
         <div class="about-grid">
 
-          <div class="about-image-wrapper reveal-left">
+          <!-- Placeholder — replace with a real photograph of Sumit at a
+               monitoring station. Do not ship a stock control-room image
+               here as if it were him. -->
+          <div class="about-image-wrapper reveal-left no-img">
             <img
-              src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=900&auto=format&fit=crop"
-              alt="Multi-screen surveillance control room running real-time camera analytics"
+              src="assets/sumit-monitoring-station.jpg"
+              alt="Sumit Anand at a CCTV monitoring station reviewing multi-camera feeds"
               loading="lazy"
               decoding="async"
               width="900"
               height="1125"
             />
+            <div class="about-image-status">
+              <span class="about-image-status-id">CAM_02 · OPERATOR</span>
+              <span class="about-image-status-live">● LIVE</span>
+            </div>
           </div>
 
           <div class="about-info reveal-right">
             <h3>Precision Monitoring &amp; <span class="highlight-span">Asset Protection</span></h3>
 
             <p>
-              Specializing in real-time multi-camera monitoring, high-speed vehicle &amp; driver
-              data logging, and forensic incident investigation across mega logistics operations —
-              including the <span class="highlight-span">Flipkart Kalash Mega Hub</span> and
+              Specializing in real-time multi-camera monitoring, high-accuracy vehicle &amp; driver
+              data logging, and incident review across mega logistics operations — including the
+              <span class="highlight-span">Flipkart Kalash Mega Hub</span> and
               <span class="purple-span">Ekart Logistics</span>.
             </p>
 
             <p>
               Expert operator of multi-screen CP Plus CCTV arrays, digital GIGO gate entry systems,
-              and zero-error Excel logging pipelines. Strict enforcer of
-              <span class="highlight-span">PSARA safety protocols</span> with a proven record of
-              eliminating shrinkage across high-volume warehouse zones.
+              and zero-error Excel logging pipelines. Consistent enforcer of
+              <span class="highlight-span">loss prevention protocols</span> and
+              fire-safety procedures across high-volume warehouse zones.
             </p>
 
+            <ul class="about-credentials" role="list">
+              <li>Innovision Ltd · Flipkart Kalash Mega Hub (2025 – Present)</li>
+              <li>A.P. Securitas · Ekart Logistics (2023 – 2024)</li>
+            </ul>
+
             <ul class="tech-tags" role="list" aria-label="Core technical skills">
-              <li class="tech-tag-span"><i class="fa-solid fa-video" aria-hidden="true"></i> CP Plus CCTV Arrays</li>
+              <li class="tech-tag-span tech-tag-span--primary"><i class="fa-solid fa-video" aria-hidden="true"></i> CP Plus CCTV Systems</li>
+              <li class="tech-tag-span tech-tag-span--primary"><i class="fa-solid fa-network-wired" aria-hidden="true"></i> IP Networking (IPv4, Subnetting)</li>
+              <li class="tech-tag-span tech-tag-span--primary"><i class="fa-solid fa-hard-drive" aria-hidden="true"></i> NVR / DVR Integration</li>
+              <li class="tech-tag-span"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> TCP/IP &amp; LAN Setup</li>
+              <li class="tech-tag-span"><i class="fa-solid fa-terminal" aria-hidden="true"></i> CLI Diagnostics (ping, ipconfig, tracert)</li>
               <li class="tech-tag-span"><i class="fa-solid fa-database" aria-hidden="true"></i> GIGO Gate Entry</li>
-              <li class="tech-tag-span"><i class="fa-solid fa-table" aria-hidden="true"></i> Excel Data Logging</li>
+              <li class="tech-tag-span"><i class="fa-solid fa-table" aria-hidden="true"></i> MS Excel / Google Sheets</li>
+              <li class="tech-tag-span"><i class="fa-solid fa-id-card" aria-hidden="true"></i> Badge &amp; Access Control</li>
               <li class="tech-tag-span"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Loss Prevention</li>
-              <li class="tech-tag-span"><i class="fa-solid fa-user-shield" aria-hidden="true"></i> PSARA Compliance</li>
-              <li class="tech-tag-span"><i class="fa-solid fa-fire-extinguisher" aria-hidden="true"></i> Emergency Response</li>
-              <li class="tech-tag-span"><i class="fa-solid fa-hard-drive" aria-hidden="true"></i> NVR / DVR Playback</li>
-              <li class="tech-tag-span"><i class="fa-solid fa-clipboard-check" aria-hidden="true"></i> Shift Reporting</li>
+              <li class="tech-tag-span"><i class="fa-solid fa-truck" aria-hidden="true"></i> Vehicle Log Management</li>
+              <li class="tech-tag-span"><i class="fa-solid fa-fire-extinguisher" aria-hidden="true"></i> Fire Safety &amp; First Aid</li>
+              <li class="tech-tag-span"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Incident Flagging</li>
             </ul>
 
             <div class="stat-grid" role="list" aria-label="Career highlights">
@@ -227,12 +408,12 @@
                 <span class="stat-label">Years Active</span>
               </div>
               <div class="stat-item" role="listitem">
-                <span class="stat-value">32+</span>
-                <span class="stat-label">Cameras Monitored</span>
-              </div>
-              <div class="stat-item" role="listitem">
                 <span class="stat-value">100%</span>
                 <span class="stat-label">Log Accuracy</span>
+              </div>
+              <div class="stat-item" role="listitem">
+                <span class="stat-value">24/7</span>
+                <span class="stat-label">Video Uptime</span>
               </div>
             </div>
           </div>
@@ -243,24 +424,65 @@
     </section>
 
     <!-- ============================================================
+         CAREER FOOTPRINT — the deployment map
+         Two real sites, one continuous watch. The globe is rendered
+         by script.js from #sites-data below; these are its frame.
+         ============================================================ -->
+    <section id="footprint" class="footprint" aria-labelledby="footprint-title">
+      <div class="section-inner">
+
+        <header class="section-header reveal">
+          <span class="section-tag-span">02 / Deployment Footprint</span>
+          <h2 id="footprint-title" class="section-title">Where I Watch From</h2>
+        </header>
+
+        <div class="footprint-stage">
+          <div class="footprint-map" data-footprint-map>
+            <div class="feed-frame" aria-hidden="true"></div>
+          </div>
+
+          <div class="footprint-panel panel" data-footprint-panel aria-live="polite">
+            <p class="footprint-panel-eyebrow">Selected site</p>
+            <h3 class="footprint-panel-name" data-footprint-name>Flipkart Kalash Mega Hub</h3>
+            <div class="footprint-panel-meta">
+              <span data-footprint-role">Security Systems &amp; Gate Control Operator</span>
+              <span data-footprint-period>2025 – Present</span>
+              <span data-footprint-cameras>32 cameras</span>
+            </div>
+          </div>
+
+          <span class="topo-status text-tnum" aria-hidden="true" data-topo-status>NODES: 2 · LINKS: 1 · LATENCY: 4ms</span>
+        </div>
+
+        <div class="footprint-legend" role="list" aria-label="Map marker meanings">
+          <span class="footprint-legend-item footprint-legend-item--active" role="listitem">
+            <span class="pulse-dot-span online"></span> Active
+          </span>
+          <span class="footprint-legend-item" role="listitem">○ Past</span>
+          <span class="footprint-legend-item footprint-legend-item--shared" role="listitem">◐ Shared</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
          OPERATIONS — Camera Feed Deployments
+         Cards are buttons — they trigger a modal, not navigate.
          ============================================================ -->
     <section id="operations" aria-labelledby="operations-title">
       <div class="section-inner">
 
         <header class="section-header reveal">
-          <span class="section-tag-span">02 / Key Deployments</span>
-          <h2 id="operations-title" class="section-title reveal-decode">Camera Feed Deployments</h2>
+          <span class="section-tag-span">03 / Key Deployments</span>
+          <h2 id="operations-title" class="section-title">Camera Feed Deployments</h2>
         </header>
 
         <div class="operations-grid" data-stagger>
 
-          <article
-            class="op-card reveal-scan"
+          <button
+            type="button"
+            class="op-card op-card--featured reveal-scan"
             data-cursor-text="View"
-            onclick="openOpModal('op1')"
-            tabindex="0"
-            role="button"
+            data-modal-id="op1"
             aria-label="Open briefing: CP Plus Multi-Channel Surveillance"
           >
             <div class="op-card-img">
@@ -275,18 +497,23 @@
               <span class="op-card-badge-span">CAM_01 · LIVE</span>
             </div>
             <div class="op-card-body">
+              <span class="op-card-stat">32+</span>
               <h3 class="op-card-title">CP Plus Multi-Channel Surveillance</h3>
-              <p class="op-card-desc">24/7 perimeter coverage across 32+ cameras. Real-time anomaly detection, forensic playback, and shrink prevention across warehouse zones.</p>
+              <div class="op-card-meta text-tnum">
+                <span>SITE: FLIPKART KALASH</span>
+                <span>2025–PRESENT</span>
+                <span>CAMERAS: 32</span>
+              </div>
+              <p class="op-card-desc">24/7 perimeter coverage across 32 cameras. Real-time monitoring, footage playback, and shrink prevention across warehouse zones.</p>
               <span class="op-link-span">Expand Briefing</span>
             </div>
-          </article>
+          </button>
 
-          <article
+          <button
+            type="button"
             class="op-card reveal-scan"
             data-cursor-text="View"
-            onclick="openOpModal('op2')"
-            tabindex="0"
-            role="button"
+            data-modal-id="op2"
             aria-label="Open briefing: Digital GIGO Gate Control"
           >
             <div class="op-card-img">
@@ -301,19 +528,24 @@
               <span class="op-card-badge-span">CAM_02 · LIVE</span>
             </div>
             <div class="op-card-body">
+              <span class="op-card-stat">100%</span>
               <h3 class="op-card-title">Digital GIGO Gate Control</h3>
-              <p class="op-card-desc">High-volume commercial fleet entry/exit logging with 100% data accuracy, credential audits, and synchronized Excel gate tracking.</p>
+              <div class="op-card-meta text-tnum">
+                <span>SITE: FLIPKART KALASH</span>
+                <span>2025–PRESENT</span>
+                <span>CAMERAS: 32</span>
+              </div>
+              <p class="op-card-desc">High-volume commercial fleet entry/exit logging with 100% data accuracy, credential checks, and synchronized Excel gate tracking.</p>
               <span class="op-link-span">Expand Briefing</span>
             </div>
-          </article>
+          </button>
 
-          <article
+          <button
+            type="button"
             class="op-card op-card--wide reveal-scan"
             data-cursor-text="View"
-            onclick="openOpModal('op3')"
-            tabindex="0"
-            role="button"
-            aria-label="Open briefing: PSARA and Fire Safety Protocol"
+            data-modal-id="op3"
+            aria-label="Open briefing: Loss Prevention and Shrink Control"
           >
             <div class="op-card-img">
               <img
@@ -327,24 +559,29 @@
               <span class="op-card-badge-span">CAM_03 · LIVE</span>
             </div>
             <div class="op-card-body">
-              <h3 class="op-card-title">PSARA &amp; Fire Safety Protocol</h3>
-              <p class="op-card-desc">Badge-access enforcement, scheduled evacuation drills, and full PSARA regulatory compliance reporting for audited facilities.</p>
+              <span class="op-card-stat">24/7</span>
+              <h3 class="op-card-title">Loss Prevention &amp; Shrink Control</h3>
+              <div class="op-card-meta text-tnum">
+                <span>SITE: FLIPKART KALASH</span>
+                <span>2025–PRESENT</span>
+                <span>CAMERAS: 32</span>
+              </div>
+              <p class="op-card-desc">Badge-access enforcement, camera maintenance, and fire-safety drill coordination for an audited mega-hub facility.</p>
               <span class="op-link-span">Expand Briefing</span>
             </div>
-          </article>
+          </button>
 
-          <article
+          <button
+            type="button"
             class="op-card reveal-scan"
             data-cursor-text="View"
-            onclick="openOpModal('op4')"
-            tabindex="0"
-            role="button"
+            data-modal-id="op4"
             aria-label="Open briefing: Incident Forensic Review"
           >
             <div class="op-card-img">
               <img
                 src="https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=900&auto=format&fit=crop"
-                alt="Investigator reviewing footage on multiple screens"
+                alt="Operator reviewing footage on multiple screens"
                 loading="lazy"
                 decoding="async"
                 width="900"
@@ -354,17 +591,21 @@
             </div>
             <div class="op-card-body">
               <h3 class="op-card-title">Incident Forensic Review</h3>
-              <p class="op-card-desc">Time-stamped footage extraction, chain-of-custody documentation, and cross-camera timeline reconstruction for loss investigations.</p>
+              <div class="op-card-meta text-tnum">
+                <span>SITE: FLIPKART KALASH</span>
+                <span>2025–PRESENT</span>
+                <span>CAMERAS: 32</span>
+              </div>
+              <p class="op-card-desc">Time-stamped footage extraction and cross-camera playback to flag and document incidents for shift managers.</p>
               <span class="op-link-span">Expand Briefing</span>
             </div>
-          </article>
+          </button>
 
-          <article
+          <button
+            type="button"
             class="op-card reveal-scan"
             data-cursor-text="View"
-            onclick="openOpModal('op5')"
-            tabindex="0"
-            role="button"
+            data-modal-id="op5"
             aria-label="Open briefing: Perimeter and Dock Security"
           >
             <div class="op-card-img">
@@ -380,17 +621,21 @@
             </div>
             <div class="op-card-body">
               <h3 class="op-card-title">Perimeter &amp; Dock Security</h3>
-              <p class="op-card-desc">Coordinated dock-movement verification, patrol-schedule oversight, and perimeter breach escalation protocols.</p>
+              <div class="op-card-meta text-tnum">
+                <span>SITE: EKART LOGISTICS</span>
+                <span>2023–2024</span>
+                <span>CAMERAS: 12</span>
+              </div>
+              <p class="op-card-desc">Dock-movement verification, patrol oversight, and multi-camera CCTV monitoring for facility perimeter security.</p>
               <span class="op-link-span">Expand Briefing</span>
             </div>
-          </article>
+          </button>
 
-          <article
+          <button
+            type="button"
             class="op-card reveal-scan"
             data-cursor-text="View"
-            onclick="openOpModal('op6')"
-            tabindex="0"
-            role="button"
+            data-modal-id="op6"
             aria-label="Open briefing: Emergency Response Coordination"
           >
             <div class="op-card-img">
@@ -406,10 +651,15 @@
             </div>
             <div class="op-card-body">
               <h3 class="op-card-title">Emergency Response Coordination</h3>
-              <p class="op-card-desc">Alarm-to-action dispatch, evacuation routing under live surveillance, and post-incident command-center reporting.</p>
+              <div class="op-card-meta text-tnum">
+                <span>SITE: EKART LOGISTICS</span>
+                <span>2023–2024</span>
+                <span>CAMERAS: 12</span>
+              </div>
+              <p class="op-card-desc">Fire-drill participation, emergency equipment operation, and daily shift-log maintenance under CCTV oversight.</p>
               <span class="op-link-span">Expand Briefing</span>
             </div>
-          </article>
+          </button>
 
         </div>
 
@@ -423,164 +673,179 @@
       <div class="section-inner">
 
         <header class="section-header reveal">
-          <span class="section-tag-span">03 / Duty History</span>
-          <h2 id="experience-title" class="section-title reveal-decode">Operational Logbook</h2>
+          <span class="section-tag-span">04 / Duty History</span>
+          <h2 id="experience-title" class="section-title">Operational Logbook</h2>
         </header>
 
         <ol class="timeline" data-stagger>
 
-          <li class="timeline-item reveal-left">
+          <li class="timeline-item timeline-item--current reveal-left">
             <span class="timeline-node-span online" aria-hidden="true"></span>
-            <span class="timeline-date-span">2025 — Present</span>
-            <span class="log-status active">Active Post</span>
+            <span class="timeline-date-span"><time datetime="2025">2025</time> — Present</span>
+            <span class="log-status current">Active Post</span>
             <h3 class="timeline-role">Security Systems &amp; Gate Control Operator</h3>
-            <p class="timeline-company">
-              <span class="highlight-span">Innovision Limited</span> — Flipkart Kalash Mega Hub · Patli, Haryana
+            <p class="timeline-org">
+              <span class="highlight-span">Innovision Limited</span>
             </p>
-            <ul class="timeline-details">
-              <li>Command end-to-end gate security operations and digital GIGO systems for India's largest Flipkart hub.</li>
-              <li>Execute real-time MS Excel data logging for all inbound and outbound commercial fleets with 100% accuracy.</li>
-              <li>Enforce strict entry/exit verification for dock movement, driver credentials, and access badges.</li>
-              <li>Perform active surveillance and perimeter monitoring to prevent shrinkage across warehouse zones.</li>
+            <a class="site-badge" href="#footprint" data-cursor-text="Go">Flipkart Kalash Mega Hub</a>
+            <ul class="timeline-body">
+              <li>Command end-to-end gate security operations, digital GIGO systems, and IP-based surveillance feeds for India's largest Flipkart hub.</li>
+              <li>Oversee network connectivity for CCTV cameras, NVRs, and surveillance switches; configure IP addressing and subnet parameters across warehouse security zones.</li>
+              <li>Execute real-time MS Excel and Google Sheets logging for all inbound/outbound commercial fleets with 100% data accuracy.</li>
+              <li>Perform active surveillance and network diagnostic checks (ping, ipconfig) to help maintain 24/7 video uptime and reduce stock shrinkage.</li>
+              <li>Coordinate directly with shift managers, IT support, and safety officers to resolve gate bottlenecks and connectivity issues immediately.</li>
+            </ul>
+            <ul class="timeline-tags" role="list" aria-label="Skills used in this role">
+              <li class="tech-tag-span">CP Plus CCTV</li>
+              <li class="tech-tag-span">IP Networking</li>
+              <li class="tech-tag-span">GIGO Gate Entry</li>
+              <li class="tech-tag-span">Excel Logging</li>
             </ul>
           </li>
 
           <li class="timeline-item reveal-right">
             <span class="timeline-node-span offline" aria-hidden="true"></span>
-            <span class="timeline-date-span">2023 — 2024</span>
+            <span class="timeline-date-span"><time datetime="2023">2023</time> — <time datetime="2024">2024</time></span>
             <span class="log-status archived">Archived</span>
             <h3 class="timeline-role">Security Guard &amp; Surveillance Operator</h3>
-            <p class="timeline-company">
-              <span class="purple-span">A.P. Securitas Pvt. Ltd.</span> — Client Site: Ekart Logistics · Haryana, India
+            <p class="timeline-org">
+              <span class="purple-span">A.P. Securitas Pvt. Ltd.</span>
             </p>
-            <ul class="timeline-details">
-              <li>Monitored multi-camera CCTV feeds, identifying suspicious activity and enforcing facility safety standards.</li>
-              <li>Conducted scheduled floor patrols, inventory spot checks, and fire safety inspections.</li>
-              <li>Operated emergency response equipment and delivered daily shift logs for management review.</li>
+            <a class="site-badge" href="#footprint" data-cursor-text="Go">Ekart Logistics</a>
+            <ul class="timeline-body">
+              <li>Monitored multi-camera CCTV feeds, managed DVR/NVR recording channels, and enforced facility safety standards.</li>
+              <li>Used CLI diagnostics (cmd, ipconfig) and router interface tools to support network connectivity for surveillance workstations.</li>
+              <li>Used Google Sheets and Excel for visitor verification and digital shift reporting.</li>
+              <li>Conducted floor patrols, inventory spot checks, and fire safety inspections.</li>
+              <li>Operated emergency response equipment, participated in fire drills, and maintained daily shift logs.</li>
+            </ul>
+            <ul class="timeline-tags" role="list" aria-label="Skills used in this role">
+              <li class="tech-tag-span">CCTV Monitoring</li>
+              <li class="tech-tag-span">CLI Diagnostics</li>
+              <li class="tech-tag-span">Fire Safety</li>
             </ul>
           </li>
 
         </ol>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CERTIFICATIONS — Verified Credentials
+         Reuses the bento grid so the four cards keep the site's
+         asymmetric rhythm; .glass-card--flat keeps them quiet.
+         ============================================================ -->
+    <section id="certifications" aria-labelledby="certifications-title">
+      <div class="section-inner">
+
+        <header class="section-header reveal">
+          <span class="section-tag-span">05 / Certifications &amp; Training</span>
+          <h2 id="certifications-title" class="section-title">Verified Credentials</h2>
+        </header>
+
+        <div class="operations-grid" data-stagger>
+
+          <article class="op-card glass-card--flat reveal-scan">
+            <div class="op-card-body">
+              <span class="log-status certified">Certified</span>
+              <h3 class="op-card-title">Networking &amp; IP Surveillance Fundamentals</h3>
+              <p class="op-card-desc">IPv4 addressing, subnetting, router/switch setup, NVR/DVR integration, TCP/IP, and CLI diagnostics.</p>
+            </div>
+          </article>
+
+          <article class="op-card glass-card--flat reveal-scan">
+            <div class="op-card-body">
+              <span class="log-status certified">Certified</span>
+              <h3 class="op-card-title">CCTV &amp; Technical Systems Training</h3>
+              <p class="op-card-desc">CP Plus equipment configuration, camera installation, playback analysis, and maintenance.</p>
+            </div>
+          </article>
+
+          <article class="op-card op-card--wide glass-card--flat reveal-scan">
+            <div class="op-card-body">
+              <span class="log-status certified">Certified</span>
+              <h3 class="op-card-title">Fire Safety &amp; First Aid (CPR)</h3>
+              <p class="op-card-desc">Evacuation procedures, fire extinguisher operation, and workplace CPR.</p>
+            </div>
+          </article>
+
+          <article class="op-card glass-card--flat reveal-scan">
+            <div class="op-card-body">
+              <span class="log-status certified">Certified</span>
+              <h3 class="op-card-title">Computer &amp; Version Control Fundamentals</h3>
+              <p class="op-card-desc">Command-line and terminal basics, Git, and cloud-based collaboration tools.</p>
+            </div>
+          </article>
+
+        </div>
 
       </div>
     </section>
 
     <!-- ============================================================
-         CONTACT — Secure Command Terminal
+         CONTACT — Open a Channel
+         The single .btn-signal on the page — everything above is
+         built to lead here.
          ============================================================ -->
     <section id="contact" aria-labelledby="contact-title">
       <div class="section-inner">
 
         <header class="section-header reveal">
-          <span class="section-tag-span">04 / Transmission</span>
-          <h2 id="contact-title" class="section-title reveal-decode">Send Direct Briefing</h2>
+          <span class="section-tag-span">06 / Open a Channel</span>
+          <h2 id="contact-title" class="section-title">Request Operator Access</h2>
         </header>
 
         <div class="contact-grid">
 
-          <div class="command-terminal reveal-scale">
+          <div class="contact-copy">
+            <p>
+              Available for CCTV operations, surveillance shifts, and gate-control roles across
+              logistics, manufacturing, and industrial facilities. Direct lines below — no
+              intermediaries.
+            </p>
 
-            <div class="command-terminal-header">
-              <span class="terminal-dot-group" aria-hidden="true">
-                <span class="terminal-dot alert"></span>
-                <span class="terminal-dot warning"></span>
-                <span class="terminal-dot online"></span>
-              </span>
-              <span>SECURE_CHANNEL // TRANSMIT</span>
-            </div>
-
-            <form class="command-form" onsubmit="handleDirectMessage(event)" novalidate>
-
-              <div class="form-row">
-
-                <div class="form-group">
-                  <label for="contact-name">Name / Organization</label>
-                  <input
-                    type="text"
-                    id="contact-name"
-                    name="name"
-                    autocomplete="name"
-                    placeholder="e.g. Operations Lead — Innovision Ltd."
-                    aria-describedby="contact-name-error"
-                    required
-                  />
-                  <span id="contact-name-error" class="form-error" role="alert"></span>
-                </div>
-
-                <div class="form-group">
-                  <label for="contact-email">Work Email</label>
-                  <input
-                    type="email"
-                    id="contact-email"
-                    name="email"
-                    autocomplete="email"
-                    placeholder="you@company.com"
-                    aria-describedby="contact-email-error"
-                    required
-                  />
-                  <span id="contact-email-error" class="form-error" role="alert"></span>
-                </div>
-
-              </div>
-
-              <div class="form-group">
-                <label for="contact-message">Mission Brief</label>
-                <textarea
-                  id="contact-message"
-                  name="message"
-                  rows="5"
-                  placeholder="Describe the deployment, role, or surveillance scope you need covered."
-                  aria-describedby="contact-message-error"
-                  required
-                ></textarea>
-                <span id="contact-message-error" class="form-error" role="alert"></span>
-              </div>
-
-              <button
-                type="submit"
-                class="btn btn-hire"
-                data-cursor-text="Send"
-                aria-label="Transmit briefing"
-              >
-                <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
-                <span>Transmit Briefing</span>
-              </button>
-
-              <p class="form-status" role="status" aria-live="polite"></p>
-
-            </form>
-
+            <ul class="contact-links" role="list">
+              <li><a class="contact-link" href="mailto:sumit.anand@example.com" data-cursor-text="Email">Email</a></li>
+              <li><a class="contact-link" href="tel:+910000000000" data-cursor-text="Call">Phone</a></li>
+              <li><a class="contact-link" href="https://www.linkedin.com/in/example" target="_blank" rel="noopener" data-cursor-text="Open">LinkedIn</a></li>
+              <li><a class="contact-link" href="assets/sumit-anand-resume.pdf" data-cursor-text="Open">Resume PDF</a></li>
+              <li><span class="contact-link" style="cursor:default;">Patli, Haryana, IN</span></li>
+            </ul>
           </div>
 
-          <aside class="command-info reveal-right" aria-label="Direct contact details">
-
-            <!-- REPLACE WITH REAL DETAILS -->
-            <div class="contact-item">
-              <i class="fa-solid fa-envelope" aria-hidden="true"></i>
-              <span class="contact-label">Email</span>
-              <a class="contact-value" href="mailto:sumit.anand@example.com">sumit.anand@example.com</a>
+          <form class="contact-form panel panel--strong" novalidate aria-labelledby="contact-title">
+            <div class="form-success" role="status" aria-live="polite" hidden>
+              <span class="status-badge live"><span class="pulse-dot-span online"></span> Sent</span>
+              <span>Request received — I'll reply within 24 hours.</span>
             </div>
 
-            <!-- REPLACE WITH REAL DETAILS -->
-            <div class="contact-item">
-              <i class="fa-solid fa-phone" aria-hidden="true"></i>
-              <span class="contact-label">Phone</span>
-              <a class="contact-value" href="tel:+910000000000">+91 00000 00000</a>
+            <div class="form-field--inline">
+              <div class="form-field">
+                <input class="form-input" type="text" id="cf-name" name="name" autocomplete="name" placeholder=" " required />
+                <label class="form-label" for="cf-name">Name</label>
+              </div>
+              <div class="form-field">
+                <input class="form-input" type="email" id="cf-email" name="email" autocomplete="email" placeholder=" " required aria-describedby="cf-email-help" />
+                <label class="form-label" for="cf-email">Email</label>
+              </div>
             </div>
 
-            <div class="contact-item">
-              <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
-              <span class="contact-label">Location</span>
-              <span class="contact-value">Haryana, India</span>
+            <p class="form-help" id="cf-email-help">I respond within 24 hours.</p>
+
+            <div class="form-field">
+              <input class="form-input" type="text" id="cf-org" name="organization" autocomplete="organization" placeholder=" " />
+              <label class="form-label" for="cf-org">Company / Organization</label>
             </div>
 
-            <div class="contact-item">
-              <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-              <span class="contact-label">Availability</span>
-              <span class="contact-value">Open to deployment — immediate joiner</span>
+            <div class="form-field">
+              <textarea class="form-input form-textarea" id="cf-message" name="message" placeholder=" " required></textarea>
+              <label class="form-label" for="cf-message">Message</label>
             </div>
 
-          </aside>
+            <button type="submit" class="btn-signal" data-cursor-text="Send">
+              <span>Transmit Request</span>
+            </button>
+          </form>
 
         </div>
 
@@ -592,133 +857,175 @@
   <!-- ============================================================
        FOOTER
        ============================================================ -->
-  <footer class="footer">
-    <div class="footer-grid">
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
 
-      <div class="footer-brand">
-        <span class="brand-logo">
-          <span class="dot-span" aria-hidden="true"></span>
-          <span>Sumit Anand</span>
-        </span>
-        <p>CCTV Operator &amp; Surveillance Specialist — command-center precision for high-volume logistics operations.</p>
+      <div class="footer-status" aria-hidden="true">
+        <span class="footer-status-item">SYS.STATUS: <span class="footer-status-value--ok">NOMINAL</span></span>
+        <span class="footer-status-item">LAST SYNC: <time class="footer-status-value text-tnum" data-live-sync>—</time></span>
+        <span class="footer-status-item">NODE: IN-SUMIT-01</span>
       </div>
 
-      <nav class="footer-nav" aria-label="Footer">
-        <a href="#about">Expertise</a>
-        <a href="#operations">Feeds</a>
-        <a href="#experience">Logbook</a>
-        <a href="#contact">Contact</a>
-      </nav>
+      <div class="footer-main">
+        <div>
+          <p class="footer-signature">
+            Sumit Anand
+            <span class="footer-signature-role">CCTV Operator · Surveillance Specialist</span>
+          </p>
+        </div>
 
-      <div class="footer-status">
-        <span class="pulse-dot-span online" aria-hidden="true"></span>
-        <span>SYSTEM ONLINE</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="#about">Expertise</a>
+          <a href="#footprint">Footprint</a>
+          <a href="#operations">Feeds</a>
+          <a href="#experience">Logbook</a>
+          <a href="#contact">Contact</a>
+        </nav>
       </div>
 
-    </div>
+      <div class="footer-bottom">
+        <span>© 2025 Sumit Anand. All rights reserved.</span>
+        <span>Built with care · Patli, IN</span>
+      </div>
 
-    <div class="footer-bottom">
-      <span>© 2026 Sumit Anand</span>
-      <span>CCTV OPS // HARYANA, INDIA</span>
     </div>
   </footer>
 
   <!-- ============================================================
-       HIRE MODAL — Deployment Briefing
+       DATA — parsed by script.js, not rendered directly.
        ============================================================ -->
-  <div
-    id="hire-modal"
-    class="modal-backdrop"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="hire-modal-title"
-    aria-hidden="true"
-  >
-    <div class="modal-window">
+  <script type="application/json" id="sites-data">
+  [
+    {
+      "id": "flipkart",
+      "name": "Flipkart Kalash Mega Hub",
+      "client": "Innovision Limited",
+      "location": "Patli, Haryana",
+      "role": "Security Systems & Gate Control Operator",
+      "period": "2025 – Present",
+      "status": "active",
+      "cameras": 32,
+      "type": "Mega Hub"
+    },
+    {
+      "id": "ekart",
+      "name": "Ekart Logistics",
+      "client": "A.P. Securitas Pvt. Ltd.",
+      "location": "Haryana, India",
+      "role": "Security Guard & Surveillance Operator",
+      "period": "2023 – 2024",
+      "status": "past",
+      "cameras": 12,
+      "type": "Logistics"
+    }
+  ]
+  </script>
 
-      <button
-        type="button"
-        class="modal-close-btn"
-        aria-label="Close"
-        onclick="closeHireModal()"
-      >×</button>
+  <script type="application/json" id="operations-data">
+  {
+    "op1": {
+      "title": "CP Plus Multi-Channel Surveillance",
+      "eyebrow": "Innovision Limited · Flipkart Kalash Mega Hub",
+      "site": "Flipkart Kalash Mega Hub",
+      "duration": "2025 – Present",
+      "cameras": 32,
+      "body": "24/7 perimeter coverage across 32 cameras. Real-time monitoring, footage playback and archiving, and shrink prevention across warehouse zones.",
+      "gallery": []
+    },
+    "op2": {
+      "title": "Digital GIGO Gate Control",
+      "eyebrow": "Innovision Limited · Flipkart Kalash Mega Hub",
+      "site": "Flipkart Kalash Mega Hub",
+      "duration": "2025 – Present",
+      "cameras": 32,
+      "body": "High-volume commercial fleet entry/exit logging with 100% data accuracy, credential checks, and synchronized Excel gate tracking.",
+      "gallery": []
+    },
+    "op3": {
+      "title": "Loss Prevention & Shrink Control",
+      "eyebrow": "Innovision Limited · Flipkart Kalash Mega Hub",
+      "site": "Flipkart Kalash Mega Hub",
+      "duration": "2025 – Present",
+      "cameras": 32,
+      "body": "Badge-access enforcement, camera maintenance, and fire-safety drill coordination for an audited mega-hub facility.",
+      "gallery": []
+    },
+    "op4": {
+      "title": "Incident Forensic Review",
+      "eyebrow": "Innovision Limited · Flipkart Kalash Mega Hub",
+      "site": "Flipkart Kalash Mega Hub",
+      "duration": "2025 – Present",
+      "cameras": 32,
+      "body": "Time-stamped footage extraction and cross-camera playback to flag and document incidents for shift managers.",
+      "gallery": []
+    },
+    "op5": {
+      "title": "Perimeter & Dock Security",
+      "eyebrow": "A.P. Securitas Pvt. Ltd. · Ekart Logistics",
+      "site": "Ekart Logistics",
+      "duration": "2023 – 2024",
+      "cameras": 12,
+      "body": "Dock-movement verification, patrol oversight, and multi-camera CCTV monitoring for facility perimeter security.",
+      "gallery": []
+    },
+    "op6": {
+      "title": "Emergency Response Coordination",
+      "eyebrow": "A.P. Securitas Pvt. Ltd. · Ekart Logistics",
+      "site": "Ekart Logistics",
+      "duration": "2023 – 2024",
+      "cameras": 12,
+      "body": "Fire-drill participation, emergency equipment operation, and daily shift-log maintenance under CCTV oversight.",
+      "gallery": []
+    }
+  }
+  </script>
 
-      <h2 id="hire-modal-title" class="modal-title">Request a Deployment Briefing</h2>
-
-      <p class="modal-body-text">
-        Share the operation and I'll respond with availability, shift preferences, and a
-        short plan for coverage. Typical response window: under 24 hours.
-      </p>
-
-      <form class="modal-form" onsubmit="handleHireSubmit(event)" novalidate>
-
-        <div class="form-field">
-          <input type="text" id="hire-name" name="name" class="form-input" placeholder=" " autocomplete="name" required />
-          <label for="hire-name" class="form-label">Full Name</label>
+  <!-- ============================================================
+       MODAL SHELL — a single instance, populated from
+       #operations-data by script.js when a card is opened.
+       ============================================================ -->
+  <div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+    <div class="modal-window" data-modal-window>
+      <div class="modal-header">
+        <div>
+          <p class="modal-eyebrow" data-modal-eyebrow>Innovision Limited · Flipkart Kalash Mega Hub</p>
+          <h2 class="modal-title" id="modal-title" data-modal-title>Deployment Briefing</h2>
         </div>
-
-        <div class="form-field">
-          <input type="email" id="hire-email" name="email" class="form-input" placeholder=" " autocomplete="email" required />
-          <label for="hire-email" class="form-label">Work Email</label>
-        </div>
-
-        <div class="form-field">
-          <input type="text" id="hire-org" name="organization" class="form-input" placeholder=" " autocomplete="organization" />
-          <label for="hire-org" class="form-label">Organization / Role</label>
-        </div>
-
-        <div class="form-field">
-          <textarea id="hire-message" name="message" class="form-input" placeholder=" " rows="4"></textarea>
-          <label for="hire-message" class="form-label">Briefing Notes</label>
-        </div>
-
-        <button type="submit" class="btn btn-hire" data-cursor-text="Send">
-          <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
-          <span>Transmit Request</span>
+        <button type="button" class="btn-icon modal-close-btn" data-modal-close aria-label="Close briefing">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
         </button>
+      </div>
 
-      </form>
+      <img class="modal-img" data-modal-img src="" alt="" loading="lazy" decoding="async" width="900" height="500" />
 
+      <div class="modal-meta" role="list" aria-label="Deployment details">
+        <div class="readout" role="listitem">
+          <span class="readout__value" data-modal-site>—</span>
+          <span class="readout__label">Site</span>
+        </div>
+        <div class="readout" role="listitem">
+          <span class="readout__value" data-modal-duration>—</span>
+          <span class="readout__label">Duration</span>
+        </div>
+        <div class="readout" role="listitem">
+          <span class="readout__value text-tnum" data-modal-cameras>—</span>
+          <span class="readout__label">Cameras</span>
+        </div>
+      </div>
+
+      <p class="modal-body-text" data-modal-body>—</p>
+
+      <div class="modal-gallery" data-modal-gallery aria-hidden="true"></div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" data-modal-close>Close</button>
+        <a href="#contact" class="btn btn-glass" data-modal-close data-cursor-text="Go">Request Briefing</a>
+      </div>
     </div>
   </div>
 
-  <!-- ============================================================
-       OPERATION MODAL — Feed Briefing
-       ============================================================ -->
-  <div
-    id="op-modal"
-    class="modal-backdrop"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="op-modal-title"
-    aria-hidden="true"
-  >
-    <div class="modal-window">
-
-      <button
-        type="button"
-        class="modal-close-btn"
-        aria-label="Close"
-        onclick="closeOpModal()"
-      >×</button>
-
-      <img id="op-modal-img" class="modal-img" src="" alt="" width="900" height="600" />
-
-      <h2 id="op-modal-title" class="modal-title"></h2>
-      <p id="op-modal-body" class="modal-body-text"></p>
-
-      <ul id="op-modal-points" class="modal-points" role="list"></ul>
-
-    </div>
-  </div>
-
-  <!-- ============================================================
-       TOAST — Confirmation Signal
-       ============================================================ -->
-  <div id="toast" class="toast-popup" role="status" aria-live="polite">
-    <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-    <span id="toast-message"></span>
-  </div>
+  <!-- Toast notifications — no content is hardcoded; script.js injects it. -->
+  <div class="toast-container" role="region" aria-live="polite" aria-label="Notifications"></div>
 
 </body>
 </html>
