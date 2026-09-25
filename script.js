@@ -1,7 +1,15 @@
 /* ==========================================================================
    CCTV COMMAND CENTER — script.js
-   Cursor · Spotlight · Clock · Particles · Tilt · Filters · Modals · Forms ·
-   Toast · Scroll Reveals · Text Decode · Scroll-Spy · Keyboard
+
+   Cursor (idle/armed/scanning/lock/boot/idle-dim) · Spotlight · Progress Bar
+   Particles · Surveillance Clock · Card Tilt · Operations Data · Modal System
+   Contact Form (mailto) · Toast · Scroll Reveal · Text Decode · Scroll-Spy
+   Keyboard & Focus Trap · Mobile Nav Drawer · Boot Sequence · Career Footprint
+   Operations Filter Bar
+
+   No backend anywhere in this file. The contact form's only transport is a
+   mailto: link — the honesty of that mechanism is part of the design, not
+   a limitation to hide.
    ========================================================================== */
 'use strict';
 
@@ -21,7 +29,25 @@ const CONTACT_EMAIL = 'sa8518430@gmail.com';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-/* Selectors that trigger the reticle "lock-on" state */
+/* requestIdleCallback isn't everywhere (Safari) — fall back to a short timeout */
+const ridle = window.requestIdleCallback
+  ? window.requestIdleCallback.bind(window)
+  : (cb) => setTimeout(() => cb({ didTimeout: false, timeRemaining: () => 0 }), 1);
+
+/* Read a duration token off :root once, in ms, with a sane fallback if the
+   variable is missing or set in an unexpected unit. */
+const readDurationVar = (name, fallbackMs) => {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  if (!raw) return fallbackMs;
+  const n = parseFloat(raw);
+  if (Number.isNaN(n)) return fallbackMs;
+  return raw.endsWith('s') && !raw.endsWith('ms') ? n * 1000 : n;
+};
+
+const DUR_REVEAL = readDurationVar('--duration-reveal', 1200);
+const TERMINAL_LINE_DELAY = readDurationVar('--terminal-line-delay', 55);
+
+/* Selectors that trigger the reticle "lock-on" (armed) state */
 const HOVER_SELECTOR = [
   'a',
   'button',
@@ -36,8 +62,18 @@ const HOVER_SELECTOR = [
 /* Selectors that switch the cursor into text-caret mode */
 const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
 
+/* Primary CTAs — the reticle "commits" here, distinct from a generic hover */
+const LOCK_SELECTOR = '.btn-signal, .btn-hire, [data-cursor-lock]';
+
+/* Topology / footprint markers — the reticle "reads" here */
+const SCAN_SELECTOR = '.topo__node, .footprint__site, [data-cursor-scan]';
+
 /* ==========================================================================
-   1. CURSOR — four-layer reticle: glow, ring, dot, context label
+   1. CURSOR — four-layer reticle: glow, ring, dot, context label.
+   Idle by default; armed on interactive elements; locked on primary CTAs;
+   scanning on topology/footprint markers; hidden during boot; dimmed after
+   a few seconds of stillness. Position is lerped here; CSS decides how
+   each state looks.
    ========================================================================== */
 (function initCursor() {
   const dot       = $('.cursor-dot');
@@ -57,6 +93,18 @@ const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
   const RING_EASE = 0.18;
   const GLOW_EASE = 0.08;
 
+  /* Idle-dim: rewards a still operator. Any movement resets the clock. */
+  const IDLE_DIM_MS = 4000;
+  let idleTimer = null;
+
+  const armIdleTimer = () => {
+    clearTimeout(idleTimer);
+    document.body.classList.remove('cursor-idle-dim');
+    idleTimer = setTimeout(() => {
+      document.body.classList.add('cursor-idle-dim');
+    }, IDLE_DIM_MS);
+  };
+
   const onPointerMove = (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
@@ -68,6 +116,8 @@ const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
       spotlight.style.setProperty('--my', `${(mouseY / window.innerHeight) * 100}%`);
       document.body.classList.add('spotlight-active');
     }
+
+    armIdleTimer();
   };
 
   const tick = () => {
@@ -103,11 +153,14 @@ const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
   });
 
   rafId = requestAnimationFrame(tick);
+  armIdleTimer();
 
   document.addEventListener('mouseover', (e) => {
     const t = e.target;
     if (t.closest?.(HOVER_SELECTOR)) document.body.classList.add('cursor-hover');
     if (t.closest?.(TEXT_SELECTOR))  document.body.classList.add('cursor-text');
+    if (t.closest?.(LOCK_SELECTOR))  document.body.classList.add('cursor-lock');
+    if (t.closest?.(SCAN_SELECTOR))  document.body.classList.add('cursor-scanning');
 
     const labeled = t.closest?.('[data-cursor-text]');
     if (labeled && label) label.textContent = labeled.dataset.cursorText;
@@ -117,14 +170,15 @@ const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
     const from = e.target;
     const to   = e.relatedTarget;
 
-    if (from.closest?.(HOVER_SELECTOR)) {
-      const still = to && to.closest?.(HOVER_SELECTOR);
-      if (!still) document.body.classList.remove('cursor-hover');
-    }
-    if (from.closest?.(TEXT_SELECTOR)) {
-      const still = to && to.closest?.(TEXT_SELECTOR);
-      if (!still) document.body.classList.remove('cursor-text');
-    }
+    const stillWithin = (selector) => {
+      if (!from.closest?.(selector)) return true; /* wasn't in that state to begin with */
+      return Boolean(to && to.closest?.(selector));
+    };
+
+    if (!stillWithin(HOVER_SELECTOR)) document.body.classList.remove('cursor-hover');
+    if (!stillWithin(TEXT_SELECTOR))  document.body.classList.remove('cursor-text');
+    if (!stillWithin(LOCK_SELECTOR))  document.body.classList.remove('cursor-lock');
+    if (!stillWithin(SCAN_SELECTOR))  document.body.classList.remove('cursor-scanning');
   }, { passive: true });
 
   document.addEventListener('mousedown', () => document.body.classList.add('cursor-active'));
@@ -132,6 +186,8 @@ const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
 
   document.addEventListener('mouseleave', () => document.body.classList.add('cursor-hidden'));
   document.addEventListener('mouseenter', () => document.body.classList.remove('cursor-hidden'));
+
+  window.addEventListener('beforeunload', () => clearTimeout(idleTimer));
 })();
 
 /* ==========================================================================
@@ -310,6 +366,8 @@ const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
 
 /* ==========================================================================
    4. SURVEILLANCE TIMESTAMP CLOCK (UTC + IST)
+   Also drives the hero monitor's own timestamp badge and the footer's
+   "LAST SYNC" readout, so the whole page agrees on one clock.
    ========================================================================== */
 (function initSurveillanceClock() {
   let clockEl = document.getElementById('cctv-clock');
@@ -341,6 +399,9 @@ const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
     document.body.appendChild(clockEl);
   }
 
+  const heroTimestamp = $('[data-live-timestamp]');
+  const footerSync    = $('[data-live-sync]');
+
   const pad = (n) => String(n).padStart(2, '0');
 
   const update = () => {
@@ -352,6 +413,9 @@ const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
     const istStr = `${pad(ist.getUTCHours())}:${pad(ist.getUTCMinutes())}:${pad(ist.getUTCSeconds())}`;
 
     clockEl.textContent = `● REC ${dateStr}  ·  UTC ${utcStr}  ·  IST ${istStr}`;
+
+    if (heroTimestamp) heroTimestamp.textContent = `● ${dateStr} ${istStr}`;
+    if (footerSync) footerSync.textContent = `${dateStr} ${istStr} IST`;
   };
 
   const syncVisibility = () => {
@@ -398,40 +462,953 @@ const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
 
     const onLeave = () => { rect = null; card.style.transform = ''; };
 
-    card.addEventListener('mouseenter', onEnter);
-    card.addEventListener('mousemove',  onMove);
-    card.addEventListener('mouseleave', onLeave);
+    card.addEventListener('mouseenter', onEnter, { passive: true });
+    card.addEventListener('mousemove',  onMove,  { passive: true });
+    card.addEventListener('mouseleave', onLeave, { passive: true });
   });
 })();
 
 /* ==========================================================================
-   6. PROJECT CATEGORY FILTER BAR
+   6. OPERATIONS DATA — the single source of truth for every deployment
+   card and its modal briefing. Every fact here traces to the resume;
+   nothing is invented. Gallery URLs are placeholders — swap in real
+   deployment photography before launch.
    ========================================================================== */
-(function initProjectFilters() {
+const opData = {
+  op1: {
+    title: 'CP Plus Multi-Channel Surveillance',
+    eyebrow: 'Innovision Limited · Flipkart Kalash Mega Hub',
+    site: 'Flipkart Kalash Mega Hub',
+    period: '2025 — Present',
+    cameras: 32,
+    status: 'active',
+    category: 'Surveillance',
+    img: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1200&auto=format&fit=crop',
+    desc: 'Real-time monitoring across a 32-camera CP Plus array covering warehouse zones, dock areas, and perimeter. Responsible for playback investigation, footage archiving, and shrink prevention.',
+    tags: ['CP Plus', 'Multi-Channel Monitoring', 'Playback & Archiving', 'Loss Prevention'],
+    /* Placeholder frames — replace with real deployment photography. */
+    gallery: [
+      'https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=500&auto=format&fit=crop'
+    ]
+  },
+  op2: {
+    title: 'Digital GIGO Gate Control & Data Terminal',
+    eyebrow: 'Innovision Limited · Flipkart Kalash Mega Hub',
+    site: 'Flipkart Kalash Mega Hub',
+    period: '2025 — Present',
+    cameras: 4,
+    status: 'active',
+    category: 'Gate Control',
+    img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop',
+    desc: 'High-density commercial vehicle logging for India\u2019s largest Flipkart hub. Gate-in/gate-out entry synchronization, driver credential checks, and 100% accurate MS Excel logging.',
+    tags: ['GIGO Gate Entry', 'MS Excel', 'Vehicle Logs', 'Badge Verification'],
+    gallery: [
+      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=500&auto=format&fit=crop'
+    ]
+  },
+  op3: {
+    title: 'Loss Prevention & Shrink Control',
+    eyebrow: 'Innovision Limited · Flipkart Kalash Mega Hub',
+    site: 'Flipkart Kalash Mega Hub',
+    period: '2025 — Present',
+    cameras: null,
+    status: 'active',
+    category: 'Loss Prevention',
+    img: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1200&auto=format&fit=crop',
+    desc: 'Continuous monitoring of high-value inventory zones, anomaly flagging, and coordinated escalation to shift managers. Zero-incident operational accuracy maintained across the current posting.',
+    tags: ['Loss Prevention', 'Incident Flagging', 'Escalation Protocols', 'Site Coordination'],
+    gallery: [
+      'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=500&auto=format&fit=crop'
+    ]
+  },
+  op4: {
+    title: 'Incident Forensic Review',
+    eyebrow: 'Innovision Limited · Flipkart Kalash Mega Hub',
+    site: 'Flipkart Kalash Mega Hub',
+    period: '2025 — Present',
+    cameras: 32,
+    status: 'active',
+    category: 'Forensics',
+    img: 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=1200&auto=format&fit=crop',
+    desc: 'Timestamped footage extraction, chain-of-custody documentation, and cross-camera timeline reconstruction for internal loss investigations.',
+    tags: ['Footage Playback', 'Forensic Review', 'Chain of Custody', 'Reporting'],
+    gallery: [
+      'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=500&auto=format&fit=crop'
+    ]
+  },
+  op5: {
+    title: 'Perimeter & Dock Security',
+    eyebrow: 'A.P. Securitas Pvt. Ltd. · Ekart Logistics',
+    site: 'Ekart Logistics',
+    period: '2023 — 2024',
+    cameras: 12,
+    status: 'past',
+    category: 'Perimeter',
+    img: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=1200&auto=format&fit=crop',
+    desc: 'Perimeter monitoring, dock-movement verification, and patrol oversight at an Ekart Logistics facility. Coordinated with shift supervisors on access control and visitor verification.',
+    tags: ['Perimeter Monitoring', 'Dock Verification', 'Patrol Oversight', 'Visitor Access'],
+    gallery: [
+      'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=500&auto=format&fit=crop'
+    ]
+  },
+  op6: {
+    title: 'Emergency Response Coordination',
+    eyebrow: 'A.P. Securitas Pvt. Ltd. · Ekart Logistics',
+    site: 'Ekart Logistics',
+    period: '2023 — 2024',
+    cameras: null,
+    status: 'past',
+    category: 'Emergency',
+    img: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=1200&auto=format&fit=crop',
+    desc: 'Alarm-to-action dispatch, evacuation routing under live surveillance, fire safety inspections, and post-incident shift reporting.',
+    tags: ['Fire Safety', 'First Aid', 'Emergency Escalation', 'Shift Reporting'],
+    gallery: [
+      'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=500&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=500&auto=format&fit=crop'
+    ]
+  }
+};
+
+/* ==========================================================================
+   7. MODAL SYSTEM — a single briefing window, two things it can show.
+   #modal's markup (from index.html) is the op-briefing template. The hire
+   channel reuses the same window rather than a second overlay: its
+   template is swapped in on demand and the original is restored the next
+   time an operations card opens. Either way, close controls stay simple —
+   every dismiss control just carries [data-modal-close].
+   ========================================================================== */
+let __lastFocusedEl = null;
+
+const modalBackdrop = document.getElementById('modal');
+const modalWindow   = modalBackdrop ? modalBackdrop.querySelector('[data-modal-window]') : null;
+const OP_MODAL_TEMPLATE = modalWindow ? modalWindow.innerHTML : '';
+
+function getFocusable(container) {
+  return $$('a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])', container)
+    .filter((el) => el.offsetParent !== null || el === document.activeElement);
+}
+
+function ensureModalBackdrop() {
+  if (modalBackdrop) return modalBackdrop;
+
+  /* Fallback — builds a minimal backdrop if #modal is ever missing from
+     the page. Not exercised in the shipped markup. */
+  const backdrop = document.createElement('div');
+  backdrop.id = 'modal-fallback';
+  backdrop.className = 'modal-backdrop';
+  backdrop.setAttribute('role', 'dialog');
+  backdrop.setAttribute('aria-modal', 'true');
+  backdrop.setAttribute('aria-hidden', 'true');
+  backdrop.innerHTML = `
+    <div class="modal-window" data-modal-window>
+      <button type="button" class="btn-icon modal-close-btn" data-modal-close aria-label="Close">×</button>
+      <div id="modal-fallback-content"></div>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+  return backdrop;
+}
+
+function openModal(target) {
+  const backdrop = (target instanceof Element ? target : document.getElementById(target))
+    || modalBackdrop
+    || ensureModalBackdrop();
+
+  if (!backdrop) return;
+
+  __lastFocusedEl = document.activeElement;
+
+  backdrop.classList.add('active');
+  backdrop.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('modal-open');
+
+  const focusables = getFocusable(backdrop);
+  (focusables[0] || backdrop.querySelector('[data-modal-close]'))?.focus({ preventScroll: true });
+}
+
+function closeModal(target) {
+  const backdrop = (target instanceof Element ? target : document.getElementById(target))
+    || document.querySelector('.modal-backdrop.active');
+
+  if (!backdrop) return;
+
+  backdrop.classList.remove('active');
+  backdrop.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+
+  if (__lastFocusedEl && typeof __lastFocusedEl.focus === 'function') {
+    __lastFocusedEl.focus({ preventScroll: true });
+    __lastFocusedEl = null;
+  }
+}
+
+function closeModalOnBackdrop(e) {
+  const backdrop = e.currentTarget;
+  if (e.target === backdrop) closeModal(backdrop);
+}
+
+if (modalBackdrop) modalBackdrop.addEventListener('click', closeModalOnBackdrop);
+
+/* Every dismiss control in either template — the × button, the footer's
+   ghost "Close", the "Request Briefing" link — carries this attribute,
+   so one delegated listener covers both templates without rewiring. */
+document.addEventListener('click', (e) => {
+  const closer = e.target.closest?.('[data-modal-close]');
+  if (closer) closeModal(closer.closest('.modal-backdrop'));
+});
+
+function renderGallery(container, images, altPrefix) {
+  if (!container) return;
+  container.innerHTML = images
+    .map((src, i) => `
+      <button type="button" class="gallery-thumb" aria-label="View frame ${i + 1} of ${altPrefix}">
+        <img src="${src}" alt="" loading="lazy" decoding="async" width="300" height="225" />
+      </button>
+    `)
+    .join('');
+}
+
+function openOpModal(key) {
+  const data = opData[key];
+  if (!data) {
+    console.warn(`[openOpModal] no briefing found for "${key}"`);
+    return;
+  }
+  if (!modalBackdrop || !modalWindow) return;
+
+  if (modalWindow.dataset.mode !== 'op') {
+    modalWindow.innerHTML = OP_MODAL_TEMPLATE;
+    modalWindow.dataset.mode = 'op';
+  }
+
+  const eyebrow  = modalWindow.querySelector('[data-modal-eyebrow]');
+  const title    = modalWindow.querySelector('[data-modal-title]');
+  const img      = modalWindow.querySelector('[data-modal-img]');
+  const site     = modalWindow.querySelector('[data-modal-site]');
+  const duration = modalWindow.querySelector('[data-modal-duration]');
+  const cameras  = modalWindow.querySelector('[data-modal-cameras]');
+  const body     = modalWindow.querySelector('[data-modal-body]');
+  const gallery  = modalWindow.querySelector('[data-modal-gallery]');
+
+  if (eyebrow)  eyebrow.textContent  = data.eyebrow;
+  if (title)    title.textContent    = data.title;
+  if (img) {
+    img.src = data.img;
+    img.alt = `${data.title} — ${data.site}`;
+  }
+  if (site)     site.textContent     = data.site;
+  if (duration) duration.textContent = data.period;
+  if (cameras)  cameras.textContent  = data.cameras != null ? String(data.cameras) : '—';
+  if (body)     body.textContent     = data.desc;
+
+  renderGallery(gallery, data.gallery, data.title);
+
+  /* A small tag row, inserted once per open rather than baked into the
+     static template — keeps the shell markup generic. */
+  let tagRow = modalWindow.querySelector('.modal-tags');
+  if (!tagRow) {
+    tagRow = document.createElement('ul');
+    tagRow.className = 'modal-tags tech-tags';
+    tagRow.setAttribute('role', 'list');
+    body?.insertAdjacentElement('afterend', tagRow);
+  }
+  tagRow.innerHTML = data.tags.map((t) => `<li class="tech-tag-span">${t}</li>`).join('');
+
+  openModal(modalBackdrop);
+}
+
+function openHireModal() {
+  if (!modalBackdrop || !modalWindow) return;
+
+  modalWindow.innerHTML = `
+    <div class="modal-header">
+      <div>
+        <p class="modal-eyebrow">// Request Deployment</p>
+        <h2 class="modal-title" id="modal-title">Open a Channel with Sumit</h2>
+      </div>
+      <button type="button" class="btn-icon modal-close-btn" data-modal-close aria-label="Close">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <p class="modal-body-text">
+      Available for CCTV operations, surveillance shifts, and gate-control roles across
+      logistics and industrial facilities in Haryana / NCR.
+    </p>
+
+    <form class="contact-form" id="hire-form" novalidate>
+      <div class="form-success" role="status" aria-live="polite" hidden>
+        <span class="status-badge live"><span class="pulse-dot-span online"></span> Sent</span>
+        <span>Thanks. Your email client is opening — if it doesn't, copy your message and send it to
+          <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.
+        </span>
+      </div>
+
+      <div class="form-field--inline">
+        <div class="form-field">
+          <input class="form-input" type="text" id="hm-name" name="name" autocomplete="name" placeholder=" " required />
+          <label class="form-label" for="hm-name">Name</label>
+        </div>
+        <div class="form-field">
+          <input class="form-input" type="email" id="hm-email" name="email" autocomplete="email" placeholder=" " required />
+          <label class="form-label" for="hm-email">Email</label>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <input class="form-input" type="text" id="hm-org" name="organization" autocomplete="organization" placeholder=" " />
+        <label class="form-label" for="hm-org">Company / Organization</label>
+      </div>
+
+      <div class="form-field">
+        <textarea class="form-input form-textarea" id="hm-message" name="message" placeholder=" " required></textarea>
+        <label class="form-label" for="hm-message">Message</label>
+      </div>
+
+      <button type="submit" class="btn-signal" data-cursor-text="Send">
+        <span>Transmit Request</span>
+      </button>
+
+      <p class="form-help">Or reach out directly: <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a></p>
+    </form>
+  `;
+  modalWindow.dataset.mode = 'hire';
+
+  attachContactFormHandler($('#hire-form', modalWindow));
+  openModal(modalBackdrop);
+}
+
+/* Backward-compatible aliases some markup or older builds may still call */
+function closeHireModal() { closeModal(modalBackdrop); }
+function closeOpModal()   { closeModal(modalBackdrop); }
+
+/* Delegated triggers — no inline onclick anywhere in the page */
+document.addEventListener('click', (e) => {
+  const card = e.target.closest?.('[data-modal-id]');
+  if (card) { openOpModal(card.dataset.modalId); return; }
+
+  const hireTrigger = e.target.closest?.('[data-open-hire]');
+  if (hireTrigger) openHireModal();
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const card = e.target.closest?.('[data-modal-id]');
+  if (card && (card.tagName === 'BUTTON' || card.getAttribute('role') === 'button')) {
+    /* Native <button> already fires a click on Enter/Space — only step in
+       for a non-button element carrying role="button". */
+    if (card.tagName !== 'BUTTON') {
+      e.preventDefault();
+      openOpModal(card.dataset.modalId);
+    }
+  }
+});
+
+window.showToast     = showToastImpl; /* defined in section 9; hoisted reference is safe here */
+window.openHireModal = openHireModal;
+window.openOpModal   = openOpModal;
+window.closeModal    = closeModal;
+window.closeHireModal = closeHireModal;
+window.closeOpModal   = closeOpModal;
+
+/* ==========================================================================
+   8. CONTACT FORM — frontend-only submission. mailto: is the transport.
+   No backend, no third-party service, and the success message says so.
+   One handler serves both the page's own Contact section and the hire
+   modal's copy of the same form.
+   ========================================================================== */
+function ensureFieldError(input) {
+  const id = `${input.id}-error`;
+  let err = document.getElementById(id);
+  if (!err) {
+    err = document.createElement('p');
+    err.id = id;
+    err.className = 'form-error';
+    err.hidden = true;
+    input.insertAdjacentElement('afterend', err);
+  }
+  return err;
+}
+
+function setFieldError(input, message) {
+  const err = ensureFieldError(input);
+  if (message) {
+    err.textContent = message;
+    err.hidden = false;
+    input.setAttribute('aria-invalid', 'true');
+    input.setAttribute('aria-describedby', err.id);
+    input.closest('.form-field')?.classList.add('has-error');
+  } else {
+    err.hidden = true;
+    input.removeAttribute('aria-invalid');
+    input.closest('.form-field')?.classList.remove('has-error');
+  }
+}
+
+function validateContactForm(form) {
+  const name    = form.querySelector('[name="name"]');
+  const email   = form.querySelector('[name="email"]');
+  const message = form.querySelector('[name="message"]');
+
+  let valid = true;
+
+  if (!name.value.trim() || name.value.trim().length < 2) {
+    setFieldError(name, 'Enter your name (2 characters or more).');
+    valid = false;
+  } else {
+    setFieldError(name, null);
+  }
+
+  if (!EMAIL_RE.test(email.value.trim())) {
+    setFieldError(email, 'Enter a valid email address.');
+    valid = false;
+  } else {
+    setFieldError(email, null);
+  }
+
+  if (!message.value.trim() || message.value.trim().length < 10) {
+    setFieldError(message, 'Say a little more (10 characters or more).');
+    valid = false;
+  } else {
+    setFieldError(message, null);
+  }
+
+  return valid;
+}
+
+function buildMailtoHref(form) {
+  const name    = form.querySelector('[name="name"]')?.value.trim() || '';
+  const email   = form.querySelector('[name="email"]')?.value.trim() || '';
+  const org     = form.querySelector('[name="organization"]')?.value.trim() || '';
+  const message = form.querySelector('[name="message"]')?.value.trim() || '';
+
+  const subject = `Portfolio contact from ${name}`;
+  const bodyLines = [
+    message,
+    '',
+    `— ${name}`,
+    email,
+    org ? org : null
+  ].filter(Boolean);
+
+  const body = bodyLines.join('\n');
+
+  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function attachContactFormHandler(form) {
+  if (!form || form.dataset.wired === 'true') return;
+  form.dataset.wired = 'true';
+
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const successEl = form.querySelector('.form-success');
+  const fieldEls  = $$('.form-field, .form-field--inline', form);
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    if (!validateContactForm(form)) return;
+
+    const originalLabel = submitBtn ? submitBtn.innerHTML : '';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Transmitting…</span>';
+    }
+
+    /* Frontend-only submission — mailto: is the transport. No backend,
+       no third-party service. The ~900ms delay is a deliberate pause,
+       not a network call: it gives the "transmitting" state a moment
+       to register before the mail client takes over. */
+    setTimeout(() => {
+      const href = buildMailtoHref(form);
+      window.location.href = href;
+
+      fieldEls.forEach((el) => { el.hidden = true; });
+      if (submitBtn) submitBtn.hidden = true;
+      if (successEl) successEl.hidden = false;
+
+      showToastImpl({ type: 'success', title: 'Channel opened', message: 'Channel opened.' });
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalLabel;
+      }
+    }, 900);
+  });
+}
+
+/* Wire the page's own contact form immediately (the hire-modal copy is
+   wired at creation time, in openHireModal). */
+attachContactFormHandler($('#contact .contact-form'));
+
+/* ==========================================================================
+   9. TOAST SYSTEM — small glass notices, bottom-right. Confirms; never
+   interrupts. Capped at three on screen at once.
+   ========================================================================== */
+function showToastImpl({ type = 'info', title = '', message = '', duration = 4200 } = {}) {
+  const container = $('.toast-container');
+  if (!container) return;
+
+  while (container.children.length >= 3) {
+    container.removeChild(container.firstElementChild);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = `toast toast--${type}`;
+  toast.setAttribute('role', type === 'alert' ? 'alert' : 'status');
+  toast.innerHTML = `
+    <span class="toast-icon" aria-hidden="true"></span>
+    <div class="toast-content">
+      ${title ? `<p class="toast-label">${title}</p>` : ''}
+      <p class="toast-body">${message}</p>
+    </div>
+    <button type="button" class="toast-close" aria-label="Dismiss notification">×</button>
+  `;
+
+  container.appendChild(toast);
+
+  const dismiss = () => {
+    if (prefersReducedMotion) {
+      toast.remove();
+      return;
+    }
+    toast.classList.add('exit');
+    toast.classList.remove('enter');
+    toast.addEventListener('animationend', () => toast.remove(), { once: true });
+    /* Fallback in case the animation never fires (e.g. display:none ancestor) */
+    setTimeout(() => toast.remove(), 700);
+  };
+
+  toast.querySelector('.toast-close')?.addEventListener('click', dismiss);
+
+  if (prefersReducedMotion) {
+    setTimeout(dismiss, duration);
+    return;
+  }
+
+  toast.classList.add('enter');
+  requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.remove('enter')));
+  setTimeout(dismiss, duration);
+}
+
+window.showToast = showToastImpl;
+
+/* ==========================================================================
+   10. SCROLL REVEAL SYSTEM
+   One-shot IntersectionObserver: an element earns `.is-visible` once and
+   is left alone after. Stagger containers set --stagger-index on each
+   child before observing; the CSS reads that variable for the delay.
+   ========================================================================== */
+(function initScrollReveal() {
+  const REVEAL_SELECTOR = '.reveal, .reveal-left, .reveal-right, .reveal-scan, .reveal-decode, .reveal-stagger, .reveal--mask';
+  const targets = $$(REVEAL_SELECTOR);
+  if (!targets.length) return;
+
+  $$('[data-stagger]').forEach((group) => {
+    Array.from(group.children).forEach((child, i) => {
+      child.style.setProperty('--stagger-index', String(i));
+    });
+  });
+
+  if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+    targets.forEach((el) => el.classList.add('is-visible'));
+    return;
+  }
+
+  const io = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
+  targets.forEach((el) => io.observe(el));
+})();
+
+/* ==========================================================================
+   11. TEXT DECODE — a scramble-to-resolve reveal for headline text.
+   Only text nodes are touched; child elements (an <em>, a <span>) keep
+   their identity and are recursed into rather than replaced.
+   ========================================================================== */
+(function initTextDecode() {
+  const targets = $$('.reveal-decode');
+  if (!targets.length) return;
+
+  if (prefersReducedMotion) {
+    targets.forEach((el) => el.classList.add('is-visible'));
+    return;
+  }
+
+  const CHARSET = '!@#$%^&*()_+-=<>[]{}/\\|~0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const randChar = () => CHARSET[Math.floor(Math.random() * CHARSET.length)];
+
+  /* Collect the element's text nodes once, recording each node plus its
+     final characters, so the animation can rebuild without disturbing
+     sibling elements. */
+  function collectTextNodes(root) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    const nodes = [];
+    let n;
+    while ((n = walker.nextNode())) {
+      if (n.textContent.trim().length) nodes.push(n);
+    }
+    return nodes;
+  }
+
+  function decode(el) {
+    if (el.dataset.decoded === 'true') return;
+    el.dataset.decoded = 'true';
+
+    const nodes = collectTextNodes(el).map((node) => ({
+      node,
+      final: node.textContent,
+      current: node.textContent.split('').map(() => ' ')
+    }));
+
+    const totalChars = nodes.reduce((sum, n) => sum + n.final.length, 0);
+    if (!totalChars) return;
+
+    const start = performance.now();
+    let rafId = null;
+
+    const paint = (now) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / DUR_REVEAL, 1);
+      const resolvedCount = Math.floor(progress * totalChars);
+
+      let counted = 0;
+      nodes.forEach(({ node, final, current }) => {
+        for (let i = 0; i < final.length; i++) {
+          const globalIndex = counted + i;
+          if (globalIndex < resolvedCount) {
+            current[i] = final[i];
+          } else if (final[i] === ' ') {
+            current[i] = ' ';
+          } else {
+            current[i] = randChar();
+          }
+        }
+        node.textContent = current.join('');
+        counted += final.length;
+      });
+
+      if (progress < 1) {
+        rafId = requestAnimationFrame(paint);
+      } else {
+        nodes.forEach(({ node, final }) => { node.textContent = final; });
+      }
+    };
+
+    const onVisibility = () => {
+      if (document.hidden && rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+        nodes.forEach(({ node, final }) => { node.textContent = final; });
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+
+    rafId = requestAnimationFrame(paint);
+  }
+
+  if (!('IntersectionObserver' in window)) {
+    targets.forEach(decode);
+    return;
+  }
+
+  const io = new IntersectionObserver((entries, observer) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      decode(entry.target);
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: 0.4 });
+
+  targets.forEach((el) => io.observe(el));
+})();
+
+/* ==========================================================================
+   12. SCROLL-SPY — highlights the nav link for the section in view
+   ========================================================================== */
+(function initScrollSpy() {
+  const sections = $$('main > section[id]');
+  const navLinks = $$('a[href^="#"]', document.querySelector('.nav-links') || document);
+  if (!sections.length || !navLinks.length || !('IntersectionObserver' in window)) return;
+
+  const linkFor = (id) => navLinks.filter((a) => a.getAttribute('href') === `#${id}`);
+
+  let queued = false;
+  let currentId = null;
+
+  const applyCurrent = (id) => {
+    if (id === currentId) return;
+    currentId = id;
+    navLinks.forEach((a) => a.classList.remove('is-current'));
+    linkFor(id).forEach((a) => a.classList.add('is-current'));
+  };
+
+  const io = new IntersectionObserver((entries) => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      const visible = entries
+        .filter((e) => e.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+      if (visible[0]) applyCurrent(visible[0].target.id);
+      queued = false;
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+
+  sections.forEach((s) => io.observe(s));
+})();
+
+/* ==========================================================================
+   13. MOBILE NAVIGATION DRAWER
+   ========================================================================== */
+(function initNavDrawer() {
+  const toggle   = $('.nav-toggle');
+  const drawer   = document.getElementById('nav-drawer');
+  const backdrop = $('[data-nav-backdrop]');
+  if (!toggle || !drawer) return;
+
+  const open = () => {
+    drawer.classList.add('is-open');
+    drawer.removeAttribute('inert');
+    drawer.setAttribute('aria-hidden', 'false');
+    backdrop?.classList.add('is-open');
+    toggle.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('nav-open');
+    getFocusable(drawer)[0]?.focus({ preventScroll: true });
+  };
+
+  const close = () => {
+    drawer.classList.remove('is-open');
+    drawer.setAttribute('inert', '');
+    drawer.setAttribute('aria-hidden', 'true');
+    backdrop?.classList.remove('is-open');
+    toggle.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('nav-open');
+    toggle.focus({ preventScroll: true });
+  };
+
+  toggle.addEventListener('click', () => {
+    if (drawer.classList.contains('is-open')) close();
+    else open();
+  });
+
+  $('[data-nav-close]', drawer)?.addEventListener('click', close);
+  backdrop?.addEventListener('click', close);
+
+  $$('a', drawer).forEach((a) => a.addEventListener('click', close));
+
+  window.__closeNavDrawer = close;
+  window.__navDrawerIsOpen = () => drawer.classList.contains('is-open');
+})();
+
+/* ==========================================================================
+   14. KEYBOARD & FOCUS TRAP
+   Escape closes whatever overlay is open (modal, then drawer). Tab is
+   trapped inside an open modal so focus never escapes to the page behind it.
+   ========================================================================== */
+(function initKeyboard() {
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const openModalEl = document.querySelector('.modal-backdrop.active');
+      if (openModalEl) { closeModal(openModalEl); return; }
+
+      if (window.__navDrawerIsOpen?.()) { window.__closeNavDrawer?.(); return; }
+
+      const boot = document.getElementById('boot-overlay');
+      if (boot && !boot.classList.contains('is-done')) window.__skipBoot?.();
+      return;
+    }
+
+    if (e.key === 'Enter') {
+      const boot = document.getElementById('boot-overlay');
+      if (boot && document.activeElement?.closest('#boot-overlay') === boot && !boot.classList.contains('is-done')) {
+        window.__skipBoot?.();
+      }
+    }
+
+    if (e.key === 'Tab') {
+      const openModalEl = document.querySelector('.modal-backdrop.active');
+      if (!openModalEl) return;
+
+      const focusables = getFocusable(openModalEl);
+      if (!focusables.length) return;
+
+      const first = focusables[0];
+      const last  = focusables[focusables.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  });
+})();
+
+/* ==========================================================================
+   15. BOOT SEQUENCE CONTROLLER
+   A short, skippable ritual: lines reveal on the terminal's own rhythm,
+   an ASCII progress bar tracks alongside, then the overlay fades and is
+   removed from layout. Shown once per session; ?skipboot=1 bypasses it
+   for development.
+   ========================================================================== */
+(function initBoot() {
+  const boot = document.getElementById('boot-overlay');
+  if (!boot) { document.body.classList.remove('is-loading'); return; }
+
+  const params = new URLSearchParams(window.location.search);
+  const alreadySeen = sessionStorage.getItem('boot-seen') === '1';
+  const skipRequested = params.get('skipboot') === '1';
+
+  const finish = () => {
+    document.body.classList.remove('cursor-boot', 'is-loading');
+    boot.remove();
+    sessionStorage.setItem('boot-seen', '1');
+  };
+
+  if (prefersReducedMotion || alreadySeen || skipRequested) {
+    finish();
+    return;
+  }
+
+  document.body.classList.add('cursor-boot');
+
+  const lines = $$('.boot-line', boot);
+  const progressEl = $('.boot-progress', boot);
+  const skipBtn = $('[data-boot-skip]', boot);
+
+  let finished = false;
+
+  const fadeOutAndFinish = () => {
+    if (finished) return;
+    finished = true;
+    boot.classList.add('boot-fade-out', 'is-done');
+    setTimeout(() => {
+      finish();
+      showToastImpl({ type: 'info', title: 'System Online', message: 'Welcome, Operator. All channels nominal.' });
+    }, readDurationVar('--duration-slower', 900));
+  };
+
+  const setProgress = (fraction) => {
+    if (!progressEl) return;
+    const width = 20;
+    const filled = Math.round(width * fraction);
+    const pct = Math.round(fraction * 100);
+    progressEl.innerHTML = `<span class="boot-progress-fill">${'█'.repeat(filled)}</span>${'░'.repeat(width - filled)} ${pct}%`;
+  };
+
+  lines.forEach((line, i) => {
+    setTimeout(() => {
+      line.style.opacity = '1';
+      setProgress((i + 1) / lines.length);
+    }, TERMINAL_LINE_DELAY * 4 * i);
+  });
+
+  const totalTime = TERMINAL_LINE_DELAY * 4 * lines.length + 600;
+  const holdTimer = setTimeout(fadeOutAndFinish, totalTime);
+
+  const skipNow = () => {
+    clearTimeout(holdTimer);
+    fadeOutAndFinish();
+  };
+
+  skipBtn?.addEventListener('click', skipNow);
+  window.__skipBoot = skipNow;
+})();
+
+/* ==========================================================================
+   16. CAREER FOOTPRINT / TOPOLOGY COORDINATOR
+   Reads the two verified sites from #sites-data and hands them off via a
+   CustomEvent for a future WebGL globe module to pick up. Until that
+   module exists, this also keeps the detail panel and the topology
+   status line populated so the section is never empty.
+   ========================================================================== */
+(function initFootprint() {
+  const dataEl = document.getElementById('sites-data');
+  if (!dataEl) return;
+
+  let sites = [];
+  try {
+    sites = JSON.parse(dataEl.textContent);
+  } catch (err) {
+    console.warn('[footprint] could not parse #sites-data', err);
+    return;
+  }
+
+  window.dispatchEvent(new CustomEvent('footprint:ready', { detail: { sites } }));
+
+  const panel   = $('[data-footprint-panel]');
+  const nameEl  = $('[data-footprint-name]', panel || document);
+  const roleEl  = $('[data-footprint-role]', panel || document);
+  const periodEl = $('[data-footprint-period]', panel || document);
+  const camerasEl = $('[data-footprint-cameras]', panel || document);
+  const statusEl = $('[data-topo-status]');
+
+  const showSite = (site) => {
+    if (!site) return;
+    if (nameEl) nameEl.textContent = site.name;
+    if (roleEl) roleEl.textContent = site.role;
+    if (periodEl) periodEl.textContent = site.period;
+    if (camerasEl) camerasEl.textContent = `${site.cameras} cameras`;
+  };
+
+  showSite(sites.find((s) => s.status === 'active') || sites[0]);
+
+  /* No 3D globe module is attached yet — let the two sites take turns in
+     the detail panel so the section still feels alive. */
+  if (sites.length > 1) {
+    let index = 0;
+    setInterval(() => {
+      index = (index + 1) % sites.length;
+      showSite(sites[index]);
+    }, 6000);
+  }
+
+  const linkCount = Math.max(sites.length - 1, 0);
+  if (statusEl) {
+    const tick = () => {
+      const latency = 3 + Math.floor(Math.random() * 7); /* 3–9ms */
+      statusEl.textContent = `NODES: ${sites.length} · LINKS: ${linkCount} · LATENCY: ${latency}ms`;
+    };
+    tick();
+    setInterval(tick, 4000);
+  }
+})();
+
+/* ==========================================================================
+   17. OPERATIONS FILTER BAR
+   Categories are derived from opData via each card's data-modal-id — no
+   parsing of inline handlers. Built on an idle callback since it isn't
+   needed for first paint.
+   ========================================================================== */
+ridle(() => {
   const grid = $('.operations-grid');
   if (!grid) return;
 
-  const cards = $$('.op-card', grid);
+  const cards = $$('[data-modal-id]', grid);
   if (!cards.length) return;
 
-  const CATEGORY_BY_OP = {
-    op1: 'Surveillance',
-    op2: 'Gate Control',
-    op3: 'Compliance',
-    op4: 'Forensics',
-    op5: 'Perimeter',
-    op6: 'Emergency'
-  };
-
-  const getOpKey = (card) => {
-    const attr = card.getAttribute('onclick') || '';
-    const m = attr.match(/openOpModal\(\s*['"]?(\w+)['"]?\s*\)/);
-    return m ? m[1] : null;
-  };
-
   cards.forEach((card) => {
-    const key = getOpKey(card);
-    card.dataset.category = (key && CATEGORY_BY_OP[key]) || 'Other';
+    const entry = opData[card.dataset.modalId];
+    card.dataset.category = entry?.category || 'Other';
   });
 
   const categories = ['All', ...new Set(cards.map((c) => c.dataset.category))];
@@ -443,21 +1420,21 @@ const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
   bar.setAttribute('aria-label', 'Filter feed deployments');
   bar.style.cssText = 'display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:var(--space-lg);';
 
+  const buttons = [];
+
   const setActive = (activeBtn) => {
-    $$('.feed-filter-btn', bar).forEach((btn) => {
+    buttons.forEach((btn) => {
       const isActive = btn === activeBtn;
-      btn.style.borderColor = isActive ? 'var(--accent-cyan)'  : 'var(--border-default)';
-      btn.style.color       = isActive ? 'var(--accent-cyan)'  : 'var(--text-primary)';
-      btn.style.boxShadow   = isActive ? 'var(--glow-cyan-sm)' : 'none';
-      btn.setAttribute('aria-selected', String(isActive));
       btn.classList.toggle('is-active', isActive);
+      btn.setAttribute('aria-selected', String(isActive));
+      btn.tabIndex = isActive ? 0 : -1;
     });
+    activeBtn.focus();
   };
 
   let hideTimer = null;
 
   const applyFilter = (filter) => {
-    /* Cancel any pending "hide" from a previous filter change */
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
 
     cards.forEach((card) => {
@@ -466,7 +1443,7 @@ const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
 
       if (match) {
         card.style.display = '';
-        void card.offsetWidth; /* force reflow so the fade-in always runs */
+        void card.offsetWidth;
         card.style.opacity = '1';
         card.style.transform = 'scale(1)';
       } else {
@@ -491,11 +1468,12 @@ const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
     btn.dataset.filter = cat;
     btn.className = 'btn btn-glass feed-filter-btn';
     btn.setAttribute('role', 'tab');
-    btn.setAttribute('aria-selected', 'false');
+    btn.setAttribute('aria-selected', String(i === 0));
+    btn.tabIndex = i === 0 ? 0 : -1;
     btn.style.padding = '0.5rem 1.2rem';
     btn.style.fontSize = 'var(--fs-xs)';
+    buttons.push(btn);
     bar.appendChild(btn);
-    if (i === 0) setActive(btn);
   });
 
   bar.addEventListener('click', (e) => {
@@ -505,627 +1483,22 @@ const TEXT_SELECTOR = 'input, textarea, [contenteditable="true"]';
     applyFilter(btn.dataset.filter);
   });
 
+  /* WAI-ARIA tabs pattern: arrow keys move focus between filters */
+  bar.addEventListener('keydown', (e) => {
+    if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) return;
+    e.preventDefault();
+
+    const current = buttons.indexOf(document.activeElement);
+    let next = current;
+
+    if (e.key === 'ArrowRight') next = (current + 1) % buttons.length;
+    if (e.key === 'ArrowLeft')  next = (current - 1 + buttons.length) % buttons.length;
+    if (e.key === 'Home') next = 0;
+    if (e.key === 'End')  next = buttons.length - 1;
+
+    setActive(buttons[next]);
+    applyFilter(buttons[next].dataset.filter);
+  });
+
   grid.parentElement.insertBefore(bar, grid);
-})();
-
-/* ==========================================================================
-   7. MODAL SYSTEM — universal briefing window
-   Works with any .modal-backdrop in the DOM (e.g. #hire-modal, #op-modal).
-   If none exist, one is built on demand.
-   ========================================================================== */
-let __lastFocusedEl = null;
-
-function ensureModalBackdrop() {
-  let backdrop = document.getElementById('modal-backdrop');
-  if (backdrop) return backdrop;
-
-  backdrop = document.createElement('div');
-  backdrop.id = 'modal-backdrop';
-  backdrop.className = 'modal-backdrop';
-  backdrop.setAttribute('role', 'dialog');
-  backdrop.setAttribute('aria-modal', 'true');
-  backdrop.setAttribute('aria-hidden', 'true');
-  backdrop.addEventListener('click', closeModalOnBackdrop);
-  backdrop.innerHTML = `
-    <div class="modal-window">
-      <button type="button" class="modal-close-btn" aria-label="Close" onclick="closeModal()">×</button>
-      <div id="modal-content"></div>
-    </div>
-  `;
-  document.body.appendChild(backdrop);
-  return backdrop;
-}
-
-function openModal(target) {
-  let backdrop = null;
-
-  if (target instanceof Element) backdrop = target;
-  else if (typeof target === 'string') backdrop = document.getElementById(target);
-  if (!backdrop) backdrop = document.getElementById('modal-backdrop') || ensureModalBackdrop();
-
-  if (!backdrop) return;
-
-  __lastFocusedEl = document.activeElement;
-
-  backdrop.classList.add('active');
-  backdrop.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-
-  const closeBtn = backdrop.querySelector('.modal-close-btn');
-  if (closeBtn) closeBtn.focus({ preventScroll: true });
-}
-
-function closeModal(target) {
-  let backdrop = null;
-
-  if (target instanceof Element) backdrop = target;
-  else if (typeof target === 'string') backdrop = document.getElementById(target);
-  else backdrop = document.querySelector('.modal-backdrop.active');
-
-  if (!backdrop) return;
-
-  backdrop.classList.remove('active');
-  backdrop.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-
-  if (__lastFocusedEl && typeof __lastFocusedEl.focus === 'function') {
-    __lastFocusedEl.focus({ preventScroll: true });
-    __lastFocusedEl = null;
-  }
-}
-
-function closeModalOnBackdrop(e) {
-  if (e.target && e.target.classList && e.target.classList.contains('modal-backdrop')) {
-    closeModal(e.target);
-  }
-}
-
-function closeHireModal() { closeModal(document.getElementById('hire-modal')); }
-function closeOpModal()   { closeModal(document.getElementById('op-modal'));   }
-
-/* --- Project briefing data -------------------------------------- */
-const opData = {
-  op1: {
-    title: 'CP Plus Multi-Channel Surveillance Network',
-    img: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1200&auto=format&fit=crop',
-    desc: 'Configured and actively monitored CP Plus multi-channel camera arrays across high-density logistics hubs. Owned live feeds, footage archiving, playback investigation during incidents, and shrink prevention across every warehouse zone.'
-  },
-  op2: {
-    title: 'Digital GIGO Gate Control & Data Terminal',
-    img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop',
-    desc: 'Managed high-density commercial vehicle logging and Goods-In / Goods-Out gate control for the Flipkart Kalash Mega Hub. Executed real-time Excel data entry, driver ID audits, dock allocation, and material gate-pass clearance with zero operational error.'
-  },
-  op3: {
-    title: 'PSARA Compliance & Emergency Safety Protocols',
-    img: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1200&auto=format&fit=crop',
-    desc: 'Enforced strict compliance with the Private Security Agencies Regulation Act (PSARA). Ran fire-extinguisher inspections, led emergency evacuation drills, performed badge audits, and produced daily shift reports for management review.'
-  },
-  op4: {
-    title: 'Incident Forensic Review & Footage Reconstruction',
-    img: 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?q=80&w=1200&auto=format&fit=crop',
-    desc: 'Extracted time-stamped footage across multi-camera arrays, documented chain-of-custody for evidentiary review, and reconstructed incident timelines to support loss investigations and disciplinary actions.'
-  },
-  op5: {
-    title: 'Perimeter & Dock Security Operations',
-    img: 'https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=1200&auto=format&fit=crop',
-    desc: 'Coordinated dock-movement verification against inbound / outbound manifests, supervised patrol schedules, and escalated perimeter-breach events with clear reporting to shift command.'
-  },
-  op6: {
-    title: 'Emergency Response Coordination Center',
-    img: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=1200&auto=format&fit=crop',
-    desc: 'Operated alarm-to-action dispatch under live surveillance coverage, routed evacuation paths using camera intelligence, and produced post-incident command-center reports used for compliance audits.'
-  }
-};
-
-function openOpModal(key) {
-  const data = opData[key];
-  if (!data) return;
-
-  const modalEl = document.getElementById('op-modal');
-
-  if (modalEl) {
-    const imgEl    = document.getElementById('op-modal-img');
-    const titleEl  = document.getElementById('op-modal-title');
-    const bodyEl   = document.getElementById('op-modal-body');
-    const pointsEl = document.getElementById('op-modal-points');
-
-    if (imgEl)   { imgEl.src = data.img; imgEl.alt = data.title; }
-    if (titleEl) { titleEl.textContent = data.title; }
-    if (bodyEl)  { bodyEl.textContent  = data.desc; }
-    if (pointsEl) { pointsEl.innerHTML = ''; }
-
-    openModal(modalEl);
-    return;
-  }
-
-  /* Fallback: build a generic modal window on demand */
-  const backdrop = ensureModalBackdrop();
-  const content  = backdrop.querySelector('#modal-content');
-  if (!content) return;
-
-  content.innerHTML = `
-    <img class="modal-img" src="${data.img}" alt="${data.title}" loading="lazy" decoding="async" />
-    <h2 class="modal-title" id="op-modal-title">${data.title}</h2>
-    <p class="modal-body-text">${data.desc}</p>
-    <button type="button" class="btn btn-hire" onclick="openHireModal()">
-      <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
-      <span>Discuss Deployment Offer</span>
-    </button>
-  `;
-
-  openModal(backdrop);
-}
-
-function openHireModal() {
-  const modalEl = document.getElementById('hire-modal');
-
-  if (modalEl) {
-    openModal(modalEl);
-    return;
-  }
-
-  const backdrop = ensureModalBackdrop();
-  const content  = backdrop.querySelector('#modal-content');
-  if (!content) return;
-
-  content.innerHTML = `
-    <h2 class="modal-title" id="hire-modal-title">Request a Deployment Briefing</h2>
-    <p class="modal-body-text">Share the operation and I'll respond with availability, shift preferences, and a short plan for coverage. Typical response window: under 24 hours.</p>
-    <form class="modal-form" onsubmit="handleHireSubmit(event)" novalidate>
-      <div class="form-field">
-        <input type="text" id="hire-name" name="name" class="form-input" placeholder=" " autocomplete="name" required />
-        <label for="hire-name" class="form-label">Full Name</label>
-      </div>
-      <div class="form-field">
-        <input type="email" id="hire-email" name="email" class="form-input" placeholder=" " autocomplete="email" required />
-        <label for="hire-email" class="form-label">Work Email</label>
-      </div>
-      <div class="form-field">
-        <input type="text" id="hire-org" name="organization" class="form-input" placeholder=" " autocomplete="organization" />
-        <label for="hire-org" class="form-label">Organization / Role</label>
-      </div>
-      <div class="form-field">
-        <textarea id="hire-message" name="message" class="form-input" placeholder=" " rows="4"></textarea>
-        <label for="hire-message" class="form-label">Briefing Notes</label>
-      </div>
-      <button type="submit" class="btn btn-hire">
-        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
-        <span>Transmit Request</span>
-      </button>
-    </form>
-  `;
-
-  openModal(backdrop);
-}
-
-/* Focus trap + Escape handling for modals */
-document.addEventListener('keydown', (e) => {
-  const activeBackdrop = document.querySelector('.modal-backdrop.active');
-
-  if (e.key === 'Escape') {
-    if (activeBackdrop) closeModal(activeBackdrop);
-    return;
-  }
-
-  if (e.key !== 'Tab' || !activeBackdrop) return;
-
-  const focusables = activeBackdrop.querySelectorAll(
-    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-  );
-  if (!focusables.length) return;
-
-  const first = focusables[0];
-  const last  = focusables[focusables.length - 1];
-  const active = document.activeElement;
-
-  if (e.shiftKey && active === first) {
-    e.preventDefault();
-    last.focus();
-  } else if (!e.shiftKey && active === last) {
-    e.preventDefault();
-    first.focus();
-  }
 });
-
-/* Wire backdrop clicks on any pre-existing modals */
-document.addEventListener('click', (e) => {
-  if (e.target && e.target.classList && e.target.classList.contains('modal-backdrop')) {
-    closeModal(e.target);
-  }
-});
-
-/* ==========================================================================
-   8. FORMS + TOAST
-   ========================================================================== */
-let __toastTimer = null;
-
-function showToast(message, type = 'success') {
-  let toast = document.getElementById('toast');
-
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.id = 'toast';
-    toast.className = 'toast-popup';
-    toast.setAttribute('role', 'status');
-    toast.setAttribute('aria-live', 'polite');
-    toast.innerHTML = '<i class="fa-solid fa-circle-check" aria-hidden="true"></i><span id="toast-message"></span>';
-    document.body.appendChild(toast);
-  }
-
-  const msgEl = toast.querySelector('#toast-message');
-  if (msgEl) msgEl.textContent = message;
-
-  const iconEl = toast.querySelector('i');
-  if (iconEl) {
-    iconEl.className = type === 'error'
-      ? 'fa-solid fa-circle-exclamation'
-      : 'fa-solid fa-circle-check';
-    iconEl.setAttribute('aria-hidden', 'true');
-  }
-
-  toast.classList.remove('show');
-  void toast.offsetWidth; /* restart transition cleanly */
-  toast.classList.add('show');
-
-  clearTimeout(__toastTimer);
-  __toastTimer = setTimeout(() => toast.classList.remove('show'), 3600);
-}
-
-/* --- Validation helpers ----------------------------------------- */
-function clearFormErrors(form) {
-  if (!form) return;
-  form.querySelectorAll('[aria-invalid="true"]').forEach((el) => el.removeAttribute('aria-invalid'));
-  form.querySelectorAll('.form-error').forEach((el) => { el.textContent = ''; });
-}
-
-function markInvalid(field, message) {
-  if (!field) return;
-  field.setAttribute('aria-invalid', 'true');
-  const describedBy = field.getAttribute('aria-describedby');
-  if (describedBy) {
-    const errEl = document.getElementById(describedBy);
-    if (errEl) errEl.textContent = message || 'This field is required.';
-  }
-}
-
-/* --- Main contact form ------------------------------------------ */
-function handleDirectMessage(event) {
-  event.preventDefault();
-
-  const form = event.target;
-  if (!form) return;
-
-  const nameEl  = form.querySelector('#contact-name');
-  const emailEl = form.querySelector('#contact-email');
-  const msgEl   = form.querySelector('#contact-message');
-  const statusEl = form.querySelector('.form-status');
-
-  const name    = nameEl  ? nameEl.value.trim()  : '';
-  const email   = emailEl ? emailEl.value.trim() : '';
-  const message = msgEl   ? msgEl.value.trim()   : '';
-
-  clearFormErrors(form);
-
-  let firstInvalid = null;
-
-  if (!name) {
-    markInvalid(nameEl, 'Please enter your name.');
-    firstInvalid = firstInvalid || nameEl;
-  }
-  if (!email || !EMAIL_RE.test(email)) {
-    markInvalid(emailEl, 'Please enter a valid email address.');
-    firstInvalid = firstInvalid || emailEl;
-  }
-  if (!message || message.length < 10) {
-    markInvalid(msgEl, 'Please describe the mission in at least 10 characters.');
-    firstInvalid = firstInvalid || msgEl;
-  }
-
-  if (firstInvalid) {
-    if (statusEl) {
-      statusEl.textContent = 'Transmission blocked — please review highlighted fields.';
-      statusEl.classList.remove('success');
-      statusEl.classList.add('error');
-    }
-    firstInvalid.focus();
-    return;
-  }
-
-  const subject = `Deployment Briefing — ${name}`;
-  const body = `Name: ${name}\nEmail: ${email}\n\n${message}`;
-  const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-  window.location.href = mailto;
-
-  if (statusEl) {
-    statusEl.textContent = 'Channel open. Your mail client is ready to transmit.';
-    statusEl.classList.remove('error');
-    statusEl.classList.add('success');
-  }
-
-  showToast('Briefing ready to send.', 'success');
-  form.reset();
-}
-
-/* --- Hire modal form -------------------------------------------- */
-function handleHireSubmit(event) {
-  event.preventDefault();
-
-  const form = event.target;
-  if (!form) return;
-
-  const nameEl  = form.querySelector('#hire-name');
-  const emailEl = form.querySelector('#hire-email');
-  const orgEl   = form.querySelector('#hire-org');
-  const msgEl   = form.querySelector('#hire-message');
-
-  const name    = nameEl  ? nameEl.value.trim()  : '';
-  const email   = emailEl ? emailEl.value.trim() : '';
-  const org     = orgEl   ? orgEl.value.trim()   : '';
-  const message = msgEl   ? msgEl.value.trim()   : '';
-
-  if (!name) {
-    if (nameEl) nameEl.focus();
-    showToast('Full name is required.', 'error');
-    return;
-  }
-  if (!email || !EMAIL_RE.test(email)) {
-    if (emailEl) emailEl.focus();
-    showToast('A valid work email is required.', 'error');
-    return;
-  }
-
-  const subject = `Deployment Briefing Request — ${name}`;
-  const body = `Name: ${name}\nEmail: ${email}\nOrganization / Role: ${org}\n\nBriefing Notes:\n${message}`;
-  const mailto = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-
-  window.location.href = mailto;
-
-  closeModal(document.getElementById('hire-modal'));
-  showToast('Request ready to send.', 'success');
-  form.reset();
-}
-
-/* Clear aria-invalid as the user corrects a field */
-document.addEventListener('input', (e) => {
-  const field = e.target;
-  if (!field || !field.getAttribute) return;
-  if (field.getAttribute('aria-invalid') === 'true') {
-    field.removeAttribute('aria-invalid');
-    const describedBy = field.getAttribute('aria-describedby');
-    if (describedBy) {
-      const errEl = document.getElementById(describedBy);
-      if (errEl) errEl.textContent = '';
-    }
-  }
-}, { passive: true });
-
-/* ==========================================================================
-   9. SCROLL REVEALS
-   ========================================================================== */
-(function initScrollReveals() {
-  const targets = $$('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-scan, .reveal--left, .reveal--right, .reveal--scale');
-  if (!targets.length) return;
-
-  /* Assign stagger delays to children of [data-stagger] containers */
-  $$('[data-stagger]').forEach((container) => {
-    Array.from(container.children).forEach((child, i) => {
-      child.style.setProperty('--reveal-delay', `${Math.min(i * 90, 600)}ms`);
-    });
-  });
-
-  const showAll = () => targets.forEach((el) => el.classList.add('is-visible'));
-
-  if (prefersReducedMotion || !('IntersectionObserver' in window)) {
-    showAll();
-    return;
-  }
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-visible');
-      io.unobserve(entry.target);
-    });
-  }, {
-    threshold: 0.15,
-    rootMargin: '0px 0px -8% 0px'
-  });
-
-  targets.forEach((el) => io.observe(el));
-})();
-
-/* ==========================================================================
-   10. TEXT DECODE — .reveal-decode headings
-   Animates text nodes only, so child markup (e.g. <em>) is preserved.
-   ========================================================================== */
-(function initTextDecode() {
-  const headings = $$('.reveal-decode');
-  if (!headings.length || prefersReducedMotion || !('IntersectionObserver' in window)) return;
-
-  const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#/_<>';
-  const DURATION = 900;
-
-  const decode = (el) => {
-    /* Snapshot every non-empty text node inside the heading */
-    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
-    const nodes = [];
-    let n;
-    while ((n = walker.nextNode())) {
-      if (n.nodeValue && n.nodeValue.length) {
-        nodes.push({ node: n, original: n.nodeValue });
-      }
-    }
-    if (!nodes.length) return;
-
-    const totalChars = nodes.reduce((sum, { original }) => sum + original.length, 0);
-    const accessibleText = nodes.map(({ original }) => original).join('');
-
-    /* Preserve the true accessible name while the visual animates */
-    if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', accessibleText);
-
-    const startTime = performance.now();
-
-    const frame = (now) => {
-      const t = Math.min((now - startTime) / DURATION, 1);
-      let budget = Math.floor(t * totalChars);
-
-      for (let i = 0; i < nodes.length; i++) {
-        const { node, original } = nodes[i];
-        let out = '';
-
-        for (let k = 0; k < original.length; k++) {
-          const ch = original[k];
-
-          if (budget > 0) {
-            out += ch;
-            budget--;
-          } else if (ch === ' ' || ch === '\n' || ch === '\t') {
-            out += ch;
-          } else {
-            out += GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-          }
-        }
-        node.nodeValue = out;
-      }
-
-      if (t < 1) {
-        requestAnimationFrame(frame);
-      } else {
-        for (let i = 0; i < nodes.length; i++) {
-          nodes[i].node.nodeValue = nodes[i].original;
-        }
-      }
-    };
-
-    requestAnimationFrame(frame);
-  };
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      decode(entry.target);
-      io.unobserve(entry.target);
-    });
-  }, { threshold: 0.4 });
-
-  headings.forEach((el) => io.observe(el));
-})();
-
-/* ==========================================================================
-   11. SCROLL-SPY + NAV
-   ========================================================================== */
-(function initScrollSpy() {
-  const sections = ['hero', 'about', 'operations', 'experience', 'contact']
-    .map((id) => document.getElementById(id))
-    .filter(Boolean);
-
-  const navLinks = $$('.nav-links a');
-  if (!sections.length || !navLinks.length) return;
-
-  const linkMap = new Map();
-  navLinks.forEach((a) => {
-    const href = a.getAttribute('href') || '';
-    if (href.startsWith('#')) linkMap.set(href.slice(1), a);
-  });
-
-  if (!('IntersectionObserver' in window)) return;
-
-  const setCurrent = (id) => {
-    navLinks.forEach((a) => {
-      a.classList.remove('is-current');
-      a.removeAttribute('aria-current');
-    });
-    const link = linkMap.get(id);
-    if (link) {
-      link.classList.add('is-current');
-      link.setAttribute('aria-current', 'true');
-    }
-  };
-
-  const io = new IntersectionObserver((entries) => {
-    /* Pick the entry closest to the middle of the viewport */
-    const visible = entries.filter((e) => e.isIntersecting);
-    if (!visible.length) return;
-    visible.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-    setCurrent(visible[0].target.id);
-  }, {
-    rootMargin: '-45% 0px -50% 0px',
-    threshold: [0, 0.25, 0.5, 1]
-  });
-
-  sections.forEach((s) => io.observe(s));
-})();
-
-/* Nav scrolled state */
-(function initNavScrolled() {
-  const nav = document.querySelector('nav');
-  if (!nav) return;
-
-  let ticking = false;
-
-  const update = () => {
-    if (window.scrollY > 20) nav.classList.add('is-scrolled');
-    else nav.classList.remove('is-scrolled');
-    ticking = false;
-  };
-
-  window.addEventListener('scroll', () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(update);
-  }, { passive: true });
-
-  update();
-})();
-
-/* Smooth in-page anchor scrolling with header offset + focus management */
-(function initAnchorScroll() {
-  const cssHeaderHeight = parseInt(
-    getComputedStyle(document.documentElement).getPropertyValue('--header-height'),
-    10
-  );
-  const headerOffset = Number.isFinite(cssHeaderHeight) ? cssHeaderHeight : 76;
-
-  document.addEventListener('click', (e) => {
-    const anchor = e.target.closest('a[href^="#"]');
-    if (!anchor) return;
-
-    const href = anchor.getAttribute('href');
-    if (!href || href === '#' || href.length < 2) return;
-
-    const id = href.slice(1);
-    const target = document.getElementById(id);
-    if (!target) return;
-
-    e.preventDefault();
-
-    const top = target.getBoundingClientRect().top + window.scrollY - headerOffset - 8;
-
-    window.scrollTo({
-      top,
-      behavior: prefersReducedMotion ? 'auto' : 'smooth'
-    });
-
-    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
-    const delay = prefersReducedMotion ? 0 : 450;
-    setTimeout(() => target.focus({ preventScroll: true }), delay);
-
-    history.pushState(null, '', href);
-  });
-})();
-
-/* ==========================================================================
-   12. KEYBOARD — card activation, plus Escape handled with modals above
-   ========================================================================== */
-(function initKeyboardCards() {
-  document.addEventListener('keydown', (e) => {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-
-    const card = e.target.closest?.('.op-card[role="button"]');
-    if (!card) return;
-
-    if (e.key === ' ') e.preventDefault();
-    card.click();
-  });
-})();
