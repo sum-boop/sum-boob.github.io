@@ -320,7 +320,9 @@
 
         <div class="hero-monitor" aria-hidden="true">
           <div class="hero-monitor-grid"></div>
-          <canvas id="particles-canvas"></canvas>
+          <video class="hero-monitor-video" autoplay muted loop playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;filter:grayscale(0.3) contrast(1.1) brightness(0.9);">
+  <source src="assets/hero-feed.mp4" type="video/mp4">
+          </video>
           <div class="hero-monitor-scan"></div>
           <div class="hero-monitor-frame"></div>
           <div class="hero-monitor-corners">
