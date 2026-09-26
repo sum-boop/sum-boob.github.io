@@ -5,8 +5,8 @@
    Particles · Surveillance Clock · Card Tilt · About Image Loader ·
    Operations Data · Modal System · Contact Form (mailto) · Toast ·
    Scroll Reveal · Text Decode · Scroll-Spy · Keyboard & Focus Trap ·
-   Mobile Nav Drawer · Boot Sequence · Career Footprint + Visual ·
-   Operations Filter Bar
+   Mobile Nav Drawer · Boot Sequence · Operations Filter Bar ·
+   Career Footprint — Cinematic Earth Globe
 
    No backend anywhere in this file. The contact form's only transport is a
    mailto: link — the honesty of that mechanism is part of the design, not
@@ -222,12 +222,11 @@ const SCAN_SELECTOR = '.topo__node, .footprint__site, [data-cursor-scan]';
 /* ==========================================================================
    3. PARTICLE CONSTELLATION — hero monitor canvas
 
-   FIX: the canvas can measure as zero-size if this runs before the grid's
+   The canvas can measure as zero-size if this runs before the grid's
    layout has fully settled (e.g. before web fonts swap in and reflow the
-   hero). That leaves the box looking permanently dim/empty even though
-   the loop is running. A ResizeObserver on the canvas's own container
-   catches any later layout shift, and one extra resize after the window's
-   `load` event catches the common font-swap case.
+   hero). A ResizeObserver on the canvas's own container catches any later
+   layout shift, and one extra resize after the window's `load` event
+   catches the common font-swap case.
    ========================================================================== */
 (function initParticles() {
   const canvas = document.getElementById('particles-canvas');
@@ -353,7 +352,6 @@ const SCAN_SELECTOR = '.topo__node, .footprint__site, [data-cursor-scan]';
     else if (canvas.dataset.inView !== 'false') start();
   });
 
-  /* Pause when the hero is offscreen */
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -371,7 +369,6 @@ const SCAN_SELECTOR = '.topo__node, .footprint__site, [data-cursor-scan]';
   seed();
   start();
 
-  /* --- FIX: re-measure once layout has fully settled --------------- */
   window.addEventListener('load', () => { resize(); seed(); }, { once: true });
 
   if ('ResizeObserver' in window) {
@@ -488,20 +485,9 @@ const SCAN_SELECTOR = '.topo__node, .footprint__site, [data-cursor-scan]';
 })();
 
 /* ==========================================================================
-   5.1 ABOUT IMAGE LOADER — NEW
-
-   FIX for the permanently-black About photo box: index.html puts a
-   `.no-img` class on `.about-image-wrapper` to show the "acquiring
-   signal" placeholder state, but nothing ever removed that class once
-   the real photo loaded — so `.no-img img { opacity: 0 }` stayed in
-   effect forever, regardless of whether the image ever arrived.
-
-   This clears `.no-img` on load, and on error it clears it too (so the
-   box doesn't sit in an endless loading animation) while flagging
-   `.img-error` for anyone who wants to style that state later. It does
-   NOT fix a missing photo file — if assets/sumit-monitoring-station.jpg
-   was never uploaded to the deployed site, the box will still show a
-   broken-image icon until a real photo is placed at that path.
+   5.1 ABOUT IMAGE LOADER
+   Clears `.no-img` on the real load event (or on error, so the box
+   doesn't sit in an endless "acquiring signal" animation forever).
    ========================================================================== */
 (function initAboutImageLoader() {
   const wrapper = document.querySelector('.about-image-wrapper');
@@ -540,7 +526,6 @@ const opData = {
     img: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=1200&auto=format&fit=crop',
     desc: 'Real-time monitoring across a 32-camera CP Plus array covering warehouse zones, dock areas, and perimeter. Responsible for playback investigation, footage archiving, and shrink prevention.',
     tags: ['CP Plus', 'Multi-Channel Monitoring', 'Playback & Archiving', 'Loss Prevention'],
-    /* Placeholder frames — replace with real deployment photography. */
     gallery: [
       'https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=500&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=500&auto=format&fit=crop',
@@ -966,8 +951,6 @@ function attachContactFormHandler(form) {
       submitBtn.innerHTML = '<span>Transmitting…</span>';
     }
 
-    /* Frontend-only submission — mailto: is the transport. No backend,
-       no third-party service. */
     setTimeout(() => {
       const href = buildMailtoHref(form);
       window.location.href = href;
@@ -1356,170 +1339,7 @@ window.showToast = showToastImpl;
 })();
 
 /* ==========================================================================
-   16. CAREER FOOTPRINT / TOPOLOGY COORDINATOR
-
-   FIX: the "footprint:ready" dispatch now happens on a macrotask
-   (setTimeout 0) instead of synchronously. Previously it fired the
-   instant this IIFE ran — before section 16.1 below had even registered
-   its listener — so the event was dispatched into an empty room and the
-   map visual never got its data.
-   ========================================================================== */
-(function initFootprint() {
-  const dataEl = document.getElementById('sites-data');
-  if (!dataEl) return;
-
-  let sites = [];
-  try {
-    sites = JSON.parse(dataEl.textContent);
-  } catch (err) {
-    console.warn('[footprint] could not parse #sites-data', err);
-    return;
-  }
-
-  setTimeout(() => {
-    window.dispatchEvent(new CustomEvent('footprint:ready', { detail: { sites } }));
-  }, 0);
-
-  const panel   = $('[data-footprint-panel]');
-  const nameEl  = $('[data-footprint-name]', panel || document);
-  const roleEl  = $('[data-footprint-role]', panel || document);
-  const periodEl = $('[data-footprint-period]', panel || document);
-  const camerasEl = $('[data-footprint-cameras]', panel || document);
-  const statusEl = $('[data-topo-status]');
-
-  const showSite = (site) => {
-    if (!site) return;
-    if (nameEl) nameEl.textContent = site.name;
-    if (roleEl) roleEl.textContent = site.role;
-    if (periodEl) periodEl.textContent = site.period;
-    if (camerasEl) camerasEl.textContent = `${site.cameras} cameras`;
-  };
-
-  showSite(sites.find((s) => s.status === 'active') || sites[0]);
-
-  if (sites.length > 1) {
-    let index = 0;
-    setInterval(() => {
-      index = (index + 1) % sites.length;
-      showSite(sites[index]);
-    }, 6000);
-  }
-
-  const linkCount = Math.max(sites.length - 1, 0);
-  if (statusEl) {
-    const tick = () => {
-      const latency = 3 + Math.floor(Math.random() * 7);
-      statusEl.textContent = `NODES: ${sites.length} · LINKS: ${linkCount} · LATENCY: ${latency}ms`;
-    };
-    tick();
-    setInterval(tick, 4000);
-  }
-})();
-
-/* ==========================================================================
-   16.1 FOOTPRINT VISUAL — NEW
-
-   FIX for the empty/black Career Footprint box: nothing was ever drawn
-   inside `.footprint-map` — only the surrounding CSS frame (badge, faint
-   grid) existed. This is not a 3D globe (deliberately out of scope), but
-   a light canvas node-map: one core (the operator), one node per site,
-   linked by a soft pulse. It listens for `footprint:ready` (section 16)
-   so the site data has a single source of truth.
-   ========================================================================== */
-(function initFootprintVisual() {
-  const mapEl = document.querySelector('.footprint-map');
-  if (!mapEl) return;
-
-  window.addEventListener('footprint:ready', (e) => {
-    const sites = e.detail?.sites || [];
-    if (!sites.length) return;
-
-    const canvas = document.createElement('canvas');
-    canvas.setAttribute('aria-hidden', 'true');
-    canvas.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;z-index:1;';
-    mapEl.prepend(canvas);
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const styles = getComputedStyle(document.documentElement);
-    const cyan  = (styles.getPropertyValue('--accent-cyan')  || '#00e5ff').trim();
-    const green = (styles.getPropertyValue('--accent-green') || '#00ff9c').trim();
-    const core  = (styles.getPropertyValue('--topo-core-color') || '#eafcff').trim();
-
-    let W = 0, H = 0, dpr = 1;
-
-    const resize = () => {
-      const rect = mapEl.getBoundingClientRect();
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = rect.width;
-      H = rect.height;
-      canvas.width  = Math.floor(W * dpr);
-      canvas.height = Math.floor(H * dpr);
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
-    };
-
-    const start = performance.now();
-
-    const draw = (now) => {
-      if (!W || !H) resize();
-      ctx.clearRect(0, 0, W, H);
-
-      const cx = W / 2;
-      const cy = H * 0.38;
-      const pulse = prefersReducedMotion ? 1 : 0.6 + 0.4 * Math.sin((now - start) / 900);
-
-      /* links: core → each site */
-      sites.forEach((site, i) => {
-        const x = W * (i === 0 ? 0.28 : 0.72);
-        const y = H * 0.62;
-        ctx.strokeStyle = site.status === 'active'
-          ? `rgba(0, 229, 255, ${(0.25 + 0.35 * pulse).toFixed(2)})`
-          : 'rgba(0, 229, 255, 0.12)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(x, y);
-        ctx.stroke();
-      });
-
-      /* core node — the operator console */
-      ctx.beginPath();
-      ctx.arc(cx, cy, 5, 0, Math.PI * 2);
-      ctx.fillStyle = core;
-      ctx.shadowColor = cyan;
-      ctx.shadowBlur = 14;
-      ctx.fill();
-      ctx.shadowBlur = 0;
-
-      /* one node per site */
-      sites.forEach((site, i) => {
-        const x = W * (i === 0 ? 0.28 : 0.72);
-        const y = H * 0.62;
-        const active = site.status === 'active';
-        const r = active ? 4 + pulse * 1.5 : 3;
-
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = active ? cyan : green;
-        ctx.shadowColor = active ? cyan : 'transparent';
-        ctx.shadowBlur = active ? 10 : 0;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      });
-
-      if (!prefersReducedMotion) requestAnimationFrame(draw);
-    };
-
-    resize();
-    window.addEventListener('resize', () => resize(), { passive: true });
-    requestAnimationFrame(draw);
-  }, { once: true });
-})();
-
-/* ==========================================================================
-   17. OPERATIONS FILTER BAR
+   16. OPERATIONS FILTER BAR
    ========================================================================== */
 ridle(() => {
   const grid = $('.operations-grid');
@@ -1623,3 +1443,191 @@ ridle(() => {
 
   grid.parentElement.insertBefore(bar, grid);
 });
+
+/* ==========================================================================
+   21. CAREER FOOTPRINT — CINEMATIC EARTH GLOBE
+
+   Supersedes the old text-only footprint coordinator: the section now
+   drives a state machine (idle → zooming → locked) on .footprint-map's
+   data-state attribute, ramps the background video's playbackRate for a
+   cinematic push-in, and slides the operator panel in once locked.
+   ========================================================================== */
+(function initFootprintGlobe() {
+  const mapEl   = $('.footprint-map');
+  if (!mapEl) return;
+
+  const video     = $('.footprint-video', mapEl);
+  const panel     = $('.footprint-panel', mapEl);
+  const closeBtn  = $('.footprint-close', panel || mapEl);
+
+  let timers = [];
+  let rampRafId = null;
+  let autoResetTimer = null;
+
+  const schedule = (fn, delay) => {
+    const id = setTimeout(fn, delay);
+    timers.push(id);
+    return id;
+  };
+
+  const clearAllTimers = () => {
+    timers.forEach(clearTimeout);
+    timers = [];
+    clearTimeout(autoResetTimer);
+    autoResetTimer = null;
+  };
+
+  const cancelRamp = () => {
+    if (rampRafId !== null) cancelAnimationFrame(rampRafId);
+    rampRafId = null;
+  };
+
+  /* Smooth playbackRate ramp — ease-out cubic, cancellable so a fast
+     close (or a second trigger) never leaves two ramps fighting. */
+  const rampPlaybackRate = (from, to, duration, onDone) => {
+    if (!video) { onDone?.(); return; }
+    cancelRamp();
+    const start = performance.now();
+
+    const step = (now) => {
+      const t = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      try {
+        video.playbackRate = from + (to - from) * eased;
+      } catch (err) {
+        /* Some browsers clamp/throw on out-of-range rates — safe to ignore */
+      }
+      if (t < 1) {
+        rampRafId = requestAnimationFrame(step);
+      } else {
+        rampRafId = null;
+        onDone?.();
+      }
+    };
+
+    rampRafId = requestAnimationFrame(step);
+  };
+
+  const startAutoReset = () => {
+    clearTimeout(autoResetTimer);
+    autoResetTimer = setTimeout(() => closeFootprint(), 8000);
+  };
+
+  const cancelAutoReset = () => {
+    clearTimeout(autoResetTimer);
+    autoResetTimer = null;
+  };
+
+  function showPanel() {
+    mapEl.dataset.state = 'locked';
+    if (panel) {
+      panel.classList.add('is-open');
+      panel.setAttribute('aria-hidden', 'false');
+      closeBtn?.focus({ preventScroll: true });
+    }
+    startAutoReset();
+  }
+
+  function openFootprint() {
+    if (mapEl.dataset.state !== 'idle') return; /* guard: already zooming/locked */
+
+    if (prefersReducedMotion) {
+      mapEl.dataset.state = 'locked';
+      showPanel();
+      return;
+    }
+
+    document.body.classList.add('cursor-scanning');
+    mapEl.dataset.state = 'zooming';
+
+    rampPlaybackRate(1, 3.5, 800);
+
+    schedule(showPanel, 1500);
+
+    schedule(() => {
+      rampPlaybackRate(3.5, 1, 600, () => {
+        document.body.classList.remove('cursor-scanning');
+      });
+    }, 2400);
+  }
+
+  function closeFootprint() {
+    if (mapEl.dataset.state === 'idle') return;
+
+    clearAllTimers();
+    cancelRamp();
+
+    if (video) {
+      try { video.playbackRate = 1; } catch (err) { /* ignore */ }
+    }
+
+    document.body.classList.remove('cursor-scanning');
+
+    if (panel) {
+      panel.classList.remove('is-open');
+      panel.setAttribute('aria-hidden', 'true');
+    }
+
+    mapEl.dataset.state = 'idle';
+    mapEl.focus({ preventScroll: true });
+  }
+
+  /* Click: opens from idle; on any subsequent click that lands inside
+     the map but outside the panel, that's "click outside panel" → close.
+     Clicks inside the panel (CTA, close button) are left alone here —
+     they have their own handlers below, and the CTA link is allowed to
+     navigate without the map intercepting it. One listener, no
+     mouse/touch double-firing, since click already unifies both. */
+  mapEl.addEventListener('click', (e) => {
+    if (e.target.closest('.footprint-panel')) return;
+
+    if (mapEl.dataset.state === 'idle') {
+      openFootprint();
+    } else {
+      closeFootprint();
+    }
+  });
+
+  mapEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+      e.preventDefault();
+      openFootprint();
+    }
+  });
+
+  closeBtn?.addEventListener('click', () => closeFootprint());
+
+  /* Any interaction inside the panel (including the maps CTA, which is
+     meant to navigate rather than close) cancels the auto-reset — the
+     operator is reading, not idling. */
+  panel?.addEventListener('click', () => cancelAutoReset());
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mapEl.dataset.state !== 'idle') {
+      closeFootprint();
+    }
+  });
+
+  /* Click entirely outside the map (and therefore outside the panel) —
+     the "click outside" case the map's own listener can't see, since
+     that listener only fires for clicks that land on the map itself. */
+  document.addEventListener('click', (e) => {
+    if (mapEl.dataset.state === 'idle') return;
+    if (mapEl.contains(e.target)) return;
+    closeFootprint();
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      clearAllTimers();
+      cancelRamp();
+    }
+  });
+
+  if (video) {
+    video.muted = true;
+    video.play().catch((err) => {
+      console.warn('[footprint] video autoplay was blocked', err);
+    });
+  }
+})();
