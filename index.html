@@ -426,9 +426,10 @@
     </section>
 
     <!-- ============================================================
-         CAREER FOOTPRINT — the deployment map
-         Two real sites, one continuous watch. The globe is rendered
-         by script.js from #sites-data below; these are its frame.
+         CAREER FOOTPRINT — cinematic earth-globe interaction
+         Career Footprint — the operator's deployment map. One site
+         located, one continuous watch. The globe is a looping video
+         behind cyan glass; the marker at Patli drives the zoom lock.
          ============================================================ -->
     <section id="footprint" class="footprint" aria-labelledby="footprint-title">
       <div class="section-inner">
@@ -439,30 +440,71 @@
         </header>
 
         <div class="footprint-stage">
-          <div class="footprint-map" data-footprint-map>
-            <div class="feed-frame" aria-hidden="true"></div>
-          </div>
+          <div
+            class="footprint-map"
+            data-footprint-map
+            data-state="idle"
+            role="button"
+            tabindex="0"
+            aria-label="View operator location on earth map"
+          >
+            <video class="footprint-video" autoplay muted loop playsinline preload="metadata" poster="">
+              <source src="assets/earth-globe.mp4" type="video/mp4">
+            </video>
 
-          <div class="footprint-panel panel" data-footprint-panel aria-live="polite">
-            <p class="footprint-panel-eyebrow">Selected site</p>
-            <h3 class="footprint-panel-name" data-footprint-name>Flipkart Kalash Mega Hub</h3>
-            <div class="footprint-panel-meta">
-              <span data-footprint-role">Security Systems &amp; Gate Control Operator</span>
-              <span data-footprint-period>2025 – Present</span>
-              <span data-footprint-cameras>32 cameras</span>
+            <div class="footprint-vignette" aria-hidden="true"></div>
+            <div class="footprint-frame" aria-hidden="true"></div>
+            <div class="footprint-badge" aria-hidden="true">● LIVE MAP · GLOBAL COVERAGE</div>
+
+            <div class="footprint-marker"
+                 style="--marker-x: 62%; --marker-y: 42%;"
+                 aria-hidden="true"></div>
+
+            <div class="footprint-reticle" aria-hidden="true"></div>
+
+            <div class="footprint-legend" aria-hidden="true">
+              <span>○ SITES</span>
+              <span>● OPERATOR</span>
+              <span>⌖ PATLI, IN</span>
+            </div>
+
+            <div class="footprint-panel" aria-live="polite" aria-hidden="true">
+              <button type="button" class="footprint-close" aria-label="Close operator details">×</button>
+              <div class="footprint-panel-header">
+                <span class="footprint-panel-eyebrow">// OPERATOR LOCATED</span>
+                <h3 class="footprint-panel-title">Sumit Anand</h3>
+              </div>
+              <div class="footprint-panel-body">
+                <div class="readout-row">
+                  <div class="readout">
+                    <span class="readout__value">CCTV Operator</span>
+                    <span class="readout__label">Role</span>
+                  </div>
+                  <div class="readout">
+                    <span class="readout__value">Patli, HR</span>
+                    <span class="readout__label">Base</span>
+                  </div>
+                  <div class="readout">
+                    <span class="readout__value">2+ YRS</span>
+                    <span class="readout__label">Active</span>
+                  </div>
+                </div>
+                <p class="footprint-panel-sites">
+                  Deployed at <span class="highlight-span">Flipkart Kalash Mega Hub</span> (current)
+                  and previously at <span class="purple-span">Ekart Logistics</span>.
+                </p>
+              </div>
+              <a class="footprint-panel-cta"
+                 href="PASTE_YOUR_GOOGLE_MAPS_LINK_HERE"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 data-cursor-text="Open Map">
+                Open in Google Maps →
+              </a>
             </div>
           </div>
-
-          <span class="topo-status text-tnum" aria-hidden="true" data-topo-status>NODES: 2 · LINKS: 1 · LATENCY: 4ms</span>
         </div>
 
-        <div class="footprint-legend" role="list" aria-label="Map marker meanings">
-          <span class="footprint-legend-item footprint-legend-item--active" role="listitem">
-            <span class="pulse-dot-span online"></span> Active
-          </span>
-          <span class="footprint-legend-item" role="listitem">○ Past</span>
-          <span class="footprint-legend-item footprint-legend-item--shared" role="listitem">◐ Shared</span>
-        </div>
       </div>
     </section>
 
@@ -807,8 +849,8 @@
             </p>
 
             <ul class="contact-links" role="list">
-              <li><a class="contact-link" href="mailto:sumit.anand@example.com" data-cursor-text="Email">Email</a></li>
-              <li><a class="contact-link" href="tel:+910000000000" data-cursor-text="Call">Phone</a></li>
+              <li><a class="contact-link" href="mailto:sa8518430@gmail.com" data-cursor-text="Email">Email</a></li>
+              <li><a class="contact-link" href="tel:+917206185384" data-cursor-text="Call">Phone</a></li>
               <li><a class="contact-link" href="https://www.linkedin.com/in/example" target="_blank" rel="noopener" data-cursor-text="Open">LinkedIn</a></li>
               <li><a class="contact-link" href="assets/sumit-anand-resume.pdf" data-cursor-text="Open">Resume PDF</a></li>
               <li><span class="contact-link" style="cursor:default;">Patli, Haryana, IN</span></li>
