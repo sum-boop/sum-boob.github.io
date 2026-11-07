@@ -1245,7 +1245,10 @@ select:focus-visible,
    --accent-green               #10b981
    --accent-blue                #3b82f6   (NEW — replaces --accent-violet)
    --accent-violet              REMOVE — rename all usages to --accent-blue
-   --status-live                #10b981
+   --status-live                #ef4444   (ALERT RED — REC, error, .scrollbar-live)
+   --status-live-rgb            239, 68, 68
+   --status-online              #10b981   (emerald — healthy, live, current)
+   --status-online-rgb          16, 185, 129
    --status-warning             #f59e0b
    --status-alert               #ef4444
    --border-default             #1e293b
