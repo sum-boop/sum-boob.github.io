@@ -1,3 +1,4 @@
+/* Refactor 2025 — Cyber-Security & Data-Ops palette. Violet → Blue (#3b82f6). */
 /* ==========================================================================
    COMPONENTS.CSS
    CCTV Command Center — UI Component Library
@@ -11,10 +12,10 @@
              the "current" role, the hovered thing.
    → GREEN = "operational / online." Success, live, healthy status,
              a certification that checks out.
-   → VIOLET = rare. One appearance per view, never on anything a visitor
-              presses repeatedly. Its component homes are the flagship
-              client-site badge, the training chip and the inline
-              .purple-span — pick one per view, not all three.
+   → BLUE = rare. One appearance per view, never on anything a visitor
+            presses repeatedly. Its component homes are the flagship
+            client-site badge, the training chip and the inline
+            .purple-span — pick one per view, not all three.
    → RED / AMBER = alert and warning status only, never decoration.
 
    One vocabulary: a "live" status looks the same whether it is a badge,
@@ -316,12 +317,14 @@
   font-weight: var(--fw-semibold);
 }
 
-/* Rare, single-use emphasis — a company name or one accent word.
-   Never apply this to interactive elements. */
+/* Rare, single-use emphasis — a company name or one accent word,
+   rendered in the blue data accent. The class name is legacy and
+   kept for markup compatibility. Never apply this to interactive
+   elements. */
 .purple-span {
-  color: var(--accent-violet);
+  color: var(--accent-blue);
   font-weight: var(--fw-semibold);
-  text-shadow: 0 0 10px var(--accent-violet-soft);
+  text-shadow: 0 0 10px var(--accent-blue-soft);
 }
 
 /* ==========================================================================
@@ -479,14 +482,14 @@
 }
 
 /* Client site — the label naming where a role was served
-   (Flipkart Kalash Mega Hub, Ekart Logistics). Violet, and violet is
+   (Flipkart Kalash Mega Hub, Ekart Logistics). Blue, and blue is
    single-use: spend it on the ONE flagship label in a view. Anywhere the
    site name repeats — card lists, timeline entries — use .site-badge
    (section 4) instead. No pulse. */
 .status-badge.client-site {
-  color: var(--accent-violet);
-  background: var(--accent-violet-soft);
-  border-color: rgba(var(--accent-violet-rgb), 0.35);
+  color: var(--accent-blue);
+  background: var(--accent-blue-soft);
+  border-color: rgba(var(--accent-blue-rgb), 0.35);
   box-shadow: none;
 }
 
@@ -779,7 +782,7 @@
      completed  finished               green
      certified  a credential that      green, ✓ prefix
                 verifies
-     training   a course in progress   violet — rare, see the colour
+     training   a course in progress   blue — rare, see the colour
                                        discipline at the top
      archived   filed away             quiet */
 .log-status {
@@ -834,9 +837,9 @@
 }
 
 .log-status.training {
-  color: var(--accent-violet);
-  border-color: rgba(var(--accent-violet-rgb), 0.35);
-  background: var(--accent-violet-soft);
+  color: var(--accent-blue);
+  border-color: rgba(var(--accent-blue-rgb), 0.35);
+  background: var(--accent-blue-soft);
 }
 
 .log-status.certified {
@@ -917,7 +920,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-md);
-  background: rgba(3, 4, 5, 0.86);
+  background: rgba(5, 8, 16, 0.86);
   backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
   opacity: 0;
@@ -1200,7 +1203,7 @@ textarea.form-input,
    there is no empty state for the label to sit in. */
 .form-select {
   padding-right: 3rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%2300e5ff' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%2306b6d4' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1.25rem center;
   background-size: 12px 8px;
@@ -1622,7 +1625,7 @@ nav.nav-scrolled {
   position: fixed;
   inset: 0;
   z-index: calc(var(--z-overlay) - 1);
-  background: rgba(3, 4, 5, 0.6);
+  background: rgba(5, 8, 16, 0.6);
   backdrop-filter: blur(var(--glass-blur-soft));
   -webkit-backdrop-filter: blur(var(--glass-blur-soft));
   opacity: 0;
@@ -2229,7 +2232,7 @@ body.modal-open {
 
   .modal-backdrop,
   .nav-drawer-backdrop {
-    background: rgba(3, 4, 5, 0.94);
+    background: rgba(5, 8, 16, 0.94);
   }
 }
 
