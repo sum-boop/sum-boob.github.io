@@ -1,3 +1,7 @@
+/* Refactor 2025 — Cyber-Security & Data-Ops palette.
+   Fallback cyan #00e5ff → #06b6d4; fallback green #00ff9c → #10b981;
+   glass fallback → rgba(15,23,42,0.80); cyan-border fallback → rgba(6,182,212,0.35). */
+
 /* ==========================================================================
    CCTV COMMAND CENTER — script.js
 
@@ -245,8 +249,8 @@ const SCAN_SELECTOR = '.topo__node, .footprint__site, [data-cursor-scan]';
     return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
   };
 
-  const DOT  = parseColor(rootStyles.getPropertyValue('--accent-cyan'),  { r: 0, g: 229, b: 255 });
-  const LINE = parseColor(rootStyles.getPropertyValue('--accent-green'), { r: 0, g: 255, b: 156 });
+  const DOT  = parseColor(rootStyles.getPropertyValue('--accent-cyan'),  { r: 6, g: 182, b: 212 });
+  const LINE = parseColor(rootStyles.getPropertyValue('--accent-green'), { r: 16, g: 185, b: 129 });
 
   const MAX_DIST = 110;
   const MAX_DIST_SQ = MAX_DIST * MAX_DIST;
@@ -400,10 +404,10 @@ const SCAN_SELECTOR = '.topo__node, .footprint__site, [data-cursor-scan]';
       'font-family:var(--font-mono, monospace)',
       'font-size:var(--fs-xs, 0.75rem)',
       'letter-spacing:var(--ls-wide, 0.04em)',
-      'color:var(--accent-cyan, #00e5ff)',
-      'text-shadow:var(--text-glow-cyan, 0 0 14px rgba(0, 229, 255, 0.45))',
-      'background:var(--glass-bg, rgba(12, 14, 19, 0.55))',
-      'border:1px solid var(--border-cyan, rgba(0, 229, 255, 0.28))',
+      'color:var(--accent-cyan, #06b6d4)',
+      'text-shadow:var(--text-glow-cyan, 0 0 14px rgba(6, 182, 212, 0.45))',
+      'background:var(--glass-bg, rgba(15, 23, 42, 0.80))',
+      'border:1px solid var(--border-cyan, rgba(6, 182, 212, 0.35))',
       'border-radius:var(--radius-sm, 6px)',
       'padding:5px 12px',
       'pointer-events:none',
