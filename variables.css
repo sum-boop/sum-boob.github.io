@@ -9,7 +9,7 @@
      body copy, UI labels, buttons, descriptions.
    → MONO (JetBrains Mono) carries system readouts — tags,
      timestamps, status, coordinates, technical metadata.
-   → NEON IS A SIGNAL, NOT WALLPAPER. Cyan, green, and violet are
+   → NEON IS A SIGNAL, NOT WALLPAPER. Cyan, green, and blue are
      reserved for the one thing that matters in a given view:
      live status, active nav, primary CTA. The rest of the interface
      is quiet obsidian, so color always means something.
@@ -75,12 +75,12 @@
      primary CTA, focus ring).
      Green means "operational / good" — online states, success,
      a resolved signal.
-     Violet is a rare tertiary — used at most once per page,
+     Blue is a rare tertiary — used at most once per page,
      never for interactive states. It exists to break the
      cyan/green duality on a single editorial moment.
 
      The palette is one family (cyan) with two signals (green =
-     operational, red = live/alert) and one rare guest (violet).
+     operational, red = live/alert) and one rare guest (blue).
      No further hues are introduced anywhere in this file —
      sections 17–21 are built entirely from these.
      ============================================================== */
@@ -94,15 +94,15 @@
   --accent-green-soft:  rgba(0, 255, 156, 0.16);
   --accent-green-mid:   rgba(0, 255, 156, 0.38);
 
-  --accent-violet:      #a78bfa;
-  --accent-violet-rgb:  167, 139, 250;
-  --accent-violet-soft: rgba(167, 139, 250, 0.16);
+  --accent-blue:        #3b82f6;
+  --accent-blue-rgb:    59, 130, 246;
+  --accent-blue-soft:   rgba(59, 130, 246, 0.16);
 
   /* Legacy aliases — kept so older components.css / animations.css
      references continue to resolve without edits. */
   --neon-cyan:   var(--accent-cyan);
   --neon-green:  var(--accent-green);
-  --neon-violet: var(--accent-violet);
+  --neon-blue:   var(--accent-blue);
 
   /* ==============================================================
      4. STATUS COLORS — system states
@@ -169,7 +169,7 @@
      re-verify if --bg-base ever changes):
        --accent-cyan     ≈ 13 : 1   passes AA (normal text)
        --accent-green    ≈ 15 : 1   passes AA
-       --accent-violet   ≈ 7.4 : 1  passes AA
+       --accent-blue     ≈ 5.5 : 1  passes AA
        --status-live     ≈ 5.8 : 1  passes AA
        --status-warning  ≈ 11.5 : 1 passes AA
        --text-tertiary   ≈ 5.4 : 1  passes AA
