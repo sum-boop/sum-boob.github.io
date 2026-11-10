@@ -33,13 +33,13 @@
      between --bg-base and --bg-elevated; surfaces are used sparingly
      so that elevation always reads as deliberate.
      ============================================================== */
-  --bg-void:            #030405;
-  --bg-base:            #07080b;
-  --bg-elevated:        #0c0e13;
-  --bg-surface:         #12141b;
-  --bg-surface-hover:   #171a23;
-  --bg-surface-active:  #1c202b;
-  --bg-inset:           #020203;
+  --bg-void:            #040508;
+  --bg-base:            #080a10;
+  --bg-elevated:        #0d1019;
+  --bg-surface:         #131722;
+  --bg-surface-hover:   #181d2a;
+  --bg-surface-active:  #1e2433;
+  --bg-inset:           #030407;
 
   /* Atmosphere — used once or twice per page, never tiled.
      These gradients anchor the eye to a single focal point. */
@@ -53,13 +53,13 @@
      soft (ambient cards), default (standard panels), strong
      (modals, headers, anything that must dominate).
      ============================================================== */
-  --glass-bg:             rgba(12, 14, 19, 0.52);
-  --glass-bg-strong:      rgba(12, 14, 19, 0.80);
-  --glass-bg-soft:        rgba(12, 14, 19, 0.30);
-  --glass-bg-hover:       rgba(23, 26, 35, 0.85);
+  --glass-bg:             rgba(13, 16, 25, 0.52);
+  --glass-bg-strong:      rgba(13, 16, 25, 0.80);
+  --glass-bg-soft:        rgba(13, 16, 25, 0.30);
+  --glass-bg-hover:       rgba(24, 29, 42, 0.85);
 
-  --glass-border:         rgba(200, 212, 230, 0.08);
-  --glass-border-strong:  rgba(200, 212, 230, 0.16);
+  --glass-border:         rgba(190, 205, 235, 0.08);
+  --glass-border-strong:  rgba(190, 205, 235, 0.16);
   --glass-highlight:      rgba(255, 255, 255, 0.05);
 
   --glass-blur-soft:      8px;
@@ -195,9 +195,9 @@
      for state. Alpha values are tuned for obsidian backgrounds
      so a "subtle" border still reads as intentional.
      ============================================================== */
-  --border-subtle:       rgba(200, 212, 230, 0.06);
-  --border-default:      rgba(200, 212, 230, 0.12);
-  --border-strong:       rgba(200, 212, 230, 0.22);
+  --border-subtle:       rgba(190, 205, 235, 0.06);
+  --border-default:      rgba(190, 205, 235, 0.12);
+  --border-strong:       rgba(190, 205, 235, 0.22);
   --border-cyan:         rgba(0, 229, 255, 0.25);
   --border-cyan-strong:  rgba(0, 229, 255, 0.55);
   --border-green:        rgba(0, 255, 156, 0.25);
@@ -607,8 +607,8 @@
     --border-default:  rgba(214, 223, 236, 0.35);
     --border-strong:   rgba(214, 223, 236, 0.55);
 
-    --glass-bg:        rgba(7, 8, 11, 0.90);
-    --glass-bg-strong: rgba(7, 8, 11, 0.97);
+    --glass-bg:        rgba(8, 10, 16, 0.90);
+    --glass-bg-strong: rgba(8, 10, 16, 0.97);
     --glass-border:    rgba(214, 223, 236, 0.28);
 
     /* Atmosphere — decoration off */
