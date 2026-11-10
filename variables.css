@@ -98,6 +98,16 @@
   --accent-blue-rgb:    59, 130, 246;
   --accent-blue-soft:   rgba(59, 130, 246, 0.16);
 
+  --accent-teal:        #2dd4bf;
+  --accent-teal-rgb:    45, 212, 191;
+  --accent-teal-soft:   rgba(45, 212, 191, 0.16);
+  --accent-teal-mid:    rgba(45, 212, 191, 0.38);
+
+  --accent-amber:       #fbbf24;
+  --accent-amber-rgb:   251, 191, 36;
+  --accent-amber-soft:  rgba(251, 191, 36, 0.16);
+  --accent-amber-mid:   rgba(251, 191, 36, 0.38);
+
   /* Legacy aliases — kept so older components.css / animations.css
      references continue to resolve without edits. */
   --neon-cyan:   var(--accent-cyan);
