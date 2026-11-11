@@ -843,15 +843,15 @@
 }
 
 .log-status.certified {
-  color: var(--status-online);
-  border-color: var(--border-green);
-  background: rgba(var(--status-online-rgb), 0.10);
+  color: var(--text-teal);
+  border-color: var(--border-teal);
+  background: var(--accent-teal-soft);
 }
 
 .log-status.certified::before {
   content: "✓";
   content: "✓" / "";
-  color: var(--accent-green);
+  color: var(--accent-teal);
 }
 
 /* ==========================================================================

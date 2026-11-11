@@ -143,7 +143,7 @@ body {
   position: relative;
   isolation: isolate;
   background-color: var(--bg-base);
-  background-image: var(--bg-radial-cyan), var(--bg-radial-green);
+  background-image: var(--bg-radial-cyan), var(--bg-radial-green), var(--bg-radial-teal), var(--bg-radial-amber);
   background-repeat: no-repeat;
   background-attachment: fixed;
   color: var(--text-primary);
@@ -695,7 +695,7 @@ select:focus-visible,
   height: 420px;
   top: 42%;
   left: 38%;
-  background: var(--accent-green);
+  background: var(--accent-teal);
   opacity: 0.12;
   animation-delay: -6s;
 }
@@ -708,7 +708,7 @@ select:focus-visible,
   height: 280px;
   top: 8%;
   right: 6%;
-  background: var(--status-warning);
+  background: var(--accent-amber);
   opacity: 0.06;
   filter: blur(110px);
   animation-delay: -18s;
