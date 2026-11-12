@@ -56,8 +56,7 @@ export function NetworkMap() {
         context.beginPath();
         context.moveTo(start[0] * width, start[1] * height);
         context.lineTo(end[0] * width, end[1] * height);
-        context.strokeStyle =
-          index % 4 === 0 ? 'rgba(131, 101, 255, 0.32)' : 'rgba(72, 240, 225, 0.16)';
+        context.strokeStyle = index % 4 === 0 ? 'rgba(8, 122, 67, 0.28)' : 'rgba(53, 95, 70, 0.15)';
         context.stroke();
       });
       nodes.forEach(([x, y], index) => {
@@ -65,7 +64,7 @@ export function NetworkMap() {
         const pulse = reducedMotion ? 1 : 0.72 + (Math.sin(time / 760 + index * 0.9) + 1) * 0.14;
         context.beginPath();
         context.arc(x * width, y * height, radius * pulse, 0, Math.PI * 2);
-        context.fillStyle = index === 3 ? '#a5ff71' : index % 3 === 0 ? '#8365ff' : '#48f0e1';
+        context.fillStyle = index === 3 ? '#c8ee72' : index % 3 === 0 ? '#087a43' : '#6a9a70';
         context.shadowColor = context.fillStyle;
         context.shadowBlur = index === 3 ? 17 : 9;
         context.fill();

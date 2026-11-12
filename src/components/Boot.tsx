@@ -32,18 +32,16 @@ export function Boot() {
 
   return (
     <div
-      aria-label="Initializing surveillance network"
+      aria-label="Loading Sumit Anand's portfolio"
       className={`boot-screen boot-screen--${phase}`}
     >
       <div aria-live="polite" className="boot-terminal" role="status">
-        <p>&gt; booting surveillance_os v2.4…</p>
-        <p className="boot-muted">&gt; handshake: NVR_CORE … OK</p>
-        <p className="boot-muted">&gt; handshake: GATE_CONTROL … OK</p>
-        <p className="boot-muted">&gt; camera index loaded … 32 nodes found</p>
-        <p className="boot-success">operator: SUMIT ANAND</p>
-        <p className="boot-success">clearance: GRANTED</p>
+        <p>&gt; loading professional profile…</p>
+        <p className="boot-muted">&gt; role: CCTV operator</p>
+        <p className="boot-muted">&gt; base: Haryana, India</p>
+        <p className="boot-success">SUMIT ANAND</p>
         <p>
-          &gt; initializing command center
+          &gt; profile ready
           <span aria-hidden="true" className="terminal-cursor" />
         </p>
       </div>
