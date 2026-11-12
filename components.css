@@ -674,16 +674,9 @@
   }
 }
 
-/* Monitor — a surveillance-feed card. The header strip is always on:
-     <div class="glass-card-monitor-header">
-       <span class="monitor-rec">● REC</span>
-       <span>CAM_02</span>
-       <time class="monitor-time">…</time>
-     </div>
-   REC on the left in alert red, camera ID beside it, timestamp pushed
-   to the right. The viewfinder brackets from .feed-frame stay faintly
-   visible instead of waiting for hover. Used on the About and Career
-   Footprint sections. */
+/* Monitor — a surveillance-feed card. Its header keeps the illustrative
+   label and timestamp visible; viewfinder brackets from .feed-frame stay
+   faintly present instead of waiting for hover. */
 .glass-card--monitor {
   padding-top: var(--space-md);
 }
@@ -1299,9 +1292,41 @@ textarea.form-input,
   font-weight: var(--fw-bold);
 }
 
-/* Success — a confirmation banner above the form, in the same green
-   vocabulary as a live badge. Put a .status-badge.live inside it for the
-   label. */
+/* Success and fallback feedback stay hidden until a submission finishes. */
+.form-error[hidden],
+.form-success[hidden],
+.form-field[hidden],
+.form-field--inline[hidden] {
+  display: none !important;
+}
+
+.form-honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.form-email-draft {
+  color: var(--text-teal);
+  text-decoration: underline;
+  text-decoration-color: var(--border-teal-strong);
+  text-underline-offset: 0.2em;
+}
+
+.form-email-draft:hover {
+  color: var(--text-primary);
+}
+
+.form-email-draft:focus-visible {
+  outline: 2px solid var(--accent-teal);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+/* Confirmation or mailto fallback banner above the form. */
 .form-success {
   display: flex;
   flex-wrap: wrap;
@@ -1476,7 +1501,7 @@ nav.nav-scrolled {
   margin-left: var(--space-xs);
 }
 
-/* Live readout — "● ONLINE · IN-SUMIT-01". A whisper of system status,
+/* Live readout — "Online · CCTV Operator". A whisper of profile context,
    visible only where there is room for it. */
 .nav-status {
   display: inline-flex;

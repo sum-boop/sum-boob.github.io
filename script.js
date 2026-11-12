@@ -1,20 +1,10 @@
-/* Refactor 2025 — Cyber-Security & Data-Ops palette.
-   Fallback cyan #00e5ff → #06b6d4; fallback green #00ff9c → #10b981;
-   glass fallback → rgba(15,23,42,0.80); cyan-border fallback → rgba(6,182,212,0.35). */
-
-/* ==========================================================================
+/* ========================================================================
    CCTV COMMAND CENTER — script.js
 
-   Cursor (idle/armed/scanning/lock/boot/idle-dim) · Spotlight · Progress Bar
-   Particles · Surveillance Clock · Card Tilt · About Image Loader ·
-   Operations Data · Modal System · Contact Form (mailto) · Toast ·
-   Scroll Reveal · Text Decode · Scroll-Spy · Keyboard & Focus Trap ·
-   Mobile Nav Drawer · Boot Sequence · Operations Filter Bar ·
-   Career Footprint — Cinematic Earth Globe
-
-   No backend anywhere in this file. The contact form's only transport is a
-   mailto: link — the honesty of that mechanism is part of the design, not
-   a limitation to hide.
+   Cursor · Spotlight · Progress · Clock · Operations Data · Modals ·
+   Supabase-backed Contact Form with mailto fallback · Toasts · Scroll Reveal ·
+   Scroll-Spy · Keyboard & Focus Trap · Mobile Navigation · Boot Sequence ·
+   Operations Filters · Career Footprint
    ========================================================================== */
 'use strict';
 
@@ -31,9 +21,6 @@ const $  = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
 const CONTACT_EMAIL = 'sa8518430@gmail.com';
-
-const SUPABASE_URL = '__SUPABASE_URL__';
-const SUPABASE_ANON_KEY = '__SUPABASE_ANON_KEY__';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -407,10 +394,10 @@ const SCAN_SELECTOR = '.topo__node, .footprint__site, [data-cursor-scan]';
       'font-family:var(--font-mono, monospace)',
       'font-size:var(--fs-xs, 0.75rem)',
       'letter-spacing:var(--ls-wide, 0.04em)',
-      'color:var(--accent-cyan, #06b6d4)',
-      'text-shadow:var(--text-glow-cyan, 0 0 14px rgba(6, 182, 212, 0.45))',
-      'background:var(--glass-bg, rgba(15, 23, 42, 0.80))',
-      'border:1px solid var(--border-cyan, rgba(6, 182, 212, 0.35))',
+      'color:var(--accent-cyan, #5ed8c1)',
+      'text-shadow:var(--text-glow-cyan, 0 0 14px rgba(94, 216, 193, 0.45))',
+      'background:var(--glass-bg, rgba(15, 35, 29, 0.80))',
+      'border:1px solid var(--border-cyan, rgba(94, 216, 193, 0.35))',
       'border-radius:var(--radius-sm, 6px)',
       'padding:5px 12px',
       'pointer-events:none',
@@ -429,16 +416,15 @@ const SCAN_SELECTOR = '.topo__node, .footprint__site, [data-cursor-scan]';
 
   const update = () => {
     const now = new Date();
-    const dateStr = `${now.getUTCFullYear()}-${pad(now.getUTCMonth() + 1)}-${pad(now.getUTCDate())}`;
-    const utcStr  = `${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}`;
-
     const ist = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
-    const istStr = `${pad(ist.getUTCHours())}:${pad(ist.getUTCMinutes())}:${pad(ist.getUTCSeconds())}`;
+    const dateStr = `${ist.getUTCFullYear()}-${pad(ist.getUTCMonth() + 1)}-${pad(ist.getUTCDate())}`;
+    const utcStr  = `${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())}:${pad(now.getUTCSeconds())}`;
+    const istStr  = `${pad(ist.getUTCHours())}:${pad(ist.getUTCMinutes())}:${pad(ist.getUTCSeconds())}`;
 
-    clockEl.textContent = `● REC ${dateStr}  ·  UTC ${utcStr}  ·  IST ${istStr}`;
+    clockEl.textContent = `● CLOCK ${dateStr}  ·  UTC ${utcStr}  ·  IST ${istStr}`;
 
     if (heroTimestamp) heroTimestamp.textContent = `● ${dateStr} ${istStr}`;
-    if (footerSync) footerSync.textContent = `${dateStr} ${istStr} IST`;
+    if (footerSync) footerSync.textContent = `${istStr} IST`;
   };
 
   const syncVisibility = () => {
@@ -492,34 +478,9 @@ const SCAN_SELECTOR = '.topo__node, .footprint__site, [data-cursor-scan]';
 })();
 
 /* ==========================================================================
-   5.1 ABOUT IMAGE LOADER
-   Clears `.no-img` on the real load event (or on error, so the box
-   doesn't sit in an endless "acquiring signal" animation forever).
-   ========================================================================== */
-(function initAboutImageLoader() {
-  const wrapper = document.querySelector('.about-image-wrapper');
-  const img = wrapper?.querySelector('img');
-  if (!wrapper || !img) return;
-
-  const reveal = () => wrapper.classList.remove('no-img');
-
-  if (img.complete && img.naturalWidth > 0) {
-    reveal();
-  } else {
-    img.addEventListener('load', reveal, { once: true });
-    img.addEventListener('error', () => {
-      wrapper.classList.remove('no-img');
-      wrapper.classList.add('img-error');
-      console.warn('[about-image] failed to load — upload the real photo to', img.src);
-    }, { once: true });
-  }
-})();
-
-/* ==========================================================================
    6. OPERATIONS DATA — the single source of truth for every deployment
-   card and its modal briefing. Every fact here traces to the resume;
-   nothing is invented. Gallery URLs are placeholders — swap in real
-   deployment photography before launch.
+   card and its modal briefing. Work details are kept separate from the
+   illustrative reference imagery, which does not depict client sites.
    ========================================================================== */
 const opData = {
   op1: {
@@ -788,30 +749,33 @@ function openHireModal() {
 
     <form class="contact-form" id="hire-form" novalidate>
       <div class="form-success" role="status" aria-live="polite" hidden>
-        <span class="status-badge live"><span class="pulse-dot-span online"></span> Sent</span>
-        <span>Thanks. Your email client is opening — if it doesn't, copy your message and send it to
-          <a href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.
-        </span>
+        <span class="status-badge live"><span class="pulse-dot-span online"></span><span data-form-status>Request received</span></span>
+        <span data-form-message>Request received — I&apos;ll reply within 24 hours.</span>
+      </div>
+
+      <div class="form-honeypot" aria-hidden="true">
+        <label for="hm-website">Leave this field empty</label>
+        <input id="hm-website" name="website" type="text" tabindex="-1" autocomplete="off" />
       </div>
 
       <div class="form-field--inline">
         <div class="form-field">
-          <input class="form-input" type="text" id="hm-name" name="name" autocomplete="name" placeholder=" " required />
+          <input class="form-input" type="text" id="hm-name" name="name" autocomplete="name" maxlength="120" placeholder=" " required />
           <label class="form-label" for="hm-name">Name</label>
         </div>
         <div class="form-field">
-          <input class="form-input" type="email" id="hm-email" name="email" autocomplete="email" placeholder=" " required />
+          <input class="form-input" type="email" id="hm-email" name="email" autocomplete="email" maxlength="254" placeholder=" " required />
           <label class="form-label" for="hm-email">Email</label>
         </div>
       </div>
 
       <div class="form-field">
-        <input class="form-input" type="text" id="hm-org" name="organization" autocomplete="organization" placeholder=" " />
+        <input class="form-input" type="text" id="hm-org" name="organization" autocomplete="organization" maxlength="120" placeholder=" " />
         <label class="form-label" for="hm-org">Company / Organization</label>
       </div>
 
       <div class="form-field">
-        <textarea class="form-input form-textarea" id="hm-message" name="message" placeholder=" " required></textarea>
+        <textarea class="form-input form-textarea" id="hm-message" name="message" maxlength="5000" placeholder=" " required></textarea>
         <label class="form-label" for="hm-message">Message</label>
       </div>
 
@@ -855,10 +819,9 @@ window.closeHireModal = closeHireModal;
 window.closeOpModal   = closeOpModal;
 
 /* ==========================================================================
-   8. CONTACT FORM — frontend-only submission. mailto: is the transport.
-   No backend, no third-party service, and the success message says so.
-   One handler serves both the page's own Contact section and the hire
-   modal's copy of the same form.
+   8. CONTACT FORM — one validated path for the page form and hire modal.
+   Vercel stores messages through the same-origin API; static-only hosts get
+   a prefilled email draft instead of a false success state.
    ========================================================================== */
 function ensureFieldError(input) {
   const id = `${input.id}-error`;
@@ -875,61 +838,108 @@ function ensureFieldError(input) {
 
 function setFieldError(input, message) {
   const err = ensureFieldError(input);
+  if (!('originalDescribedBy' in input.dataset)) {
+    input.dataset.originalDescribedBy = input.getAttribute('aria-describedby') || '';
+  }
+
   if (message) {
     err.textContent = message;
     err.hidden = false;
     input.setAttribute('aria-invalid', 'true');
-    input.setAttribute('aria-describedby', err.id);
+    input.setAttribute('aria-describedby', [input.dataset.originalDescribedBy, err.id].filter(Boolean).join(' '));
     input.closest('.form-field')?.classList.add('has-error');
   } else {
     err.hidden = true;
     input.removeAttribute('aria-invalid');
+    if (input.dataset.originalDescribedBy) input.setAttribute('aria-describedby', input.dataset.originalDescribedBy);
+    else input.removeAttribute('aria-describedby');
     input.closest('.form-field')?.classList.remove('has-error');
   }
 }
 
 function validateContactForm(form) {
-  const name    = form.querySelector('[name="name"]');
-  const email   = form.querySelector('[name="email"]');
+  const name = form.querySelector('[name="name"]');
+  const email = form.querySelector('[name="email"]');
+  const organization = form.querySelector('[name="organization"]');
   const message = form.querySelector('[name="message"]');
-
+  const nameValue = name.value.trim();
+  const emailValue = email.value.trim();
+  const organizationValue = organization?.value.trim() || '';
+  const messageValue = message.value.trim();
   let valid = true;
 
-  if (!name.value.trim() || name.value.trim().length < 2) {
-    setFieldError(name, 'Enter your name (2 characters or more).');
+  if (nameValue.length < 2 || nameValue.length > 120) {
+    setFieldError(name, 'Enter a name between 2 and 120 characters.');
     valid = false;
-  } else {
-    setFieldError(name, null);
-  }
+  } else setFieldError(name, null);
 
-  if (!EMAIL_RE.test(email.value.trim())) {
-    setFieldError(email, 'Enter a valid email address.');
+  if (emailValue.length > 254 || !EMAIL_RE.test(emailValue)) {
+    setFieldError(email, 'Enter a valid email address (254 characters or fewer).');
     valid = false;
-  } else {
-    setFieldError(email, null);
-  }
+  } else setFieldError(email, null);
 
-  if (!message.value.trim() || message.value.trim().length < 10) {
-    setFieldError(message, 'Say a little more (10 characters or more).');
+  if (organization && organizationValue.length > 120) {
+    setFieldError(organization, 'Keep the organization name to 120 characters or fewer.');
     valid = false;
-  } else {
-    setFieldError(message, null);
-  }
+  } else if (organization) setFieldError(organization, null);
+
+  if (messageValue.length < 10 || messageValue.length > 5000) {
+    setFieldError(message, 'Enter a message between 10 and 5,000 characters.');
+    valid = false;
+  } else setFieldError(message, null);
 
   return valid;
 }
 
-async function submitContactMessage(form) {
-  const field = (name) => form.querySelector(`[name="${name}"]`)?.value.trim() || null;
+function buildEmailDraft(form) {
+  const field = (name) => form.querySelector(`[name="${name}"]`)?.value.trim() || '';
+  const name = field('name');
+  const organization = field('organization');
+  const body = [
+    `Name: ${name}`,
+    `Email: ${field('email')}`,
+    ...(organization ? [`Organization: ${organization}`] : []),
+    '',
+    field('message'),
+  ].join('\n');
+  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(`Portfolio contact from ${name}`)}&body=${encodeURIComponent(body)}`;
+}
 
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
+function showContactResult(successEl, { success, draftUrl } = {}) {
+  if (!successEl) return;
+  const status = successEl.querySelector('[data-form-status]');
+  const message = successEl.querySelector('[data-form-message]');
+  const badge = status?.closest('.status-badge');
+  const pulse = badge?.querySelector('.pulse-dot-span');
+  successEl.querySelector('[data-email-draft]')?.remove();
+
+  if (status) status.textContent = success ? 'Request received' : 'Email draft available';
+  if (badge) badge.classList.toggle('live', success);
+  if (pulse) pulse.classList.toggle('online', success);
+  if (message) {
+    message.textContent = success
+      ? 'Request received — I’ll reply within 24 hours.'
+      : 'The form is unavailable on this host. Send your message using a prefilled email draft.';
+  }
+  successEl.setAttribute('role', success ? 'status' : 'alert');
+  successEl.hidden = false;
+
+  if (!success && draftUrl) {
+    const link = document.createElement('a');
+    link.href = draftUrl;
+    link.className = 'form-email-draft';
+    link.dataset.emailDraft = '';
+    link.textContent = 'Open email draft';
+    successEl.append(link);
+  }
+}
+
+async function submitContactMessage(form) {
+  const field = (name) => form.querySelector(`[name="${name}"]`)?.value.trim() || '';
+  const endpoint = new URL('api/contact', window.location.href);
+  const response = await fetch(endpoint, {
     method: 'POST',
-    headers: {
-      apikey: SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      'Content-Type': 'application/json',
-      Prefer: 'return=minimal',
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       name: field('name'),
       email: field('email'),
@@ -937,8 +947,7 @@ async function submitContactMessage(form) {
       message: field('message'),
     }),
   });
-
-  if (!response.ok) throw new Error(`Request failed (${response.status})`);
+  if (!response.ok) throw new Error('Contact submission failed');
 }
 
 function attachContactFormHandler(form) {
@@ -947,11 +956,10 @@ function attachContactFormHandler(form) {
 
   const submitBtn = form.querySelector('button[type="submit"]');
   const successEl = form.querySelector('.form-success');
-  const fieldEls  = $$('.form-field, .form-field--inline', form);
+  const fieldEls = $$('.form-field, .form-field--inline', form);
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
     if (!validateContactForm(form)) return;
 
     const originalLabel = submitBtn ? submitBtn.innerHTML : '';
@@ -959,21 +967,26 @@ function attachContactFormHandler(form) {
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span>Transmitting…</span>';
     }
+    form.setAttribute('aria-busy', 'true');
+    if (successEl) successEl.hidden = true;
 
-    submitContactMessage(form)
-      .then(() => {
-        fieldEls.forEach((el) => { el.hidden = true; });
-        if (submitBtn) submitBtn.hidden = true;
-        if (successEl) successEl.hidden = false;
-        showToastImpl({ type: 'success', title: 'Channel opened', message: 'Your message has been received.' });
-      })
-      .catch(() => {
-        showToastImpl({ type: 'alert', title: 'Transmission failed', message: 'Your message could not be sent. Please try again.' });
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalLabel;
-        }
-      });
+    try {
+      const honeypot = form.querySelector('[name="website"]');
+      if (!honeypot?.value.trim()) await submitContactMessage(form);
+      fieldEls.forEach((element) => { element.hidden = true; });
+      if (submitBtn) submitBtn.hidden = true;
+      showContactResult(successEl, { success: true });
+      showToastImpl({ type: 'success', title: 'Channel opened', message: 'Your message has been received.' });
+    } catch {
+      showContactResult(successEl, { success: false, draftUrl: buildEmailDraft(form) });
+      showToastImpl({ type: 'alert', title: 'Form unavailable', message: 'Use the prefilled email draft to continue.' });
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalLabel;
+      }
+    } finally {
+      form.removeAttribute('aria-busy');
+    }
   });
 }
 
@@ -1316,7 +1329,7 @@ window.showToast = showToastImpl;
     setTimeout(() => {
       finish();
       showToastImpl({ type: 'info', title: 'System Online', message: 'Welcome, Operator. All channels nominal.' });
-    }, readDurationVar('--duration-slower', 900));
+    }, Math.min(readDurationVar('--duration-slower', 900), 500));
   };
 
   const setProgress = (fraction) => {
@@ -1327,14 +1340,15 @@ window.showToast = showToastImpl;
     progressEl.innerHTML = `<span class="boot-progress-fill">${'█'.repeat(filled)}</span>${'░'.repeat(width - filled)} ${pct}%`;
   };
 
+  const lineInterval = Math.min(TERMINAL_LINE_DELAY, 30) * 2;
   lines.forEach((line, i) => {
     setTimeout(() => {
       line.style.opacity = '1';
       setProgress((i + 1) / lines.length);
-    }, TERMINAL_LINE_DELAY * 4 * i);
+    }, lineInterval * i);
   });
 
-  const totalTime = TERMINAL_LINE_DELAY * 4 * lines.length + 600;
+  const totalTime = lineInterval * Math.max(0, lines.length - 1) + 350;
   const holdTimer = setTimeout(fadeOutAndFinish, totalTime);
 
   const skipNow = () => {

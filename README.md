@@ -1,4 +1,4 @@
-# 🛰️ CCTV Operator & Surveillance Command Center — Portfolio
+# Sumit Anand — CCTV Operator Portfolio
 
 **A cinematic, dark-glass command console for a CCTV & Surveillance Systems Specialist.**
 
@@ -6,9 +6,9 @@
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![No Framework](https://img.shields.io/badge/Framework-None%20(Vanilla)-0a0f1d?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-00e5ff?style=for-the-badge)
+**Vercel:** [sum-boob-github-io.vercel.app](https://sum-boob-github-io.vercel.app/)
 
-🔗 **Live Deployment:** [sum-boose.github.io](https://sum-boose.github.io/)
+**GitHub Pages project URL:** `https://sum-boop.github.io/sum-boob.github.io/` (when Pages is enabled for this repository).
 
 ---
 
@@ -16,19 +16,19 @@
 
 This repository holds a single-page developer portfolio designed around a **CCTV operator / surveillance command center** aesthetic — deep obsidian backgrounds, neon cyan and green glows, dark glassmorphism panels, and a custom crosshair cursor. It's built entirely with vanilla HTML, CSS and JavaScript on a modular, token-driven architecture, with no build tooling required.
 
-Every surface of the interface — the HUD grid overlay, the "live" camera-feed project cards, the operational logbook timeline, and the secure command-terminal contact form — is designed to feel like a real monitoring console rather than a generic template.
+The portfolio uses a restrained teal control-room palette, camera-feed styling, an operational logbook timeline, and a contact form that stores submissions through a same-origin Vercel Function. The imagery is illustrative and does not represent the named client sites or a personal photograph.
 
 ---
 
 ## ⚡ Key Features
 
-- **Dark Glassmorphism + Neon Theme** — obsidian surfaces, backdrop blur, and cyan / green / violet glow accents driven entirely by CSS custom properties
+- **Dark Teal Control-Room Theme** — layered teal-black surfaces with teal, green, and amber signal accents driven by CSS custom properties
 - **Tactical HUD Backdrop** — a subtle scanning grid overlay, a moving scanline sweep, and ambient glow orbs
 - **Custom Crosshair Cursor** — a precision dot + rotating dashed reticle with a "target-lock" hover state, with automatic fallback on touch devices
 - **Live Surveillance Timestamp** — a real-time UTC / IST clock rendered in the header, formatted like an operator console
-- **Camera-Feed Project Cards** — glass panels with viewfinder-style corner brackets and a pulsing "LIVE" indicator, filterable by category
+- **Illustrative Camera-Feed Cards** — glass panels with viewfinder-style corner brackets, clearly separated from factual work-history details, filterable by category
 - **Interactive Glass Modals** — project briefings and a working "Hire Me" proposal form, closable via overlay click, close button, or <kbd>Esc</kbd>
-- **Secure Command Terminal** — a contact form styled as a terminal window, complete with status-light header dots
+- **Contact Form** — Vercel submissions are validated server-side and stored in Supabase; static-only hosts offer a prefilled email-draft fallback
 - **Operational Logbook Timeline** — a vertical work-history log with online/archived status markers
 - **Scroll Progress + Reveal Animations** — a top progress bar and IntersectionObserver-driven section reveals
 - **Accessibility-Minded** — respects `prefers-reduced-motion`, keyboard-focus states, and disables custom cursor / tilt effects on coarse pointers
@@ -60,6 +60,7 @@ Every surface of the interface — the HUD grid overlay, the "live" camera-feed 
 ├── sections-layout.css     # Section-level layout: hero, feeds, timeline, contact
 ├── components.css          # Reusable UI: buttons, badges, cards, modals, nav
 ├── script.js                # Interactivity: cursor, clock, filters, modals, forms
+├── api/contact.js           # Same-origin Vercel Function for Supabase inserts
 └── README.md                # Project documentation
 ```
 
@@ -72,8 +73,8 @@ Every surface of the interface — the HUD grid overlay, the "live" camera-feed 
 This is a fully static site — no build step, no package manager.
 
 ```bash
-git clone https://github.com/sum-boose/sum-boose.github.io.git
-cd sum-boose.github.io
+git clone https://github.com/sum-boop/sum-boob.github.io.git
+cd sum-boob.github.io
 ```
 
 Then either:
@@ -91,19 +92,13 @@ npx serve .
 
 ## 🌐 Deployment Guide
 
-**GitHub Pages** (recommended — this repo is already named for it)
+**GitHub Pages**
 
-1. Push your changes to the `main` branch
-2. Go to **Settings → Pages**
-3. Under **Source**, select `main` branch, root folder
-4. Your site will be live at `https://sum-boose.github.io/`
+Configure Pages for this repository and serve the repository root. Because the repository name differs from the account name, its project-site URL is `https://sum-boop.github.io/sum-boob.github.io/` when Pages is enabled.
 
-**Netlify / Vercel** (alternative)
+**Vercel**
 
-1. Import the repository from your Git provider
-2. Build command: *none*
-3. Publish directory: `/` (repository root)
-4. Deploy
+The repository is connected to Vercel and deploys as a static site from the repository root, with no build command. The stable production alias is `https://sum-boob-github-io.vercel.app/`. The `/api/contact.js` function uses the connected Supabase environment variables; GitHub Pages has no serverless runtime, so the form provides an email-draft fallback there.
 
 ---
 
@@ -112,19 +107,5 @@ npx serve .
 - **Colors, type, spacing** — edit tokens once in `variables.css`; every other file reads from them
 - **Content & copy** — update `index.html` sections directly (hero, expertise, deployments, logbook, contact)
 - **Project cards** — edit the `opData` object in `script.js` to change modal titles, images, and descriptions
-- **Contact routing** — the contact and hire forms send via `mailto:`; update the address in `handleHireSubmit` and `handleDirectMessage` in `script.js`
-- **Filter categories** — auto-generated from each card's `.op-card-badge-span` text, no extra config needed
-
----
-
-## 📄 License
-
-Released under the **MIT License**. You're free to use, modify, and distribute this project with attribution.
-
-```
-MIT License — Copyright (c) 2026 Sumit Anand
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files, to deal in the software
-without restriction, including the rights to use, copy, modify, merge,
-publish, distribute, sublicense, and/or sell copies of the software.
-```
+- **Contact routing** — the Vercel Function writes to `public.contact_messages` using the public Supabase key and the table's INSERT-only RLS policy. On hosts without `/api/contact`, the form offers a prefilled `mailto:` draft. The recipient address is defined once in `script.js`.
+- **Filter categories** — generated from each card's `data-category` attribute, no extra configuration needed

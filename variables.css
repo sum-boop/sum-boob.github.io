@@ -27,42 +27,34 @@
 :root {
 
   /* ==============================================================
-     1. CORE PALETTE — obsidian depth scale with warm undertone
-     Seven steps from near-black upward, now with a subtle warm
-     charcoal undertone instead of pure blue-black. The warmth
-     lets amber and coral accents sit naturally on the surface.
+     1. CORE PALETTE — deep teal-black control-room surfaces
      ============================================================== */
-  --bg-void:            #060608;
-  --bg-base:            #0b0a0f;
-  --bg-elevated:        #121118;
-  --bg-surface:         #1a1822;
-  --bg-surface-hover:   #232030;
-  --bg-surface-active:  #2c2839;
-  --bg-inset:           #050407;
+  --bg-void:            #030907;
+  --bg-base:            #07110e;
+  --bg-elevated:        #0b1915;
+  --bg-surface:         #10231e;
+  --bg-surface-hover:   #163029;
+  --bg-surface-active:  #1c3b33;
+  --bg-inset:           #040a08;
 
-  /* Atmosphere — bolder, multi-hue. These gradients now carry
-     enough saturation to be visible as colour zones, not just
-     subtle glows. Each anchors a different part of the page. */
-  --bg-radial-teal:   radial-gradient(circle at 50% 0%, rgba(45, 212, 191, 0.12), transparent 55%);
-  --bg-radial-amber:  radial-gradient(circle at 85% 20%, rgba(251, 191, 36, 0.10), transparent 50%);
-  --bg-radial-coral:  radial-gradient(circle at 15% 60%, rgba(255, 107, 107, 0.08), transparent 50%);
-  --bg-radial-blue:   radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.09), transparent 50%);
-  --bg-radial-green:  radial-gradient(circle at 50% 100%, rgba(0, 255, 156, 0.07), transparent 55%);
+  /* Low-contrast atmosphere: teal first, amber and green as signals. */
+  --bg-radial-teal:   radial-gradient(circle at 50% 0%, rgba(94, 216, 193, 0.12), transparent 55%);
+  --bg-radial-amber:  radial-gradient(circle at 85% 20%, rgba(237, 194, 123, 0.07), transparent 50%);
+  --bg-radial-coral:  radial-gradient(circle at 15% 60%, rgba(239, 130, 122, 0.035), transparent 50%);
+  --bg-radial-blue:   radial-gradient(circle at 80% 80%, rgba(94, 216, 193, 0.04), transparent 50%);
+  --bg-radial-green:  radial-gradient(circle at 50% 100%, rgba(157, 227, 187, 0.055), transparent 55%);
   --bg-vignette:      radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
 
   /* ==============================================================
-     2. GLASS SURFACES
-     Frosted panels now carry a warm purple-tinted charcoal instead
-     of pure blue-black, so they sit harmoniously over the warmer
-     base and let coloured accents pop.
+     2. GLASS SURFACES — layered teal-black panels
      ============================================================== */
-  --glass-bg:             rgba(26, 24, 34, 0.55);
-  --glass-bg-strong:      rgba(26, 24, 34, 0.82);
-  --glass-bg-soft:        rgba(26, 24, 34, 0.30);
-  --glass-bg-hover:       rgba(35, 32, 48, 0.88);
+  --glass-bg:             rgba(16, 35, 30, 0.55);
+  --glass-bg-strong:      rgba(11, 25, 21, 0.88);
+  --glass-bg-soft:        rgba(16, 35, 30, 0.30);
+  --glass-bg-hover:       rgba(22, 48, 41, 0.90);
 
-  --glass-border:         rgba(200, 195, 230, 0.10);
-  --glass-border-strong:  rgba(200, 195, 230, 0.20);
+  --glass-border:         rgba(184, 218, 203, 0.10);
+  --glass-border-strong:  rgba(184, 218, 203, 0.20);
   --glass-highlight:      rgba(255, 255, 255, 0.06);
 
   --glass-blur-soft:      8px;
@@ -72,49 +64,38 @@
   --glass-saturate:       140%;
 
   /* ==============================================================
-     3. ACCENT SYSTEM — full spectrum, section-owned
-     TEAL is the new primary — cooler than cyan but richer, used
-     for live status, active nav, primary CTA, focus ring.
-     AMBER is the energy accent — stats, numbers, highlights,
-     the "data is flowing" signal.
-     CORAL is the alert/live accent — REC badges, live indicators,
-     replacing the old red. Warmer and more cinematic.
-     BLUE is the editorial accent — company names, section variety.
-     GREEN remains operational — online status, success, resolved.
-     CYAN is retained as a legacy signal for the topology and rail.
-
-     Each section of the page owns a dominant hue so the scroll
-     feels like moving through a colour spectrum.
+     3. ACCENT SYSTEM — teal primary, green and amber support
+     Coral is reserved for errors and alert states.
      ============================================================== */
-  --accent-teal:        #2dd4bf;
-  --accent-teal-rgb:    45, 212, 191;
-  --accent-teal-soft:   rgba(45, 212, 191, 0.18);
-  --accent-teal-mid:    rgba(45, 212, 191, 0.42);
+  --accent-teal:        #5ed8c1;
+  --accent-teal-rgb:    94, 216, 193;
+  --accent-teal-soft:   rgba(94, 216, 193, 0.16);
+  --accent-teal-mid:    rgba(94, 216, 193, 0.38);
 
-  --accent-amber:       #fbbf24;
-  --accent-amber-rgb:   251, 191, 36;
-  --accent-amber-soft:  rgba(251, 191, 36, 0.18);
-  --accent-amber-mid:   rgba(251, 191, 36, 0.42);
+  --accent-amber:       #edc27b;
+  --accent-amber-rgb:   237, 194, 123;
+  --accent-amber-soft:  rgba(237, 194, 123, 0.14);
+  --accent-amber-mid:   rgba(237, 194, 123, 0.36);
 
-  --accent-coral:       #ff6b6b;
-  --accent-coral-rgb:   255, 107, 107;
-  --accent-coral-soft:  rgba(255, 107, 107, 0.18);
-  --accent-coral-mid:   rgba(255, 107, 107, 0.42);
+  --accent-coral:       #ef827a;
+  --accent-coral-rgb:   239, 130, 122;
+  --accent-coral-soft:  rgba(239, 130, 122, 0.14);
+  --accent-coral-mid:   rgba(239, 130, 122, 0.36);
 
-  --accent-blue:        #60a5fa;
-  --accent-blue-rgb:    96, 165, 250;
-  --accent-blue-soft:   rgba(96, 165, 250, 0.18);
-  --accent-blue-mid:    rgba(96, 165, 250, 0.42);
+  --accent-blue:        #8fcfc4;
+  --accent-blue-rgb:    143, 207, 196;
+  --accent-blue-soft:   rgba(143, 207, 196, 0.12);
+  --accent-blue-mid:    rgba(143, 207, 196, 0.30);
 
-  --accent-green:       #00ff9c;
-  --accent-green-rgb:   0, 255, 156;
-  --accent-green-soft:  rgba(0, 255, 156, 0.18);
-  --accent-green-mid:   rgba(0, 255, 156, 0.42);
+  --accent-green:       #9de3bb;
+  --accent-green-rgb:   157, 227, 187;
+  --accent-green-soft:  rgba(157, 227, 187, 0.14);
+  --accent-green-mid:   rgba(157, 227, 187, 0.36);
 
-  --accent-cyan:        #00e5ff;
-  --accent-cyan-rgb:    0, 229, 255;
-  --accent-cyan-soft:   rgba(0, 229, 255, 0.16);
-  --accent-cyan-mid:    rgba(0, 229, 255, 0.38);
+  --accent-cyan:        var(--accent-teal);
+  --accent-cyan-rgb:    94, 216, 193;
+  --accent-cyan-soft:   rgba(94, 216, 193, 0.14);
+  --accent-cyan-mid:    rgba(94, 216, 193, 0.34);
 
   /* Legacy aliases — kept so older references resolve. */
   --neon-cyan:   var(--accent-teal);
@@ -126,18 +107,18 @@
      CORAL replaces red for live/alert — warmer, more cinematic.
      GREEN stays operational. AMBER is warning. Teal is scanning.
      ============================================================== */
-  --status-live:        #ff6b6b;
-  --status-live-rgb:    255, 107, 107;
+  --status-live:        var(--accent-coral);
+  --status-live-rgb:    var(--accent-coral-rgb);
 
-  --status-online:      #00ff9c;
-  --status-online-rgb:  0, 255, 156;
+  --status-online:      var(--accent-green);
+  --status-online-rgb:  var(--accent-green-rgb);
 
-  --status-offline:     #5a5468;
-  --status-offline-rgb: 90, 84, 104;
+  --status-offline:     #87978f;
+  --status-offline-rgb: 135, 151, 143;
 
-  --status-alert:       #ff6b6b;
-  --status-warning:     #fbbf24;
-  --status-warning-rgb: 251, 191, 36;
+  --status-alert:       var(--accent-coral);
+  --status-warning:     var(--accent-amber);
+  --status-warning-rgb: 237, 194, 123;
 
   --status-scanning:    var(--accent-teal);
 
@@ -188,59 +169,46 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
 
   /* ==============================================================
-     6. TEXT HIERARCHY
-     Four steps of neutral brightness on the warm obsidian base.
-     Accent text variants for each hue — used for mono readouts
-     where a value needs to visibly belong to a signal.
-
-     ACCENT-AS-TEXT AUDIT (contrast vs --bg-base #0b0a0f, rounded):
-       --accent-teal     ≈ 10.5 : 1  passes AA
-       --accent-amber    ≈ 12 : 1   passes AA
-       --accent-coral    ≈ 5.8 : 1  passes AA
-       --accent-blue     ≈ 6.5 : 1  passes AA
-       --accent-green    ≈ 15 : 1   passes AA
-       --text-tertiary   ≈ 5.2 : 1  passes AA
-       --status-offline  ≈ 2.8 : 1  FAILS — decoration only
-       --text-muted      ≈ 2.9 : 1  FAILS — decoration only
+     6. TEXT HIERARCHY — cool neutrals with readable signal colors
      ============================================================== */
-  --text-primary:    #f3f0fa;
-  --text-secondary:  #b0abc0;
-  --text-tertiary:   #8278a0;
-  --text-muted:      #524c64;
+  --text-primary:    #f1f7f4;
+  --text-secondary:  #c1d0c9;
+  --text-tertiary:   #96aa9f;
+  --text-muted:      #82958a;
   --text-on-accent:  #06120f;
-  --text-teal:       #5eead4;
-  --text-amber:      #fcd34d;
-  --text-coral:      #fca5a5;
-  --text-blue:       #93c5fd;
-  --text-cyan:       #7fe8ff;
-  --text-green:      #7fffc4;
+  --text-teal:       #75e2cb;
+  --text-amber:      #f3d08f;
+  --text-coral:      #f39b94;
+  --text-blue:       #a3d9d0;
+  --text-cyan:       #8ce9d4;
+  --text-green:      #b1ecc7;
 
   /* ==============================================================
      7. BORDERS
      Warm-tinted hairlines for structure, accent-tinted borders
      for state. Each hue has its own border token.
      ============================================================== */
-  --border-subtle:       rgba(200, 195, 230, 0.07);
-  --border-default:      rgba(200, 195, 230, 0.14);
-  --border-strong:       rgba(200, 195, 230, 0.24);
+  --border-subtle:       rgba(184, 218, 203, 0.07);
+  --border-default:      rgba(184, 218, 203, 0.14);
+  --border-strong:       rgba(184, 218, 203, 0.24);
 
-  --border-teal:         rgba(45, 212, 191, 0.28);
-  --border-teal-strong:  rgba(45, 212, 191, 0.55);
-  --border-amber:        rgba(251, 191, 36, 0.28);
-  --border-amber-strong: rgba(251, 191, 36, 0.55);
-  --border-coral:        rgba(255, 107, 107, 0.28);
-  --border-coral-strong: rgba(255, 107, 107, 0.55);
-  --border-blue:         rgba(96, 165, 250, 0.28);
-  --border-blue-strong:  rgba(96, 165, 250, 0.55);
-  --border-cyan:         rgba(0, 229, 255, 0.25);
-  --border-cyan-strong:  rgba(0, 229, 255, 0.55);
-  --border-green:        rgba(0, 255, 156, 0.25);
-  --border-alert:        rgba(255, 107, 107, 0.40);
+  --border-teal:         rgba(94, 216, 193, 0.28);
+  --border-teal-strong:  rgba(94, 216, 193, 0.55);
+  --border-amber:        rgba(237, 194, 123, 0.28);
+  --border-amber-strong: rgba(237, 194, 123, 0.55);
+  --border-coral:        rgba(239, 130, 122, 0.28);
+  --border-coral-strong: rgba(239, 130, 122, 0.55);
+  --border-blue:         rgba(143, 207, 196, 0.28);
+  --border-blue-strong:  rgba(143, 207, 196, 0.55);
+  --border-cyan:         rgba(94, 216, 193, 0.25);
+  --border-cyan-strong:  rgba(94, 216, 193, 0.55);
+  --border-green:        rgba(157, 227, 187, 0.25);
+  --border-alert:        rgba(239, 130, 122, 0.40);
 
   /* ==============================================================
-     8. TYPOGRAPHY — three-tier system
+     8. TYPOGRAPHY — sans for display and body, mono for telemetry
      ============================================================== */
-  --font-display: 'Instrument Serif', 'Georgia', 'Times New Roman', serif;
+  --font-display: var(--font-body);
   --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', 'Fira Code', ui-monospace, 'SFMono-Regular', monospace;
 

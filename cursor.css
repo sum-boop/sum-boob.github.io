@@ -60,7 +60,7 @@
 @property --xh-color {
   syntax: "<color>";
   inherits: false;
-  initial-value: #00e5ff;
+  initial-value: #5ed8c1;
 }
 
 /* ================================================================
