@@ -1,5 +1,7 @@
+import { AnimatePresence, m } from 'framer-motion';
 import { useEffect, useRef, type MouseEvent, type PropsWithChildren } from 'react';
 import { X } from 'lucide-react';
+import { motionDurations, motionEasings, motionSprings } from '../motion/tokens';
 
 interface ModalProps extends PropsWithChildren {
   isOpen: boolean;
@@ -57,32 +59,46 @@ export function Modal({ isOpen, titleId, onClose, className = '', children }: Mo
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
-
   const handleBackdrop = (event: MouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) onClose();
   };
 
   return (
-    <div className="modal-backdrop" onMouseDown={handleBackdrop}>
-      <div
-        aria-labelledby={titleId}
-        aria-modal="true"
-        className={`modal-window ${className}`.trim()}
-        ref={dialogRef}
-        role="dialog"
-        tabIndex={-1}
-      >
-        <button
-          aria-label="Close dialog"
-          className="icon-button modal-close"
-          onClick={onClose}
-          type="button"
+    <AnimatePresence>
+      {isOpen ? (
+        <m.div
+          className="modal-backdrop"
+          key="modal-backdrop"
+          onMouseDown={handleBackdrop}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: motionDurations.micro, ease: motionEasings.out }}
         >
-          <X aria-hidden="true" size={18} />
-        </button>
-        {children}
-      </div>
-    </div>
+          <m.div
+            aria-labelledby={titleId}
+            aria-modal="true"
+            className={`modal-window ${className}`.trim()}
+            ref={dialogRef}
+            role="dialog"
+            tabIndex={-1}
+            initial={{ opacity: 0, y: 14, scale: 0.985 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.985 }}
+            transition={motionSprings.soft}
+          >
+            <button
+              aria-label="Close dialog"
+              className="icon-button modal-close"
+              onClick={onClose}
+              type="button"
+            >
+              <X aria-hidden="true" size={18} />
+            </button>
+            {children}
+          </m.div>
+        </m.div>
+      ) : null}
+    </AnimatePresence>
   );
 }

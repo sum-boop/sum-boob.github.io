@@ -1,5 +1,7 @@
+import { AnimatePresence, m } from 'framer-motion';
 import { createContext, useContext, useEffect, useState, type PropsWithChildren } from 'react';
 import { Check, Info, X, XOctagon } from 'lucide-react';
+import { motionSprings } from '../motion/tokens';
 
 type ToastKind = 'success' | 'error' | 'info';
 
@@ -42,32 +44,40 @@ export function ToastProvider({ children }: PropsWithChildren) {
     <ToastContext.Provider value={{ showToast }}>
       {children}
       <div className="toast-stack" aria-label="Notifications" aria-live="polite">
-        {toasts.map((toast) => {
-          const Icon = toast.type === 'success' ? Check : toast.type === 'error' ? XOctagon : Info;
-          return (
-            <div
-              className={`toast toast--${toast.type}`}
-              key={toast.id}
-              role={toast.type === 'error' ? 'alert' : 'status'}
-            >
-              <Icon aria-hidden="true" size={18} />
-              <div>
-                <p className="toast-title">{toast.title}</p>
-                <p className="toast-message">{toast.message}</p>
-              </div>
-              <button
-                aria-label="Dismiss notification"
-                className="toast-dismiss"
-                onClick={() =>
-                  setToasts((current) => current.filter((item) => item.id !== toast.id))
-                }
-                type="button"
+        <AnimatePresence initial={false}>
+          {toasts.map((toast) => {
+            const Icon =
+              toast.type === 'success' ? Check : toast.type === 'error' ? XOctagon : Info;
+            return (
+              <m.div
+                className={`toast toast--${toast.type}`}
+                key={toast.id}
+                layout
+                role={toast.type === 'error' ? 'alert' : 'status'}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ ...motionSprings.snappy, layout: motionSprings.snappy }}
               >
-                <X aria-hidden="true" size={16} />
-              </button>
-            </div>
-          );
-        })}
+                <Icon aria-hidden="true" size={18} />
+                <div>
+                  <p className="toast-title">{toast.title}</p>
+                  <p className="toast-message">{toast.message}</p>
+                </div>
+                <button
+                  aria-label="Dismiss notification"
+                  className="toast-dismiss"
+                  onClick={() =>
+                    setToasts((current) => current.filter((item) => item.id !== toast.id))
+                  }
+                  type="button"
+                >
+                  <X aria-hidden="true" size={16} />
+                </button>
+              </m.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
     </ToastContext.Provider>
   );

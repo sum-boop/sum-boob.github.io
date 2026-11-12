@@ -1,7 +1,9 @@
+import { AnimatePresence, m } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, Menu, Radio, X } from 'lucide-react';
 import { useClock } from '../hooks/useClock';
-import { useScrollProgress } from '../hooks/useScrollProgress';
+import { ScrollProgress } from '../motion';
+import { motionDurations, motionEasings, motionSprings } from '../motion/tokens';
 import { useScrollSpy } from '../hooks/useScrollSpy';
 
 const links = [
@@ -19,7 +21,6 @@ export function Navbar() {
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
   const activeSection = useScrollSpy(sectionIds);
   const clock = useClock();
-  const progress = useScrollProgress();
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -41,16 +42,7 @@ export function Navbar() {
 
   return (
     <>
-      <div
-        aria-label="Scroll progress"
-        aria-valuemax={100}
-        aria-valuemin={0}
-        aria-valuenow={progress}
-        className="scroll-progress"
-        role="progressbar"
-      >
-        <span style={{ transform: `scaleX(${progress / 100})` }} />
-      </div>
+      <ScrollProgress />
       <header className="site-header">
         <nav aria-label="Primary navigation" className="nav-shell">
           <a
@@ -72,21 +64,39 @@ export function Navbar() {
             <time>{clock}</time>
           </div>
           <div className="desktop-nav">
-            {links.map((link) => (
-              <a
-                aria-current={activeSection === link.href.slice(1) ? 'location' : undefined}
-                className="nav-link"
-                href={link.href}
-                key={link.href}
-              >
-                {link.label}
-              </a>
-            ))}
-            <a className="nav-cta" href="#contact">
+            {links.map((link) => {
+              const active = activeSection === link.href.slice(1);
+              return (
+                <m.a
+                  aria-current={active ? 'location' : undefined}
+                  className="nav-link"
+                  href={link.href}
+                  key={link.href}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  {link.label}
+                  {active ? (
+                    <m.span
+                      aria-hidden="true"
+                      className="nav-active-indicator"
+                      layoutId="active-nav-indicator"
+                      transition={motionSprings.snappy}
+                    />
+                  ) : null}
+                </m.a>
+              );
+            })}
+            <m.a
+              className="nav-cta"
+              href="#contact"
+              transition={{ duration: motionDurations.micro, ease: motionEasings.out }}
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.97 }}
+            >
               Let&apos;s talk <ArrowUpRight aria-hidden="true" size={14} />
-            </a>
+            </m.a>
           </div>
-          <button
+          <m.button
             aria-controls="mobile-navigation"
             aria-expanded={menuOpen}
             aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}
@@ -94,45 +104,71 @@ export function Navbar() {
             onClick={() => setMenuOpen((open) => !open)}
             ref={toggleRef}
             type="button"
+            whileTap={{ scale: 0.94 }}
           >
             {menuOpen ? <X aria-hidden="true" size={20} /> : <Menu aria-hidden="true" size={20} />}
-          </button>
+          </m.button>
         </nav>
-        <div
-          aria-hidden={!menuOpen}
-          className={`mobile-nav ${menuOpen ? 'mobile-nav--open' : ''}`}
-          hidden={!menuOpen}
-          id="mobile-navigation"
-        >
-          <div className="mobile-nav-head">
-            <span className="mono-label">Navigation / 06</span>
-            <button
-              aria-label="Close navigation"
-              className="icon-button"
-              onClick={() => {
-                setMenuOpen(false);
-                toggleRef.current?.focus({ preventScroll: true });
-              }}
-              type="button"
+        <AnimatePresence initial={false}>
+          {menuOpen ? (
+            <m.div
+              aria-hidden={!menuOpen}
+              className="mobile-nav mobile-nav--open"
+              id="mobile-navigation"
+              initial={{ opacity: 1, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: motionDurations.micro, ease: motionEasings.out }}
             >
-              <X aria-hidden="true" size={18} />
-            </button>
-          </div>
-          {links.map((link, index) => (
-            <a
-              aria-current={activeSection === link.href.slice(1) ? 'location' : undefined}
-              className="mobile-nav-link"
-              href={link.href}
-              key={link.href}
-              onClick={closeAfterNavigation}
-              ref={index === 0 ? firstLinkRef : undefined}
-            >
-              <span className="mobile-nav-index">0{index + 1}</span>
-              {link.label}
-              <ArrowUpRight aria-hidden="true" size={16} />
-            </a>
-          ))}
-        </div>
+              <div className="mobile-nav-head">
+                <span className="mono-label">Navigation / 06</span>
+                <m.button
+                  aria-label="Close navigation"
+                  className="icon-button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    toggleRef.current?.focus({ preventScroll: true });
+                  }}
+                  type="button"
+                  whileTap={{ scale: 0.94 }}
+                >
+                  <X aria-hidden="true" size={18} />
+                </m.button>
+              </div>
+              {links.map((link, index) => {
+                const active = activeSection === link.href.slice(1);
+                return (
+                  <m.a
+                    aria-current={active ? 'location' : undefined}
+                    className="mobile-nav-link"
+                    href={link.href}
+                    key={link.href}
+                    onClick={closeAfterNavigation}
+                    ref={index === 0 ? firstLinkRef : undefined}
+                    initial={{ opacity: 1, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{
+                      duration: motionDurations.micro,
+                      delay: index * 0.035,
+                      ease: motionEasings.out,
+                    }}
+                  >
+                    {active ? (
+                      <m.span
+                        aria-hidden="true"
+                        className="nav-active-indicator"
+                        layoutId="mobile-active-nav-indicator"
+                      />
+                    ) : null}
+                    <span className="mobile-nav-index">0{index + 1}</span>
+                    {link.label}
+                    <ArrowUpRight aria-hidden="true" size={16} />
+                  </m.a>
+                );
+              })}
+            </m.div>
+          ) : null}
+        </AnimatePresence>
       </header>
     </>
   );

@@ -1,8 +1,10 @@
+import { AnimatePresence, LayoutGroup, m } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { deployments } from '../data/projects';
 import type { DeploymentBriefing } from '../types/portfolio';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { motionDurations, motionEasings, motionSprings } from '../motion/tokens';
 import { CameraFeedCard } from './CameraFeedCard';
 import { SectionHeading } from './SectionHeading';
 
@@ -113,12 +115,15 @@ export function Deployments({ onOpen }: DeploymentsProps) {
         />
         <div aria-label="Filter deployments" className="feed-filters" role="group">
           {filters.map((filter) => (
-            <button
+            <m.button
               aria-pressed={activeFilter === filter}
               className={`feed-filter ${activeFilter === filter ? 'feed-filter--active' : ''}`}
               key={filter}
+              {...(activeFilter === filter ? { layoutId: 'active-deployment-filter' } : {})}
               onClick={() => changeFilter(filter)}
+              transition={motionSprings.snappy}
               type="button"
+              whileTap={{ scale: 0.97 }}
             >
               {filter}
               <span>
@@ -126,7 +131,7 @@ export function Deployments({ onOpen }: DeploymentsProps) {
                   ? deployments.length
                   : deployments.filter((deployment) => deployment.category === filter).length}
               </span>
-            </button>
+            </m.button>
           ))}
         </div>
         <div
@@ -155,50 +160,69 @@ export function Deployments({ onOpen }: DeploymentsProps) {
             role="group"
             tabIndex={0}
           >
-            {slidePages.map((page, slideIndex) => (
-              <div
-                aria-label={`Slide ${slideIndex + 1} of ${slidePages.length}, ${page.length} deployment cards`}
-                aria-roledescription="slide"
-                className={`feed-matrix-page ${page.length === 1 ? 'feed-matrix-page--single' : ''} ${page.length === 2 ? 'feed-matrix-page--two' : ''} ${page.length === 3 ? 'feed-matrix-page--three' : ''}`}
-                data-slide-index={slideIndex}
-                key={page.map((deployment) => deployment.id).join('-')}
-                role="group"
-              >
-                {page.map((deployment) => (
-                  <div className="feed-matrix-cell" key={deployment.id}>
-                    <CameraFeedCard
-                      deployment={deployment}
-                      index={deployments.indexOf(deployment)}
-                      onOpen={onOpen}
-                    />
-                  </div>
-                ))}
-                {page.length < cardsPerSlide && (
-                  <div
-                    aria-label="Portfolio matrix summary"
-                    className={`feed-matrix-summary ${page.length === 3 ? 'feed-matrix-summary--cell' : ''}`}
+            <LayoutGroup id="deployment-matrix">
+              <AnimatePresence initial={false}>
+                {slidePages.map((page, slideIndex) => (
+                  <m.div
+                    aria-label={`Slide ${slideIndex + 1} of ${slidePages.length}, ${page.length} deployment cards`}
+                    aria-roledescription="slide"
+                    className={`feed-matrix-page ${page.length === 1 ? 'feed-matrix-page--single' : ''} ${page.length === 2 ? 'feed-matrix-page--two' : ''} ${page.length === 3 ? 'feed-matrix-page--three' : ''}`}
+                    data-slide-index={slideIndex}
+                    key={page.map((deployment) => deployment.id).join('-')}
+                    layout
                     role="group"
+                    initial={{ opacity: 1, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 5 }}
+                    transition={{
+                      duration: motionDurations.base,
+                      ease: motionEasings.out,
+                      layout: motionSprings.snappy,
+                    }}
                   >
-                    <div className="feed-matrix-summary-head">
-                      <span aria-hidden="true" className="feed-matrix-summary-beacon" />
-                      <span>PORTFOLIO INDEX</span>
-                      <span>OVERVIEW</span>
-                    </div>
-                    <div className="feed-matrix-summary-main">
-                      <strong>{String(visibleDeployments.length).padStart(2, '0')}</strong>
-                      <div>
-                        <span>DEPLOYMENT BRIEFINGS</span>
-                        <p>Explore the field context behind each operating network.</p>
+                    {page.map((deployment) => (
+                      <m.div
+                        className="feed-matrix-cell"
+                        key={deployment.id}
+                        layout
+                        layoutId={`deployment-card-${deployment.id}`}
+                        transition={{ layout: motionSprings.snappy }}
+                      >
+                        <CameraFeedCard
+                          deployment={deployment}
+                          index={deployments.indexOf(deployment)}
+                          onOpen={onOpen}
+                        />
+                      </m.div>
+                    ))}
+                    {page.length < cardsPerSlide && (
+                      <div
+                        aria-label="Portfolio matrix summary"
+                        className={`feed-matrix-summary ${page.length === 3 ? 'feed-matrix-summary--cell' : ''}`}
+                        role="group"
+                      >
+                        <div className="feed-matrix-summary-head">
+                          <span aria-hidden="true" className="feed-matrix-summary-beacon" />
+                          <span>PORTFOLIO INDEX</span>
+                          <span>OVERVIEW</span>
+                        </div>
+                        <div className="feed-matrix-summary-main">
+                          <strong>{String(visibleDeployments.length).padStart(2, '0')}</strong>
+                          <div>
+                            <span>DEPLOYMENT BRIEFINGS</span>
+                            <p>Explore the field context behind each operating network.</p>
+                          </div>
+                        </div>
+                        <div className="feed-matrix-summary-foot">
+                          <span>{operatingNetworks} OPERATING NETWORKS</span>
+                          <span>INDEX / {String(slideIndex + 1).padStart(2, '0')}</span>
+                        </div>
                       </div>
-                    </div>
-                    <div className="feed-matrix-summary-foot">
-                      <span>{operatingNetworks} OPERATING NETWORKS</span>
-                      <span>INDEX / {String(slideIndex + 1).padStart(2, '0')}</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
+                    )}
+                  </m.div>
+                ))}
+              </AnimatePresence>
+            </LayoutGroup>
           </div>
           <div aria-hidden="true" className="feed-matrix-progress">
             <span style={{ width: `${progress}%` }} />

@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { ArrowRight, Check, MapPin, Radio } from 'lucide-react';
 import { Boot } from './components/Boot';
+import { BackToTop } from './motion';
 import { ContactForm } from './components/ContactForm';
 import { Cursor } from './components/Cursor';
 import { Footer } from './components/Footer';
@@ -8,7 +9,6 @@ import { Modal } from './components/Modal';
 import { Navbar } from './components/Navbar';
 import { ToastProvider } from './components/ToastProvider';
 import { contact } from './data/contact';
-import { useReveal } from './hooks/useReveal';
 import { PortfolioSections } from './sections/PortfolioSections';
 import type { DeploymentBriefing } from './types/portfolio';
 import { assetPath } from './utils/assets';
@@ -20,7 +20,6 @@ function AppContent() {
   const [dialog, setDialog] = useState<ActiveDialog>(null);
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [imageFailed, setImageFailed] = useState(false);
-  useReveal();
 
   const openHire = useCallback(() => setDialog({ kind: 'hire' }), []);
   const openDeployment = useCallback((deployment: DeploymentBriefing) => {
@@ -41,6 +40,7 @@ function AppContent() {
       <Navbar />
       <PortfolioSections onHire={openHire} onOpenDeployment={openDeployment} />
       <Footer />
+      <BackToTop />
       <Cursor />
       <Boot />
       <Modal
