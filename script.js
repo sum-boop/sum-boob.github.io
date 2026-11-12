@@ -32,6 +32,9 @@ const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
 const CONTACT_EMAIL = 'sa8518430@gmail.com';
 
+const SUPABASE_URL = '__SUPABASE_URL__';
+const SUPABASE_ANON_KEY = '__SUPABASE_ANON_KEY__';
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /* requestIdleCallback isn't everywhere (Safari) — fall back to a short timeout */
@@ -916,24 +919,26 @@ function validateContactForm(form) {
   return valid;
 }
 
-function buildMailtoHref(form) {
-  const name    = form.querySelector('[name="name"]')?.value.trim() || '';
-  const email   = form.querySelector('[name="email"]')?.value.trim() || '';
-  const org     = form.querySelector('[name="organization"]')?.value.trim() || '';
-  const message = form.querySelector('[name="message"]')?.value.trim() || '';
+async function submitContactMessage(form) {
+  const field = (name) => form.querySelector(`[name="${name}"]`)?.value.trim() || null;
 
-  const subject = `Portfolio contact from ${name}`;
-  const bodyLines = [
-    message,
-    '',
-    `— ${name}`,
-    email,
-    org ? org : null
-  ].filter(Boolean);
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal',
+    },
+    body: JSON.stringify({
+      name: field('name'),
+      email: field('email'),
+      organization: field('organization'),
+      message: field('message'),
+    }),
+  });
 
-  const body = bodyLines.join('\n');
-
-  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  if (!response.ok) throw new Error(`Request failed (${response.status})`);
 }
 
 function attachContactFormHandler(form) {
@@ -955,21 +960,20 @@ function attachContactFormHandler(form) {
       submitBtn.innerHTML = '<span>Transmitting…</span>';
     }
 
-    setTimeout(() => {
-      const href = buildMailtoHref(form);
-      window.location.href = href;
-
-      fieldEls.forEach((el) => { el.hidden = true; });
-      if (submitBtn) submitBtn.hidden = true;
-      if (successEl) successEl.hidden = false;
-
-      showToastImpl({ type: 'success', title: 'Channel opened', message: 'Channel opened.' });
-
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalLabel;
-      }
-    }, 900);
+    submitContactMessage(form)
+      .then(() => {
+        fieldEls.forEach((el) => { el.hidden = true; });
+        if (submitBtn) submitBtn.hidden = true;
+        if (successEl) successEl.hidden = false;
+        showToastImpl({ type: 'success', title: 'Channel opened', message: 'Your message has been received.' });
+      })
+      .catch(() => {
+        showToastImpl({ type: 'alert', title: 'Transmission failed', message: 'Your message could not be sent. Please try again.' });
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalLabel;
+        }
+      });
   });
 }
 
