@@ -52,18 +52,32 @@ export function Hero({ onHire }: HeroProps) {
               View Deployments
             </a>
           </div>
-          <div aria-label="Career highlights" className="hero-metrics">
-            {profile.heroMetrics.map((metric) => (
-              <div className="hero-metric" key={metric.label}>
-                <span className="hero-metric-value">{metric.value}</span>
-                <span className="hero-metric-label">{metric.label}</span>
-              </div>
-            ))}
-          </div>
-          <div aria-label="Professional focus" className="hero-meta">
-            {profile.metadata.map((item) => (
-              <span key={item}>{item}</span>
-            ))}
+          <div
+            aria-label="Professional profile readout"
+            className="hero-readout"
+            data-reveal
+            role="group"
+          >
+            <div className="hero-readout-head">
+              <span className="hero-readout-signal">
+                <span aria-hidden="true" className="hero-readout-led" />
+                OPERATOR PROFILE
+              </span>
+              <span className="hero-readout-index">READOUT / 01</span>
+            </div>
+            <div aria-label="Career highlights" className="hero-metrics">
+              {profile.heroMetrics.map((metric) => (
+                <div className="hero-metric" key={metric.label}>
+                  <span className="hero-metric-value">{metric.value}</span>
+                  <span className="hero-metric-label">{metric.label}</span>
+                </div>
+              ))}
+            </div>
+            <div aria-label="Professional focus" className="hero-meta">
+              {profile.metadata.map((item) => (
+                <span key={item}>{item}</span>
+              ))}
+            </div>
           </div>
         </div>
 
