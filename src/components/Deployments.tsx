@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { deployments } from '../data/projects';
 import type { DeploymentBriefing } from '../types/portfolio';
 import { useReducedMotion } from '../hooks/useReducedMotion';
@@ -10,9 +10,13 @@ interface DeploymentsProps {
   onOpen: (deployment: DeploymentBriefing) => void;
 }
 
+const DESKTOP_CARDS_PER_SLIDE = 4;
+const MOBILE_CARDS_PER_SLIDE = 2;
+
 export function Deployments({ onOpen }: DeploymentsProps) {
   const [activeFilter, setActiveFilter] = useState('All deployments');
   const [activeSlide, setActiveSlide] = useState(0);
+  const [cardsPerSlide, setCardsPerSlide] = useState(DESKTOP_CARDS_PER_SLIDE);
   const trackRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const filters = useMemo(
@@ -23,6 +27,29 @@ export function Deployments({ onOpen }: DeploymentsProps) {
     activeFilter === 'All deployments'
       ? deployments
       : deployments.filter((deployment) => deployment.category === activeFilter);
+  const slidePages = useMemo(
+    () =>
+      Array.from(
+        { length: Math.ceil(visibleDeployments.length / cardsPerSlide) },
+        (_, slideIndex) =>
+          visibleDeployments.slice(slideIndex * cardsPerSlide, (slideIndex + 1) * cardsPerSlide),
+      ),
+    [cardsPerSlide, visibleDeployments],
+  );
+  const operatingNetworks = new Set(visibleDeployments.map((deployment) => deployment.site)).size;
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 760px)');
+    const updateCardsPerSlide = () => {
+      setCardsPerSlide(mediaQuery.matches ? MOBILE_CARDS_PER_SLIDE : DESKTOP_CARDS_PER_SLIDE);
+      setActiveSlide(0);
+      trackRef.current?.scrollTo({ left: 0, behavior: 'auto' });
+    };
+
+    updateCardsPerSlide();
+    mediaQuery.addEventListener('change', updateCardsPerSlide);
+    return () => mediaQuery.removeEventListener('change', updateCardsPerSlide);
+  }, []);
 
   const scrollToSlide = (slideIndex: number) => {
     const track = trackRef.current;
@@ -41,8 +68,6 @@ export function Deployments({ onOpen }: DeploymentsProps) {
     if (!track) return;
 
     const slides = Array.from(track.querySelectorAll<HTMLElement>('[data-slide-index]'));
-    if (slides.length === 0) return;
-
     const firstSlide = slides[0];
     if (!firstSlide) return;
 
@@ -64,6 +89,12 @@ export function Deployments({ onOpen }: DeploymentsProps) {
     setActiveSlide(0);
     trackRef.current?.scrollTo({ left: 0, behavior: 'auto' });
   };
+
+  const activePage = slidePages[activeSlide];
+  const slideAnnouncement = activePage
+    ? `Slide ${activeSlide + 1} of ${slidePages.length}. ${activePage.map((deployment) => deployment.cardTitle).join(', ')}`
+    : 'No deployments available for this filter.';
+  const progress = slidePages.length ? ((activeSlide + 1) / slidePages.length) * 100 : 0;
 
   return (
     <section
@@ -99,49 +130,91 @@ export function Deployments({ onOpen }: DeploymentsProps) {
           ))}
         </div>
         <div
-          aria-label="Deployment carousel"
+          aria-label="Deployment matrix carousel"
           aria-roledescription="carousel"
-          className="feed-carousel"
+          className="feed-carousel feed-matrix-shell"
           role="region"
         >
+          <div className="feed-matrix-toolbar">
+            <div className="feed-matrix-mode">
+              <span aria-hidden="true" className="feed-matrix-beacon" />
+              <span className="feed-matrix-mode-label">MATRIX VIEW</span>
+              <span aria-hidden="true" className="feed-matrix-separator" />
+              <span className="feed-matrix-total">
+                {String(visibleDeployments.length).padStart(2, '0')} DEPLOYMENTS
+              </span>
+            </div>
+            <span className="feed-matrix-filter-label">{activeFilter.toUpperCase()}</span>
+          </div>
           <div
-            aria-label="Deployment slides"
-            className="feed-grid"
+            aria-label="Deployment matrix slides"
+            className="feed-matrix-track"
             id="deployment-carousel"
             onScroll={updateActiveSlide}
             ref={trackRef}
             role="group"
             tabIndex={0}
           >
-            {visibleDeployments.map((deployment, slideIndex) => (
+            {slidePages.map((page, slideIndex) => (
               <div
-                aria-label={`Slide ${slideIndex + 1} of ${visibleDeployments.length}: ${deployment.cardTitle}`}
+                aria-label={`Slide ${slideIndex + 1} of ${slidePages.length}, ${page.length} deployment cards`}
                 aria-roledescription="slide"
-                className="feed-slide"
+                className={`feed-matrix-page ${page.length === 1 ? 'feed-matrix-page--single' : ''} ${page.length === 2 ? 'feed-matrix-page--two' : ''} ${page.length === 3 ? 'feed-matrix-page--three' : ''}`}
                 data-slide-index={slideIndex}
-                key={deployment.id}
+                key={page.map((deployment) => deployment.id).join('-')}
                 role="group"
               >
-                <CameraFeedCard
-                  deployment={deployment}
-                  index={deployments.indexOf(deployment)}
-                  onOpen={onOpen}
-                />
+                {page.map((deployment) => (
+                  <div className="feed-matrix-cell" key={deployment.id}>
+                    <CameraFeedCard
+                      deployment={deployment}
+                      index={deployments.indexOf(deployment)}
+                      onOpen={onOpen}
+                    />
+                  </div>
+                ))}
+                {page.length < cardsPerSlide && (
+                  <div
+                    aria-label="Portfolio matrix summary"
+                    className={`feed-matrix-summary ${page.length === 3 ? 'feed-matrix-summary--cell' : ''}`}
+                    role="group"
+                  >
+                    <div className="feed-matrix-summary-head">
+                      <span aria-hidden="true" className="feed-matrix-summary-beacon" />
+                      <span>PORTFOLIO INDEX</span>
+                      <span>OVERVIEW</span>
+                    </div>
+                    <div className="feed-matrix-summary-main">
+                      <strong>{String(visibleDeployments.length).padStart(2, '0')}</strong>
+                      <div>
+                        <span>DEPLOYMENT BRIEFINGS</span>
+                        <p>Explore the field context behind each operating network.</p>
+                      </div>
+                    </div>
+                    <div className="feed-matrix-summary-foot">
+                      <span>{operatingNetworks} OPERATING NETWORKS</span>
+                      <span>INDEX / {String(slideIndex + 1).padStart(2, '0')}</span>
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
+          </div>
+          <div aria-hidden="true" className="feed-matrix-progress">
+            <span style={{ width: `${progress}%` }} />
           </div>
           <div className="feed-carousel-controls">
             <span aria-hidden="true" className="feed-slide-count">
               {String(activeSlide + 1).padStart(2, '0')} /{' '}
-              {String(visibleDeployments.length).padStart(2, '0')}
+              {String(slidePages.length).padStart(2, '0')}
             </span>
             <div aria-label="Choose deployment slide" className="feed-carousel-dots" role="group">
-              {visibleDeployments.map((deployment, slideIndex) => (
+              {slidePages.map((page, slideIndex) => (
                 <button
                   aria-current={activeSlide === slideIndex ? 'true' : undefined}
-                  aria-label={`Go to slide ${slideIndex + 1}: ${deployment.cardTitle}`}
+                  aria-label={`Go to slide ${slideIndex + 1} of ${slidePages.length}`}
                   className={`feed-carousel-dot ${activeSlide === slideIndex ? 'feed-carousel-dot--active' : ''}`}
-                  key={deployment.id}
+                  key={page.map((deployment) => deployment.id).join('-')}
                   onClick={() => scrollToSlide(slideIndex)}
                   type="button"
                 />
@@ -150,7 +223,7 @@ export function Deployments({ onOpen }: DeploymentsProps) {
             <div aria-label="Carousel navigation" className="feed-carousel-buttons" role="group">
               <button
                 aria-controls="deployment-carousel"
-                aria-label="Previous deployment"
+                aria-label="Previous slide"
                 disabled={activeSlide === 0}
                 onClick={() => scrollToSlide(activeSlide - 1)}
                 type="button"
@@ -159,8 +232,8 @@ export function Deployments({ onOpen }: DeploymentsProps) {
               </button>
               <button
                 aria-controls="deployment-carousel"
-                aria-label="Next deployment"
-                disabled={activeSlide >= visibleDeployments.length - 1}
+                aria-label="Next slide"
+                disabled={activeSlide >= slidePages.length - 1}
                 onClick={() => scrollToSlide(activeSlide + 1)}
                 type="button"
               >
@@ -168,9 +241,7 @@ export function Deployments({ onOpen }: DeploymentsProps) {
               </button>
             </div>
             <span aria-atomic="true" aria-live="polite" className="sr-only">
-              {visibleDeployments[activeSlide]
-                ? `Slide ${activeSlide + 1} of ${visibleDeployments.length}: ${visibleDeployments[activeSlide].cardTitle}`
-                : 'No deployments available for this filter.'}
+              {slideAnnouncement}
             </span>
           </div>
         </div>
