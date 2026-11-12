@@ -1,130 +1,129 @@
-# 🛰️ CCTV Operator & Surveillance Command Center — Portfolio
+# Sumit Anand — CCTV Operator & Surveillance Specialist
 
-**A cinematic, dark-glass command console for a CCTV & Surveillance Systems Specialist.**
+![CCTV command-center portfolio cover](https://sum-boob-github-io.vercel.app/assets/og-cover.jpg)
 
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
-![No Framework](https://img.shields.io/badge/Framework-None%20(Vanilla)-0a0f1d?style=for-the-badge)
-![License](https://img.shields.io/badge/License-MIT-00e5ff?style=for-the-badge)
+[![React](https://img.shields.io/badge/React-18.3-149eca?logo=react&logoColor=white)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178c6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-8-646cff?logo=vite&logoColor=white)](https://vite.dev/)
+[![CI](https://github.com/sum-boop/sum-boob.github.io/actions/workflows/ci.yml/badge.svg)](https://github.com/sum-boop/sum-boob.github.io/actions/workflows/ci.yml)
+[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?logo=vercel)](https://sum-boob-github-io.vercel.app/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-🔗 **Live Deployment:** [sum-boose.github.io](https://sum-boose.github.io/)
+**Live portfolio:** [sum-boob-github-io.vercel.app](https://sum-boob-github-io.vercel.app/)
 
----
+**GitHub Pages:** [sum-boop.github.io/sum-boob.github.io](https://sum-boop.github.io/sum-boob.github.io/)
 
-## 📡 Overview
+A vivid surveillance command-center portfolio for Sumit Anand. It presents CCTV operations, logistics deployments, work history, technical skills, training, and direct contact details in a responsive single-page experience. Feed and monitoring imagery is illustrative and is not footage from the listed client sites or a personal photograph.
 
-This repository holds a single-page developer portfolio designed around a **CCTV operator / surveillance command center** aesthetic — deep obsidian backgrounds, neon cyan and green glows, dark glassmorphism panels, and a custom crosshair cursor. It's built entirely with vanilla HTML, CSS and JavaScript on a modular, token-driven architecture, with no build tooling required.
+## Features
 
-Every surface of the interface — the HUD grid overlay, the "live" camera-feed project cards, the operational logbook timeline, and the secure command-terminal contact form — is designed to feel like a real monitoring console rather than a generic template.
+- React 18 and strict TypeScript, bundled with Vite
+- Responsive, high-contrast signal palette with layered aurora, mesh, and camera-feed treatments
+- Custom desktop reticle, reduced-motion support, reveal transitions, live India Standard Time clock, and scroll progress
+- Animated canvas topology and deployment footprint with operator-location details
+- Searchable-by-category camera-feed briefings with keyboard-accessible detail dialogs
+- Operational timeline, skills ticker, education, and certification cards
+- Mobile navigation with Escape and close-on-navigation support
+- Contact terminal with copy-email feedback, email, phone, WhatsApp, and résumé links
+- Contact form validation, same-origin Vercel function, Supabase persistence, and a mailto fallback on static hosts
+- GitHub Actions pull-request checks and GitHub Pages deployment
+- Vercel response security headers and a report-only content security policy
 
----
+## Technology
 
-## ⚡ Key Features
+| Area            | Stack                                                              |
+| --------------- | ------------------------------------------------------------------ |
+| UI              | React 18.3.1, TypeScript 6, Vite 8                                 |
+| Styling         | CSS design tokens, responsive CSS, motion-safe animations          |
+| Icons           | Lucide React                                                       |
+| Quality         | ESLint, typescript-eslint, Prettier                                |
+| Contact storage | Vercel Function, Supabase REST API, insert-only row-level security |
+| Hosting         | Vercel and GitHub Pages                                            |
 
-- **Dark Glassmorphism + Neon Theme** — obsidian surfaces, backdrop blur, and cyan / green / violet glow accents driven entirely by CSS custom properties
-- **Tactical HUD Backdrop** — a subtle scanning grid overlay, a moving scanline sweep, and ambient glow orbs
-- **Custom Crosshair Cursor** — a precision dot + rotating dashed reticle with a "target-lock" hover state, with automatic fallback on touch devices
-- **Live Surveillance Timestamp** — a real-time UTC / IST clock rendered in the header, formatted like an operator console
-- **Camera-Feed Project Cards** — glass panels with viewfinder-style corner brackets and a pulsing "LIVE" indicator, filterable by category
-- **Interactive Glass Modals** — project briefings and a working "Hire Me" proposal form, closable via overlay click, close button, or <kbd>Esc</kbd>
-- **Secure Command Terminal** — a contact form styled as a terminal window, complete with status-light header dots
-- **Operational Logbook Timeline** — a vertical work-history log with online/archived status markers
-- **Scroll Progress + Reveal Animations** — a top progress bar and IntersectionObserver-driven section reveals
-- **Accessibility-Minded** — respects `prefers-reduced-motion`, keyboard-focus states, and disables custom cursor / tilt effects on coarse pointers
+## Project structure
 
----
-
-## 🧰 Tech Stack
-
-| Layer | Details |
-|---|---|
-| **Markup** | Semantic HTML5 |
-| **Styling** | CSS3 — custom-property design tokens, Grid & Flexbox, `backdrop-filter` glassmorphism, keyframe animations |
-| **Scripting** | Vanilla JavaScript (ES6+) — Canvas API, `IntersectionObserver`, `requestAnimationFrame`, `Date` |
-| **Icons** | Font Awesome 6 |
-| **Type** | Google Fonts — Inter & JetBrains Mono |
-| **Build tooling** | None — static files, zero dependencies |
-
----
-
-## 🗂️ Project Structure
-
-```
+```text
 .
-├── index.html            # Semantic page structure & content
-├── style.css              # Central importer — loads all modules in order
-├── variables.css          # Design tokens: color, type scale, spacing, motion
-├── base.css                # Resets, typography, scrollbars, HUD grid overlay
-├── cursor.css              # Custom crosshair / reticle cursor system
-├── sections-layout.css     # Section-level layout: hero, feeds, timeline, contact
-├── components.css          # Reusable UI: buttons, badges, cards, modals, nav
-├── script.js                # Interactivity: cursor, clock, filters, modals, forms
-└── README.md                # Project documentation
+├── .github/
+│   ├── ISSUE_TEMPLATE/       # Bug and feature forms
+│   ├── workflows/            # CI and Pages deployment
+│   ├── CODEOWNERS
+│   ├── dependabot.yml
+│   └── pull_request_template.md
+├── api/contact.js            # Validated Vercel contact function
+├── public/
+│   ├── assets/                # Existing videos, imagery, and résumé PDF
+│   └── favicon.svg
+├── src/
+│   ├── components/            # Navigation, sections, dialogs, forms, toast, cursor
+│   ├── data/                  # Typed profile, experience, skills, projects, credentials, contact
+│   ├── hooks/                 # Clock, reveal, media, motion, magnetic, scroll hooks
+│   ├── sections/              # Single-page section composition
+│   ├── styles/                # Tokens and responsive application stylesheet
+│   ├── types/                 # Shared portfolio interfaces
+│   └── utils/                  # Public asset URL helper
+├── supabase/migrations/       # Contact-message table and insert-only policy
+├── index.html                 # SEO metadata, structured data, and Vite entry
+├── vite.config.ts
+└── vercel.json                # Static output and response headers
 ```
 
-`style.css` only imports the other stylesheets in the order shown above — tokens first, then base resets, then cursor, layout, and components. Do not add rules directly to `style.css`.
+## Local development
 
----
-
-## 🚀 Getting Started
-
-This is a fully static site — no build step, no package manager.
+Use Node.js `20.19.0` (see `.nvmrc`) and npm.
 
 ```bash
-git clone https://github.com/sum-boose/sum-boose.github.io.git
-cd sum-boose.github.io
+npm ci
+npm run dev
 ```
 
-Then either:
+The Vite development server serves the portfolio at `http://localhost:5173`.
 
-- Open `index.html` directly in your browser, **or**
-- Serve it locally for a closer-to-production experience:
+### Scripts
 
-```bash
-npx serve .
-```
+| Script                 | Purpose                                             |
+| ---------------------- | --------------------------------------------------- |
+| `npm run dev`          | Start the Vite development server                   |
+| `npm run build`        | Type-check with `tsc --noEmit`, then create `dist/` |
+| `npm run preview`      | Preview the built static site                       |
+| `npm run lint`         | Run ESLint                                          |
+| `npm run typecheck`    | Run strict TypeScript checking                      |
+| `npm run format`       | Format supported source files with Prettier         |
+| `npm run format:check` | Check formatting                                    |
 
-> Google Fonts and Font Awesome are loaded from CDNs, so an internet connection is needed for full styling.
+The local Vite server does not emulate Vercel Functions. On static hosts, including GitHub Pages and the Vite dev server, the contact form provides a prefilled email draft rather than claiming that a message was stored.
 
----
+## Deployment
 
-## 🌐 Deployment Guide
+### GitHub Pages
 
-**GitHub Pages** (recommended — this repo is already named for it)
+1. Open the repository’s **Settings → Pages** and select **GitHub Actions** as the build and deployment source.
+2. Merge changes into `main`. The `Deploy to GitHub Pages` workflow installs dependencies, runs lint/type-check/build, then publishes `dist/`.
+3. The repository name differs from the account’s root-site name, so this repository’s project-site URL is `https://sum-boop.github.io/sum-boob.github.io/`.
 
-1. Push your changes to the `main` branch
-2. Go to **Settings → Pages**
-3. Under **Source**, select `main` branch, root folder
-4. Your site will be live at `https://sum-boose.github.io/`
+Vite uses `base: "./"` so built assets load from both the Pages project path and the Vercel domain. This is a single page with anchor navigation; no client-side router or 404 fallback is required. GitHub Pages does not run the contact API, so the form falls back to a mail draft.
 
-**Netlify / Vercel** (alternative)
+### Vercel
 
-1. Import the repository from your Git provider
-2. Build command: *none*
-3. Publish directory: `/` (repository root)
-4. Deploy
+The Vercel project builds with `npm run build` and serves `dist/`. The root `api/contact.js` function validates requests and writes to `public.contact_messages` through Supabase using the project’s publishable key and the migration’s insert-only policy.
 
----
+Configure `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` in the Vercel project environment for the function. `.env.example` documents the variable names without containing credentials. The `vercel.json` response headers include baseline security headers and a report-only CSP; review deployment reports before tightening the policy.
 
-## 🎨 Customisation Notes
+## Customization
 
-- **Colors, type, spacing** — edit tokens once in `variables.css`; every other file reads from them
-- **Content & copy** — update `index.html` sections directly (hero, expertise, deployments, logbook, contact)
-- **Project cards** — edit the `opData` object in `script.js` to change modal titles, images, and descriptions
-- **Contact routing** — the contact and hire forms send via `mailto:`; update the address in `handleHireSubmit` and `handleDirectMessage` in `script.js`
-- **Filter categories** — auto-generated from each card's `.op-card-badge-span` text, no extra config needed
+- Edit identity, headline, biography, location, and metrics in `src/data/profile.ts`.
+- Update work history and site records in `src/data/experience.ts`.
+- Update skill groups and ticker terms in `src/data/skills.ts`.
+- Update deployment-card copy, modal briefings, image references, categories, and tags in `src/data/projects.ts`.
+- Update the education and certification text in `src/data/certifications.ts`.
+- Update public contact details in `src/data/contact.ts`.
+- Adjust colors and spacing in `src/styles/tokens.css`; component and responsive styles live in `src/styles/global.css`.
+- Keep the contact function’s input validation and the Supabase migration’s insert-only policy aligned when changing form fields.
 
----
+## Suggested repository topics
 
-## 📄 License
+`portfolio`, `react`, `typescript`, `vite`, `cctv`, `surveillance`, `github-pages`, `vercel`
 
-Released under the **MIT License**. You're free to use, modify, and distribute this project with attribution.
+## License
 
-```
-MIT License — Copyright (c) 2026 Sumit Anand
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files, to deal in the software
-without restriction, including the rights to use, copy, modify, merge,
-publish, distribute, sublicense, and/or sell copies of the software.
-```
+MIT. See [LICENSE](LICENSE). Copyright © 2026 Sumit Anand.

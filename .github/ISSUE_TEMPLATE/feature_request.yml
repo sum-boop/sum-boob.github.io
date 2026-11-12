@@ -1,0 +1,29 @@
+name: Feature request
+description: Suggest an improvement to the portfolio.
+title: '[Feature]: '
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: Share the problem or opportunity behind your suggestion.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What should improve?
+      description: Describe the user need this would address.
+      placeholder: Explain the opportunity.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Describe the change you would like to see.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false

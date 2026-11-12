@@ -1,0 +1,37 @@
+name: Bug report
+description: Report an issue with the portfolio or its behavior.
+title: '[Bug]: '
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thank you for reporting an issue. Please include enough detail to reproduce it.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the issue and the result you expected.
+      placeholder: Describe the behavior.
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Page or section
+      description: Include the page URL or section where the issue occurred.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: List the steps that reveal the issue.
+      placeholder: '1. Open the page…'
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+    validations:
+      required: false
