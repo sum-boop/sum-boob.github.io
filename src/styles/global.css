@@ -3506,7 +3506,7 @@ textarea:focus-visible {
 }
 
 .scroll-progress span {
-  background: linear-gradient(90deg, var(--cyan), #69a946, var(--lime));
+  background: linear-gradient(90deg, var(--cyan), #557fff, var(--lime));
   box-shadow: none;
 }
 
@@ -4652,5 +4652,307 @@ textarea:focus-visible,
 
   .nav-telemetry {
     display: none;
+  }
+}
+
+/* Black-blue profile refinement */
+body {
+  background:
+    radial-gradient(900px circle at 88% 10%, rgba(52, 119, 219, 0.12), transparent 62%), var(--ink);
+}
+
+.hero-section,
+.about-section,
+.footprint-section,
+.experience-section,
+.credentials-section {
+  background:
+    radial-gradient(780px circle at 12% 14%, rgba(42, 103, 199, 0.1), transparent 58%), var(--ink);
+}
+
+.skills-section,
+.operations-section,
+.contact-section {
+  background: linear-gradient(135deg, rgba(39, 73, 128, 0.08), transparent 42%), var(--ink-soft);
+}
+
+.site-header {
+  border-color: rgba(138, 183, 255, 0.16);
+  background: rgba(7, 11, 20, 0.96);
+}
+
+.scroll-progress {
+  background: rgba(99, 200, 255, 0.09);
+}
+
+.nav-cta,
+.button--primary,
+.feed-filter--active {
+  color: #06101e;
+  background: var(--cyan);
+}
+
+.nav-cta:hover,
+.button--primary:hover,
+.feed-filter--active:hover {
+  color: #06101e;
+  background: #9bdfff;
+  box-shadow: 0 0 24px rgba(99, 200, 255, 0.2);
+}
+
+.skill-card:hover,
+.feed-card:hover,
+.certification-card:hover {
+  border-color: rgba(99, 200, 255, 0.58);
+}
+
+.status-pulse {
+  background: var(--cyan);
+  box-shadow: 0 0 12px rgba(99, 200, 255, 0.62);
+}
+
+.status-pulse--muted {
+  background: var(--muted);
+  box-shadow: none;
+}
+
+.availability-chip {
+  border-color: rgba(99, 200, 255, 0.34);
+  color: var(--cyan);
+  background: rgba(99, 200, 255, 0.08);
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  box-shadow: 0 0 0 3px rgba(99, 200, 255, 0.14);
+}
+
+.form-result--success {
+  border-color: rgba(99, 200, 255, 0.32);
+  background: rgba(99, 200, 255, 0.08);
+}
+
+.about-section {
+  overflow: clip;
+}
+
+.about-layout {
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  align-items: stretch;
+  gap: clamp(1.5rem, 3.2vw, 3.25rem);
+}
+
+.about-layout > * {
+  min-width: 0;
+}
+
+.identity-panel {
+  width: 100%;
+  min-width: 0;
+  min-height: clamp(480px, 42vw, 580px);
+  aspect-ratio: auto;
+  border-color: rgba(99, 200, 255, 0.34);
+  background: linear-gradient(145deg, #142548, #0b1426 58%, #070b14);
+  box-shadow:
+    var(--shadow-deep),
+    0 0 42px rgba(49, 126, 241, 0.14);
+}
+
+.identity-image {
+  opacity: 0.56;
+  filter: saturate(0.78) contrast(1.08) hue-rotate(8deg);
+}
+
+.identity-overlay {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(5, 12, 25, 0.08),
+      rgba(5, 12, 25, 0.3) 36%,
+      rgba(5, 12, 25, 0.97) 100%
+    ),
+    linear-gradient(115deg, rgba(63, 145, 255, 0.18), transparent 48%, rgba(125, 115, 255, 0.16));
+}
+
+.identity-panel::after {
+  inset: 14px;
+  border-color: rgba(125, 190, 255, 0.32);
+}
+
+.identity-label,
+.identity-details .mono-label {
+  color: var(--cyan);
+}
+
+.identity-status {
+  max-width: calc(100% - 4rem);
+  color: var(--lime);
+}
+
+.identity-details {
+  z-index: 1;
+  right: clamp(1.25rem, 2.4vw, 2rem);
+  left: clamp(1.25rem, 2.4vw, 2rem);
+}
+
+.identity-details strong {
+  font-size: clamp(1.65rem, 3.1vw, 2.6rem);
+  overflow-wrap: anywhere;
+}
+
+.identity-monogram {
+  z-index: 0;
+  top: 36%;
+  width: clamp(112px, 13vw, 164px);
+  border-color: rgba(106, 181, 255, 0.5);
+  color: #f3f8ff;
+  background: radial-gradient(circle, rgba(68, 140, 255, 0.2), rgba(5, 12, 25, 0.58) 68%);
+  box-shadow:
+    0 0 72px rgba(62, 143, 255, 0.22),
+    inset 0 0 36px rgba(91, 171, 255, 0.14);
+}
+
+.identity-monogram::before {
+  border-color: rgba(106, 181, 255, 0.24);
+}
+
+.identity-monogram::after {
+  border-color: rgba(155, 145, 255, 0.24);
+}
+
+.about-copy {
+  position: relative;
+  min-width: 0;
+  align-self: stretch;
+  padding: clamp(1.5rem, 3vw, 2.65rem);
+  overflow: hidden;
+  border: 1px solid rgba(138, 183, 255, 0.2);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(145deg, rgba(19, 34, 60, 0.94), rgba(11, 18, 32, 0.98));
+  box-shadow:
+    0 24px 72px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(231, 242, 255, 0.06);
+}
+
+.about-copy::before {
+  position: absolute;
+  inset: 0 12% auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(120, 197, 255, 0.7), transparent);
+  content: '';
+  pointer-events: none;
+}
+
+.about-copy > * {
+  position: relative;
+}
+
+.about-copy .eyebrow-line {
+  margin: 0 0 1rem;
+  color: var(--cyan);
+  letter-spacing: 0.12em;
+}
+
+.about-copy h3 {
+  max-width: 16ch;
+  margin: 0 0 1.2rem;
+  font-size: clamp(1.9rem, 3vw, 2.8rem);
+  line-height: 1.12;
+  overflow-wrap: break-word;
+}
+
+.about-copy .body-copy {
+  max-width: 68ch;
+  overflow-wrap: anywhere;
+}
+
+.about-employers {
+  gap: 0.7rem;
+  margin-block: 1.5rem;
+}
+
+.employer-chip {
+  min-width: 0;
+  border-color: rgba(138, 183, 255, 0.16);
+  background: rgba(7, 13, 25, 0.54);
+  overflow-wrap: anywhere;
+}
+
+.about-metrics {
+  gap: 0.75rem;
+}
+
+.about-metric {
+  min-width: 0;
+  border-color: rgba(138, 183, 255, 0.16);
+  background: rgba(7, 13, 25, 0.54);
+}
+
+.about-metric-label {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1024px) {
+  .about-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+
+  .identity-panel {
+    width: min(100%, 480px);
+    min-height: 460px;
+    aspect-ratio: 1.04;
+    justify-self: center;
+  }
+
+  .about-copy {
+    width: 100%;
+    max-width: 780px;
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .identity-panel {
+    min-height: clamp(360px, 112vw, 440px);
+    aspect-ratio: auto;
+  }
+
+  .identity-label {
+    top: 1.35rem;
+    left: 1.35rem;
+    max-width: calc(100% - 2.7rem);
+    flex-wrap: wrap;
+  }
+
+  .identity-status {
+    right: 1.35rem;
+    bottom: 1.35rem;
+    max-width: calc(100% - 2.7rem);
+    justify-content: flex-end;
+    text-align: right;
+  }
+
+  .identity-details {
+    right: 1.35rem;
+    bottom: 4rem;
+    left: 1.35rem;
+  }
+
+  .identity-monogram {
+    top: 34%;
+    width: clamp(104px, 34vw, 140px);
+  }
+
+  .about-copy {
+    padding: 1.25rem;
+  }
+
+  .about-copy h3 {
+    font-size: clamp(1.8rem, 8vw, 2.35rem);
+  }
+
+  .about-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
