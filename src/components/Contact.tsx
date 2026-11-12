@@ -36,7 +36,7 @@ export function Contact() {
           eyebrow="Open a channel"
           id="contact-title"
           number="07"
-          title="Request operator access."
+          title="Let's talk about a role."
           tone="cyan"
         />
         <div className="contact-layout">

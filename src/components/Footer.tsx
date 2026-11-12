@@ -7,7 +7,7 @@ import { assetPath } from '../utils/assets';
 const footerLinks = [
   { href: '#about', label: 'Expertise' },
   { href: '#footprint', label: 'Footprint' },
-  { href: '#operations', label: 'Feeds' },
+  { href: '#operations', label: 'Deployments' },
   { href: '#experience', label: 'Logbook' },
   { href: '#certifications', label: 'Credentials' },
   { href: '#contact', label: 'Contact' },

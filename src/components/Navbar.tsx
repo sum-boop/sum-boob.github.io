@@ -7,7 +7,7 @@ import { useScrollSpy } from '../hooks/useScrollSpy';
 const links = [
   { href: '#about', label: 'Expertise' },
   { href: '#footprint', label: 'Footprint' },
-  { href: '#operations', label: 'Feeds' },
+  { href: '#operations', label: 'Deployments' },
   { href: '#experience', label: 'Logbook' },
   { href: '#contact', label: 'Contact' },
 ] as const;

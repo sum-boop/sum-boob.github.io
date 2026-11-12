@@ -23,7 +23,7 @@ export function Hero({ onHire }: HeroProps) {
       <div className="hero-layout">
         <div className="hero-copy">
           <p className="hero-kicker">
-            <span className="kicker-mark">SA /</span> SURVEILLANCE COMMAND CENTER · V2.4
+            <span className="kicker-mark">SA /</span> CCTV OPERATIONS · PROFESSIONAL PORTFOLIO
           </p>
           <div className="hero-status-line">
             <span aria-hidden="true" className="status-pulse" />
@@ -44,12 +44,12 @@ export function Hero({ onHire }: HeroProps) {
               type="button"
             >
               <ShieldCheck aria-hidden="true" size={17} />
-              Request Deployment
+              Discuss an Opportunity
               <ArrowRight aria-hidden="true" size={16} />
             </button>
             <a className="button button--quiet" href="#operations">
               <Eye aria-hidden="true" size={17} />
-              View Live Feeds
+              View Deployments
             </a>
           </div>
           <div aria-label="Career highlights" className="hero-metrics">
@@ -90,7 +90,7 @@ export function Hero({ onHire }: HeroProps) {
           <div aria-hidden="true" className="detection-box detection-box--two" />
           <div className="monitor-topline">
             <span className="monitor-live">
-              <span aria-hidden="true" className="record-dot" /> LIVE FEED
+              <span aria-hidden="true" className="status-pulse" /> REFERENCE VISUAL
             </span>
             <span>CAMERA ARRAY · REFERENCE</span>
           </div>
