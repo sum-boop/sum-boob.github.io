@@ -1,20 +1,20 @@
 :root {
   color-scheme: dark;
-  --ink: #101411;
-  --ink-soft: #151b17;
-  --surface: #1b231d;
-  --surface-raised: #232c25;
-  --surface-glass: rgba(27, 35, 29, 0.96);
-  --text: #f1f5ef;
-  --text-soft: #c1cbc2;
-  --muted: #8e9a90;
-  --line: rgba(232, 242, 232, 0.1);
-  --line-strong: rgba(232, 242, 232, 0.18);
-  --cyan: #87cf8c;
-  --lime: #d4ed91;
-  --violet: #91a58f;
-  --amber: #e5c17f;
-  --coral: #e18b83;
+  --ink: #070b14;
+  --ink-soft: #0b1220;
+  --surface: #101a2b;
+  --surface-raised: #16233a;
+  --surface-glass: rgba(16, 26, 43, 0.94);
+  --text: #f2f7ff;
+  --text-soft: #bdc9dc;
+  --muted: #899ab6;
+  --line: rgba(154, 190, 255, 0.12);
+  --line-strong: rgba(154, 190, 255, 0.24);
+  --cyan: #63c8ff;
+  --lime: #a9c5ff;
+  --violet: #9b91ff;
+  --amber: #89b2ff;
+  --coral: #ff8fae;
   --font-body: 'Space Grotesk', 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', 'SFMono-Regular', monospace;
   --gutter: clamp(1.25rem, 5vw, 5.25rem);
@@ -23,8 +23,8 @@
   --radius-md: 14px;
   --radius-lg: 24px;
   --radius-pill: 999px;
-  --shadow-deep: 0 24px 72px rgba(0, 0, 0, 0.36);
-  --glow-cyan: 0 8px 24px rgba(0, 0, 0, 0.22);
-  --glow-violet: 0 10px 28px rgba(0, 0, 0, 0.2);
+  --shadow-deep: 0 24px 72px rgba(0, 0, 0, 0.46);
+  --glow-cyan: 0 0 34px rgba(71, 171, 255, 0.18);
+  --glow-violet: 0 0 42px rgba(125, 115, 255, 0.14);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
