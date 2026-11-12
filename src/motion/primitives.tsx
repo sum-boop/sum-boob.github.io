@@ -16,13 +16,13 @@ import {
   type PropsWithChildren,
 } from 'react';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { motionDurations, motionEasings, motionSprings } from './tokens';
 import {
-  motionDurations,
-  motionEasings,
-  motionSprings,
+  heroStaggerVariants,
+  revealVariants,
   staggerContainerVariants,
   staggerItemVariants,
-} from './config';
+} from './variants';
 import { useIsTouch } from './useIsTouch';
 
 export type RevealDirection = 'up' | 'left' | 'right';
@@ -59,7 +59,7 @@ export function Reveal({ children, className, direction = 'up' }: RevealProps) {
       {...(!reduce ? { style: { opacity, scale } } : {})}
       whileInView={{ x: 0, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: reduce ? 0.24 : motionDurations.reveal, ease: motionEasings.out }}
+      transition={{ duration: reduce ? 0.24 : motionDurations.base, ease: motionEasings.out }}
     >
       {children}
     </m.div>
@@ -110,7 +110,7 @@ export function SplitText({ text, className, delay = 0 }: SplitTextProps) {
             className="split-word"
             initial={prefersReducedMotion ? false : { opacity: 1, y: 8 }}
             transition={{
-              duration: motionDurations.hero,
+              duration: motionDurations.slow,
               delay: delay + index * 0.055,
               ease: motionEasings.out,
             }}
@@ -141,7 +141,7 @@ export function Counter({ value, className }: CounterProps) {
     if (!isInView || prefersReducedMotion || target === null) return;
 
     const controls = animate(0, target, {
-      duration: motionDurations.counter,
+      duration: motionDurations.slow,
       ease: motionEasings.out,
       onUpdate: (latest) => setDisplayValue(`${Math.round(latest)}${suffix}`),
     });
@@ -154,7 +154,7 @@ export function Counter({ value, className }: CounterProps) {
       className={className ?? ''}
       initial={prefersReducedMotion ? false : { opacity: 1, y: 6 }}
       ref={ref}
-      transition={{ duration: motionDurations.reveal, ease: motionEasings.out }}
+      transition={{ duration: motionDurations.base, ease: motionEasings.out }}
       viewport={{ once: true, amount: 0.15 }}
       whileInView={{ opacity: 1, y: 0 }}
     >
@@ -301,7 +301,7 @@ export function PageTransition({ children, className }: PropsWithChildren<{ clas
       animate={{ opacity: 1, y: 0 }}
       className={className ? `page-transition ${className}` : 'page-transition'}
       initial={{ opacity: 1, y: 10 }}
-      transition={{ duration: motionDurations.hero, ease: motionEasings.out }}
+      transition={{ duration: motionDurations.slow, ease: motionEasings.out }}
     >
       {children}
     </m.div>

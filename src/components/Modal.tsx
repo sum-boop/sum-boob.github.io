@@ -1,7 +1,7 @@
 import { AnimatePresence, m } from 'framer-motion';
 import { useEffect, useRef, type MouseEvent, type PropsWithChildren } from 'react';
 import { X } from 'lucide-react';
-import { motionDurations, motionEasings, motionSprings } from '../motion/config';
+import { motionDurations, motionEasings, motionSprings } from '../motion/tokens';
 
 interface ModalProps extends PropsWithChildren {
   isOpen: boolean;
@@ -85,7 +85,7 @@ export function Modal({ isOpen, titleId, onClose, className = '', children }: Mo
             initial={{ opacity: 0, y: 14, scale: 0.985 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.985 }}
-            transition={motionSprings.tilt}
+            transition={motionSprings.soft}
           >
             <button
               aria-label="Close dialog"

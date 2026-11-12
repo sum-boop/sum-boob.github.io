@@ -2,7 +2,7 @@ import { m } from 'framer-motion';
 import { useState, type FormEvent } from 'react';
 import { ArrowRight, LoaderCircle } from 'lucide-react';
 import { contact } from '../data/contact';
-import { motionDurations, motionEasings } from '../motion/config';
+import { motionDurations, motionEasings } from '../motion/tokens';
 import { useToast } from './ToastProvider';
 
 interface ContactFormProps {

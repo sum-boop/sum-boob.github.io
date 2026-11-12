@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AnimatePresence, m } from 'framer-motion';
 import { useReducedMotion } from '../hooks/useReducedMotion';
-import { motionDurations, motionEasings } from '../motion/config';
+import { motionDurations, motionEasings } from '../motion/tokens';
 
 export function Boot() {
   const reducedMotion = useReducedMotion();

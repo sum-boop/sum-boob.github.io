@@ -12,7 +12,7 @@ import {
   StaggerGroup,
   staggerItemVariants,
 } from '../motion';
-import { motionDurations, motionEasings, motionSprings } from '../motion/config';
+import { motionDurations, motionEasings, motionSprings } from '../motion/tokens';
 import { BackgroundVideo } from './BackgroundVideo';
 
 interface HeroProps {

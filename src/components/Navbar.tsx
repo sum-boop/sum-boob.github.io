@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ArrowUpRight, Menu, Radio, X } from 'lucide-react';
 import { useClock } from '../hooks/useClock';
 import { ScrollProgress } from '../motion';
-import { motionDurations, motionEasings, motionSprings } from '../motion/config';
+import { motionDurations, motionEasings, motionSprings } from '../motion/tokens';
 import { useScrollSpy } from '../hooks/useScrollSpy';
 
 const links = [
@@ -80,7 +80,7 @@ export function Navbar() {
                       aria-hidden="true"
                       className="nav-active-indicator"
                       layoutId="active-nav-indicator"
-                      transition={motionSprings.magnetic}
+                      transition={motionSprings.snappy}
                     />
                   ) : null}
                 </m.a>

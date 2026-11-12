@@ -1,7 +1,7 @@
 import { AnimatePresence, m } from 'framer-motion';
 import { createContext, useContext, useEffect, useState, type PropsWithChildren } from 'react';
 import { Check, Info, X, XOctagon } from 'lucide-react';
-import { motionSprings } from '../motion/config';
+import { motionSprings } from '../motion/tokens';
 
 type ToastKind = 'success' | 'error' | 'info';
 
@@ -57,7 +57,7 @@ export function ToastProvider({ children }: PropsWithChildren) {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                transition={{ ...motionSprings.magnetic, layout: motionSprings.magnetic }}
+                transition={{ ...motionSprings.snappy, layout: motionSprings.snappy }}
               >
                 <Icon aria-hidden="true" size={18} />
                 <div>

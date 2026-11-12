@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { deployments } from '../data/projects';
 import type { DeploymentBriefing } from '../types/portfolio';
 import { useReducedMotion } from '../hooks/useReducedMotion';
-import { motionDurations, motionEasings, motionSprings } from '../motion/config';
+import { motionDurations, motionEasings, motionSprings } from '../motion/tokens';
 import { CameraFeedCard } from './CameraFeedCard';
 import { SectionHeading } from './SectionHeading';
 
@@ -121,7 +121,7 @@ export function Deployments({ onOpen }: DeploymentsProps) {
               key={filter}
               {...(activeFilter === filter ? { layoutId: 'active-deployment-filter' } : {})}
               onClick={() => changeFilter(filter)}
-              transition={motionSprings.magnetic}
+              transition={motionSprings.snappy}
               type="button"
               whileTap={{ scale: 0.97 }}
             >
@@ -175,9 +175,9 @@ export function Deployments({ onOpen }: DeploymentsProps) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 5 }}
                     transition={{
-                      duration: motionDurations.reveal,
+                      duration: motionDurations.base,
                       ease: motionEasings.out,
-                      layout: motionSprings.magnetic,
+                      layout: motionSprings.snappy,
                     }}
                   >
                     {page.map((deployment) => (
@@ -186,7 +186,7 @@ export function Deployments({ onOpen }: DeploymentsProps) {
                         key={deployment.id}
                         layout
                         layoutId={`deployment-card-${deployment.id}`}
-                        transition={{ layout: motionSprings.magnetic }}
+                        transition={{ layout: motionSprings.snappy }}
                       >
                         <CameraFeedCard
                           deployment={deployment}

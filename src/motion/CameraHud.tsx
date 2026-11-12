@@ -2,7 +2,7 @@ import { m, useMotionValue, useSpring } from 'framer-motion';
 import { useEffect, type RefObject } from 'react';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 import { useReducedMotion } from '../hooks/useReducedMotion';
-import { motionDurations, motionEasings, motionSprings } from './config';
+import { motionDurations, motionEasings, motionSprings } from './tokens';
 import { useIsTouch } from './useIsTouch';
 
 interface CameraHudProps {

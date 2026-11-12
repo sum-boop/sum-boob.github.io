@@ -1,7 +1,7 @@
 import { m } from 'framer-motion';
 import { ArrowUpRight, BriefcaseBusiness } from 'lucide-react';
 import { experience } from '../data/experience';
-import { motionDurations, motionEasings } from '../motion/config';
+import { motionDurations, motionEasings } from '../motion/tokens';
 import { SectionHeading } from './SectionHeading';
 
 export function Experience() {
@@ -30,7 +30,7 @@ export function Experience() {
                 <span />
                 <m.i
                   initial={{ scaleY: 0.86 }}
-                  transition={{ duration: motionDurations.reveal, ease: motionEasings.out }}
+                  transition={{ duration: motionDurations.base, ease: motionEasings.out }}
                   viewport={{ once: true, amount: 0.15 }}
                   whileInView={{ scaleY: 1 }}
                 />

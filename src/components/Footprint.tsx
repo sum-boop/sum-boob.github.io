@@ -4,7 +4,7 @@ import { ArrowUpRight, Crosshair, MapPin, Radio, Satellite } from 'lucide-react'
 import { careerSites } from '../data/experience';
 import { profile } from '../data/profile';
 import { contact } from '../data/contact';
-import { motionDurations, motionEasings } from '../motion/config';
+import { motionDurations, motionEasings } from '../motion/tokens';
 import { BackgroundVideo } from './BackgroundVideo';
 import { NetworkMap } from './NetworkMap';
 import { SectionHeading } from './SectionHeading';
@@ -73,7 +73,7 @@ export function Footprint() {
                   initial={{ opacity: 1, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 5 }}
-                  transition={{ duration: motionDurations.reveal, ease: motionEasings.out }}
+                  transition={{ duration: motionDurations.base, ease: motionEasings.out }}
                 >
                   <div className="footprint-details-heading">
                     <span className="status-pulse" /> OPERATOR LOCATED

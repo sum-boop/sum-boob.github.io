@@ -2,7 +2,7 @@ import { m, useMotionValue, useSpring } from 'framer-motion';
 import { ArrowUpRight, Eye, Radio } from 'lucide-react';
 import { useRef, type PointerEvent as ReactPointerEvent } from 'react';
 import { useReducedMotion } from '../hooks/useReducedMotion';
-import { motionSprings } from '../motion/config';
+import { motionSprings } from '../motion/tokens';
 import { useIsTouch } from '../motion/useIsTouch';
 import type { DeploymentBriefing } from '../types/portfolio';
 import { assetPath } from '../utils/assets';
@@ -21,8 +21,8 @@ export function CameraFeedCard({ deployment, index, onOpen }: CameraFeedCardProp
   const rotateY = useMotionValue(0);
   const glareX = useMotionValue(-200);
   const glareY = useMotionValue(-200);
-  const springRotateX = useSpring(rotateX, motionSprings.tilt);
-  const springRotateY = useSpring(rotateY, motionSprings.tilt);
+  const springRotateX = useSpring(rotateX, motionSprings.snappy);
+  const springRotateY = useSpring(rotateY, motionSprings.snappy);
   const enabled = !isTouch && !prefersReducedMotion;
   const useLocalFallback = () => {
     const image = imageRef.current;
@@ -54,7 +54,7 @@ export function CameraFeedCard({ deployment, index, onOpen }: CameraFeedCardProp
       onClick={() => onOpen(deployment)}
       onPointerLeave={resetTilt}
       onPointerMove={handlePointerMove}
-      transition={motionSprings.tilt}
+      transition={motionSprings.snappy}
       type="button"
       {...(enabled
         ? {
