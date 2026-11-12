@@ -7,13 +7,16 @@ function respond(res, status, payload) {
   return res.status(status).json(payload);
 }
 
-module.exports = async function contactHandler(req, res) {
+export default async function contactHandler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
     return respond(res, 405, { error: 'Method not allowed.' });
   }
 
-  const contentType = String(req.headers['content-type'] || '').split(';', 1)[0].trim().toLowerCase();
+  const contentType = String(req.headers['content-type'] || '')
+    .split(';', 1)[0]
+    .trim()
+    .toLowerCase();
   if (contentType !== 'application/json') {
     return respond(res, 415, { error: 'Unsupported content type.' });
   }
@@ -22,7 +25,9 @@ module.exports = async function contactHandler(req, res) {
   if (origin) {
     try {
       const originHost = new URL(origin).host;
-      const requestHost = String(req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim();
+      const requestHost = String(req.headers['x-forwarded-host'] || req.headers.host || '')
+        .split(',')[0]
+        .trim();
       if (!requestHost || originHost !== requestHost) {
         return respond(res, 403, { error: 'Request origin is not allowed.' });
       }
@@ -55,16 +60,21 @@ module.exports = async function contactHandler(req, res) {
   const message = typeof payload.message === 'string' ? payload.message.trim() : '';
 
   if (
-    name.length < 2 || name.length > 120 ||
-    email.length < 3 || email.length > 254 || !EMAIL_PATTERN.test(email) ||
+    name.length < 2 ||
+    name.length > 120 ||
+    email.length < 3 ||
+    email.length > 254 ||
+    !EMAIL_PATTERN.test(email) ||
     organization.length > 120 ||
-    message.length < 10 || message.length > 5000
+    message.length < 10 ||
+    message.length > 5000
   ) {
     return respond(res, 400, { error: 'Please check the contact form fields.' });
   }
 
   const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const publishableKey = process.env.SUPABASE_PUBLISHABLE_KEY ||
+  const publishableKey =
+    process.env.SUPABASE_PUBLISHABLE_KEY ||
     process.env.SUPABASE_ANON_KEY ||
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -104,4 +114,4 @@ module.exports = async function contactHandler(req, res) {
   } catch {
     return respond(res, 502, { error: 'Could not save the message.' });
   }
-};
+}
