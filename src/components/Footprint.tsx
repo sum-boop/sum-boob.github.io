@@ -16,19 +16,6 @@ export function Footprint() {
       className="content-section footprint-section"
       id="footprint"
     >
-      <div
-        aria-label="Illustrative Earth visualization; not live satellite imagery"
-        className="footprint-media-layer"
-        role="img"
-      >
-        <BackgroundVideo
-          className="footprint-section-video"
-          poster="assets/og-cover.jpg"
-          src="assets/earth-globe.mp4"
-        />
-        <div aria-hidden="true" className="footprint-media-vignette" />
-        <div aria-hidden="true" className="footprint-media-grid" />
-      </div>
       <div className="section-inner">
         <SectionHeading
           description="One operator base. Two logistics deployments. A clear line between the map and the work."
@@ -40,6 +27,18 @@ export function Footprint() {
         />
         <div className="footprint-layout">
           <div className="footprint-map" data-reveal>
+            <div
+              aria-label="Illustrative Earth rotation; not live satellite imagery"
+              className="footprint-media-layer"
+              role="img"
+            >
+              <BackgroundVideo
+                className="footprint-section-video"
+                poster="assets/earth-globe-poster.png"
+                src="assets/earth-globe.mp4"
+              />
+              <div aria-hidden="true" className="footprint-media-vignette" />
+            </div>
             <div aria-hidden="true" className="footprint-map-overlay" />
             <div className="footprint-map-top">
               <span>
