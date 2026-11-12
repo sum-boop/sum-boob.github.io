@@ -6162,7 +6162,8 @@ textarea:focus-visible {
 
   .hero-orb,
   .hero-grid,
-  .monitor-scan {
+  .monitor-scan,
+  .hero-media-scan {
     animation: none !important;
   }
 
@@ -6171,5 +6172,274 @@ textarea:focus-visible {
   *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Immersive video backdrops */
+.hero-section {
+  position: relative;
+  display: flex;
+  min-height: max(780px, 100svh);
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
+  padding-block: clamp(7.5rem, 10vw, 9rem) 3.6rem;
+}
+
+.hero-media-layer {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-atmosphere {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-background-video,
+.footprint-section-video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-background-video {
+  object-position: center 45%;
+  filter: saturate(1.12) contrast(1.08) brightness(0.88);
+}
+
+.hero-media-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(3, 7, 17, 0.96) 0%,
+      rgba(3, 7, 17, 0.82) 37%,
+      rgba(3, 7, 17, 0.4) 73%,
+      rgba(3, 7, 17, 0.3) 100%
+    ),
+    linear-gradient(0deg, rgba(3, 7, 17, 0.88), transparent 42%, rgba(3, 7, 17, 0.4));
+}
+
+.hero-media-raster,
+.footprint-media-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(129, 190, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(129, 190, 255, 0.055) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse at 70% 45%, #000 8%, transparent 79%);
+  pointer-events: none;
+}
+
+.hero-media-frame {
+  position: absolute;
+  inset: 1rem;
+  border: 1px solid rgba(160, 204, 255, 0.17);
+  border-radius: 22px;
+  box-shadow: inset 0 0 60px rgba(54, 136, 255, 0.08);
+}
+
+.hero-media-scan {
+  position: absolute;
+  top: 42%;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(91, 218, 255, 0.5), transparent);
+  box-shadow: 0 0 18px rgba(91, 218, 255, 0.24);
+  animation: hero-media-sweep 9s linear infinite;
+}
+
+.hero-media-readout {
+  position: absolute;
+  top: 8rem;
+  right: var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid rgba(119, 179, 255, 0.24);
+  border-radius: 8px;
+  color: rgba(219, 235, 255, 0.84);
+  background: rgba(5, 12, 27, 0.54);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.2);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  backdrop-filter: blur(12px);
+}
+
+.hero-media-readout-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-accent-cyan);
+}
+
+.hero-media-led {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-cyan);
+  box-shadow: 0 0 10px var(--color-accent-cyan);
+}
+
+.hero-media-readout-note {
+  color: rgba(219, 235, 255, 0.62);
+}
+
+.hero-layout {
+  position: static;
+  display: flex;
+  width: min(var(--content-width), 100%);
+  flex: 1;
+  align-items: center;
+  margin-inline: auto;
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 790px);
+  max-width: 790px;
+}
+
+.hero-scroll {
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes hero-media-sweep {
+  0% {
+    transform: translateY(-24vh);
+    opacity: 0;
+  }
+
+  12%,
+  88% {
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: translateY(28vh);
+    opacity: 0;
+  }
+}
+
+.footprint-section {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background: #050c1b;
+}
+
+.footprint-section .section-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.footprint-media-layer {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0.62;
+  pointer-events: none;
+}
+
+.footprint-section-video {
+  object-position: center 44%;
+  filter: saturate(1.18) contrast(1.08) brightness(0.8);
+}
+
+.footprint-media-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 36%, rgba(19, 71, 118, 0.12), transparent 60%),
+    linear-gradient(90deg, rgba(4, 10, 23, 0.88), rgba(4, 10, 23, 0.42) 50%, rgba(4, 10, 23, 0.9)),
+    linear-gradient(180deg, rgba(4, 10, 23, 0.82), rgba(4, 10, 23, 0.3) 28%, rgba(4, 10, 23, 0.9));
+}
+
+.footprint-media-grid {
+  opacity: 0.56;
+}
+
+.footprint-map {
+  min-height: clamp(440px, 42vw, 590px);
+  background:
+    radial-gradient(ellipse at 51% 48%, rgba(45, 155, 255, 0.18), transparent 46%),
+    linear-gradient(145deg, rgba(8, 19, 41, 0.58), rgba(4, 10, 23, 0.68));
+  backdrop-filter: blur(2px);
+}
+
+.footprint-map-overlay {
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 50% 48%, rgba(81, 196, 255, 0.12), transparent 45%),
+    linear-gradient(180deg, rgba(4, 10, 23, 0.08), rgba(4, 10, 23, 0.42));
+}
+
+.footprint-marker {
+  z-index: 2;
+}
+
+@media (max-width: 820px) {
+  .hero-section {
+    min-height: 100svh;
+    padding-block: 7.5rem 3.5rem;
+  }
+
+  .hero-layout {
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-media-readout {
+    display: none;
+  }
+
+  .hero-media-frame {
+    inset: 0.5rem;
+    border-radius: 18px;
+  }
+
+  .footprint-media-layer {
+    opacity: 0.48;
+  }
+
+  .footprint-map {
+    min-height: 430px;
+  }
+}
+
+@media (max-width: 560px) {
+  .hero-section {
+    min-height: max(760px, 100svh);
+    padding-block: 7rem 3rem;
+  }
+
+  .hero-background-video {
+    object-position: 61% center;
+  }
+
+  .hero-media-vignette {
+    background:
+      linear-gradient(90deg, rgba(3, 7, 17, 0.9), rgba(3, 7, 17, 0.56)),
+      linear-gradient(0deg, rgba(3, 7, 17, 0.88), transparent 58%, rgba(3, 7, 17, 0.38));
+  }
+
+  .footprint-map {
+    min-height: 380px;
   }
 }

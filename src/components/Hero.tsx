@@ -2,7 +2,7 @@ import { ArrowDownRight, ArrowRight, Eye, ShieldCheck } from 'lucide-react';
 import { profile } from '../data/profile';
 import { useClock } from '../hooks/useClock';
 import { useMagnetic } from '../hooks/useMagnetic';
-import { assetPath } from '../utils/assets';
+import { BackgroundVideo } from './BackgroundVideo';
 
 interface HeroProps {
   onHire: () => void;
@@ -82,40 +82,26 @@ export function Hero({ onHire }: HeroProps) {
         </div>
 
         <div
-          aria-label="Illustrative surveillance feed; not footage from a client site"
-          className="hero-monitor"
-          data-reveal
+          aria-label="Illustrative surveillance visual; not footage from a client site"
+          className="hero-media-layer"
           role="img"
         >
-          <video
-            aria-hidden="true"
-            autoPlay
-            className="hero-video"
-            loop
-            muted
-            playsInline
-            poster={assetPath('assets/sumit-monitoring-station.jpg')}
-          >
-            <source src={assetPath('assets/hero-feed.mp4')} type="video/mp4" />
-          </video>
-          <div aria-hidden="true" className="monitor-vignette" />
-          <div aria-hidden="true" className="monitor-scan" />
-          <div aria-hidden="true" className="detection-box detection-box--one" />
-          <div aria-hidden="true" className="detection-box detection-box--two" />
-          <div className="monitor-topline">
-            <span className="monitor-live">
-              <span aria-hidden="true" className="status-pulse" /> REFERENCE VISUAL
+          <BackgroundVideo
+            className="hero-background-video"
+            poster="assets/sumit-monitoring-station.jpg"
+            src="assets/hero-feed.mp4"
+          />
+          <div aria-hidden="true" className="hero-media-vignette" />
+          <div aria-hidden="true" className="hero-media-scan" />
+          <div aria-hidden="true" className="hero-media-raster" />
+          <div aria-hidden="true" className="hero-media-frame" />
+          <div aria-hidden="true" className="hero-media-readout">
+            <span className="hero-media-readout-label">
+              <span className="hero-media-led" /> REFERENCE VISUAL / 01
             </span>
-            <span>CAMERA ARRAY · REFERENCE</span>
-          </div>
-          <div className="monitor-bottomline">
-            <span>ILLUSTRATIVE FEED</span>
+            <span className="hero-media-readout-note">ILLUSTRATIVE FEED</span>
             <time>{clock}</time>
           </div>
-          <div aria-hidden="true" className="monitor-corner monitor-corner--tl" />
-          <div aria-hidden="true" className="monitor-corner monitor-corner--tr" />
-          <div aria-hidden="true" className="monitor-corner monitor-corner--bl" />
-          <div aria-hidden="true" className="monitor-corner monitor-corner--br" />
         </div>
       </div>
       <a aria-label="Scroll to expertise" className="hero-scroll" href="#about">

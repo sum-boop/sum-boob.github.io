@@ -3,7 +3,7 @@ import { ArrowUpRight, Crosshair, MapPin, Radio, Satellite } from 'lucide-react'
 import { careerSites } from '../data/experience';
 import { profile } from '../data/profile';
 import { contact } from '../data/contact';
-import { assetPath } from '../utils/assets';
+import { BackgroundVideo } from './BackgroundVideo';
 import { NetworkMap } from './NetworkMap';
 import { SectionHeading } from './SectionHeading';
 
@@ -16,6 +16,19 @@ export function Footprint() {
       className="content-section footprint-section"
       id="footprint"
     >
+      <div
+        aria-label="Illustrative Earth visualization; not live satellite imagery"
+        className="footprint-media-layer"
+        role="img"
+      >
+        <BackgroundVideo
+          className="footprint-section-video"
+          poster="assets/og-cover.jpg"
+          src="assets/earth-globe.mp4"
+        />
+        <div aria-hidden="true" className="footprint-media-vignette" />
+        <div aria-hidden="true" className="footprint-media-grid" />
+      </div>
       <div className="section-inner">
         <SectionHeading
           description="One operator base. Two logistics deployments. A clear line between the map and the work."
@@ -27,17 +40,6 @@ export function Footprint() {
         />
         <div className="footprint-layout">
           <div className="footprint-map" data-reveal>
-            <video
-              aria-hidden="true"
-              autoPlay
-              className="footprint-video"
-              loop
-              muted
-              playsInline
-              poster={assetPath('assets/og-cover.jpg')}
-            >
-              <source src={assetPath('assets/earth-globe.mp4')} type="video/mp4" />
-            </video>
             <div aria-hidden="true" className="footprint-map-overlay" />
             <div className="footprint-map-top">
               <span>
