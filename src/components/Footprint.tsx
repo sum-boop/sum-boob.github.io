@@ -1,8 +1,10 @@
+import { AnimatePresence, m } from 'framer-motion';
 import { useState } from 'react';
 import { ArrowUpRight, Crosshair, MapPin, Radio, Satellite } from 'lucide-react';
 import { careerSites } from '../data/experience';
 import { profile } from '../data/profile';
 import { contact } from '../data/contact';
+import { motionDurations, motionEasings } from '../motion/config';
 import { BackgroundVideo } from './BackgroundVideo';
 import { NetworkMap } from './NetworkMap';
 import { SectionHeading } from './SectionHeading';
@@ -63,32 +65,41 @@ export function Footprint() {
                 <ArrowUpRight aria-hidden="true" size={14} />
               </button>
             </div>
-            {detailsOpen ? (
-              <div className="footprint-details" id="footprint-details">
-                <div className="footprint-details-heading">
-                  <span className="status-pulse" /> OPERATOR LOCATED
-                </div>
-                <strong>{profile.name}</strong>
-                <div className="footprint-readouts">
-                  <span>
-                    <small>ROLE</small>CCTV Operator
-                  </span>
-                  <span>
-                    <small>BASE</small>Patli, HR
-                  </span>
-                  <span>
-                    <small>ACTIVE</small>2+ YRS
-                  </span>
-                </div>
-                <p>
-                  Deployed at <b>Flipkart Kalash Mega Hub</b> (current) and previously at{' '}
-                  <b>Ekart Logistics</b>.
-                </p>
-                <a href={contact.mapUrl} rel="noopener noreferrer" target="_blank">
-                  Open in Google Maps <ArrowUpRight aria-hidden="true" size={14} />
-                </a>
-              </div>
-            ) : null}
+            <AnimatePresence initial={false}>
+              {detailsOpen ? (
+                <m.div
+                  className="footprint-details"
+                  id="footprint-details"
+                  initial={{ opacity: 1, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 5 }}
+                  transition={{ duration: motionDurations.reveal, ease: motionEasings.out }}
+                >
+                  <div className="footprint-details-heading">
+                    <span className="status-pulse" /> OPERATOR LOCATED
+                  </div>
+                  <strong>{profile.name}</strong>
+                  <div className="footprint-readouts">
+                    <span>
+                      <small>ROLE</small>CCTV Operator
+                    </span>
+                    <span>
+                      <small>BASE</small>Patli, HR
+                    </span>
+                    <span>
+                      <small>ACTIVE</small>2+ YRS
+                    </span>
+                  </div>
+                  <p>
+                    Deployed at <b>Flipkart Kalash Mega Hub</b> (current) and previously at{' '}
+                    <b>Ekart Logistics</b>.
+                  </p>
+                  <a href={contact.mapUrl} rel="noopener noreferrer" target="_blank">
+                    Open in Google Maps <ArrowUpRight aria-hidden="true" size={14} />
+                  </a>
+                </m.div>
+              ) : null}
+            </AnimatePresence>
           </div>
           <div className="network-panel" data-reveal>
             <div className="network-panel-header">

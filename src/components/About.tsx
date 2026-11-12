@@ -2,6 +2,7 @@ import { Activity, Fingerprint, MapPin, ShieldCheck } from 'lucide-react';
 import { profile } from '../data/profile';
 import { careerSites } from '../data/experience';
 import { SectionHeading } from './SectionHeading';
+import { Counter } from '../motion';
 import { assetPath } from '../utils/assets';
 
 export function About() {
@@ -76,7 +77,7 @@ export function About() {
                 return (
                   <div className="about-metric" key={metric.label}>
                     <MetricIcon aria-hidden="true" size={16} />
-                    <span className="about-metric-value">{metric.value}</span>
+                    <Counter className="about-metric-value" value={metric.value} />
                     <span className="about-metric-label">{metric.label}</span>
                   </div>
                 );

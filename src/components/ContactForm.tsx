@@ -1,6 +1,8 @@
+import { m } from 'framer-motion';
 import { useState, type FormEvent } from 'react';
 import { ArrowRight, LoaderCircle } from 'lucide-react';
 import { contact } from '../data/contact';
+import { motionDurations, motionEasings } from '../motion/config';
 import { useToast } from './ToastProvider';
 
 interface ContactFormProps {
@@ -131,9 +133,15 @@ export function ContactForm({ variant = 'page' }: ContactFormProps) {
         </div>
       ) : null}
       {errorMessage ? (
-        <p className="form-error" role="alert">
+        <m.p
+          animate={{ opacity: 1, y: 0 }}
+          className="form-error"
+          initial={{ opacity: 1, y: 6 }}
+          role="alert"
+          transition={{ duration: motionDurations.micro, ease: motionEasings.out }}
+        >
           {errorMessage}
-        </p>
+        </m.p>
       ) : null}
       <div aria-hidden="true" className="form-honeypot">
         <label htmlFor={`${prefix}-website`}>Leave this field empty</label>
@@ -200,10 +208,11 @@ export function ContactForm({ variant = 'page' }: ContactFormProps) {
           />
           <label htmlFor={`${prefix}-message`}>Message</label>
         </div>
-        <button
+        <m.button
           className="button button--primary form-submit"
           disabled={isSubmitting}
           type="submit"
+          {...(!isSubmitting ? { whileTap: { scale: 0.985 } } : {})}
         >
           {isSubmitting ? (
             <LoaderCircle aria-hidden="true" className="spinner" size={17} />
@@ -211,7 +220,7 @@ export function ContactForm({ variant = 'page' }: ContactFormProps) {
             <ArrowRight aria-hidden="true" size={17} />
           )}
           {isSubmitting ? 'Transmitting…' : 'Transmit Request'}
-        </button>
+        </m.button>
       </fieldset>
     </form>
   );

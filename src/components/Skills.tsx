@@ -1,5 +1,7 @@
+import { m } from 'framer-motion';
 import { ArrowUpRight, Cpu, Network, ScanEye, ShieldCheck } from 'lucide-react';
 import { skillCategories, skillTicker } from '../data/skills';
+import { Marquee, StaggerGroup, staggerItemVariants } from '../motion';
 import { SectionHeading } from './SectionHeading';
 
 const icons = [ScanEye, Network, Cpu, ShieldCheck] as const;
@@ -16,14 +18,15 @@ export function Skills() {
           title="Systems in sync."
           tone="violet"
         />
-        <div className="skills-grid">
+        <StaggerGroup className="skills-grid">
           {skillCategories.map((category, index) => {
             const Icon = icons[index] ?? ScanEye;
             return (
-              <article
+              <m.article
                 className={`skill-card skill-card--${category.accent}`}
                 data-reveal
                 key={category.name}
+                variants={staggerItemVariants}
               >
                 <div className="skill-card-header">
                   <span className="skill-icon">
@@ -45,20 +48,13 @@ export function Skills() {
                   <i />
                   <i />
                 </div>
-              </article>
+              </m.article>
             );
           })}
-        </div>
+        </StaggerGroup>
       </div>
       <div aria-hidden="true" className="skill-ticker-wrap">
-        <div className="skill-ticker">
-          {[...skillTicker, ...skillTicker].map((skill, index) => (
-            <span key={`${skill}-${index}`}>
-              {skill}
-              <i />
-            </span>
-          ))}
-        </div>
+        <Marquee className="skill-ticker" items={skillTicker} />
       </div>
     </section>
   );

@@ -1,49 +1,62 @@
-import { useEffect, useRef } from 'react';
+import { m, useMotionValue, useSpring } from 'framer-motion';
+import { useEffect, useState } from 'react';
 import { useMediaQuery } from '../hooks/useMediaQuery';
 import { useReducedMotion } from '../hooks/useReducedMotion';
+import { motionSprings } from '../motion/config';
+import { useIsTouch } from '../motion/useIsTouch';
 
 const TARGET_SELECTOR = "a, button, [role='button'], input, textarea, select";
 
 export function Cursor() {
-  const cursorRef = useRef<HTMLDivElement>(null);
   const finePointer = useMediaQuery('(hover: hover) and (pointer: fine)');
+  const isTouch = useIsTouch();
   const reducedMotion = useReducedMotion();
+  const [cursorTarget, setCursorTarget] = useState(false);
+  const x = useMotionValue(-100);
+  const y = useMotionValue(-100);
+  const springX = useSpring(x, motionSprings.cursor);
+  const springY = useSpring(y, motionSprings.cursor);
 
   useEffect(() => {
-    const cursor = cursorRef.current;
-    if (!cursor || !finePointer || reducedMotion) return;
+    if (!finePointer || isTouch || reducedMotion) return;
 
     document.body.classList.add('custom-cursor-enabled');
-    let frame = 0;
     const onPointerMove = (event: PointerEvent) => {
-      window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(() => {
-        cursor.style.transform = `translate3d(${event.clientX}px, ${event.clientY}px, 0)`;
-      });
+      x.set(event.clientX);
+      y.set(event.clientY);
     };
     const onPointerOver = (event: PointerEvent) => {
-      if (event.target instanceof Element && event.target.closest(TARGET_SELECTOR)) {
-        cursor.classList.add('cursor-target');
-      }
+      setCursorTarget(
+        event.target instanceof Element && Boolean(event.target.closest(TARGET_SELECTOR)),
+      );
     };
     const onPointerOut = (event: PointerEvent) => {
-      if (event.target instanceof Element && event.target.closest(TARGET_SELECTOR)) {
-        cursor.classList.remove('cursor-target');
-      }
+      const relatedTarget = event.relatedTarget;
+      setCursorTarget(
+        relatedTarget instanceof Element && Boolean(relatedTarget.closest(TARGET_SELECTOR)),
+      );
     };
 
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     document.addEventListener('pointerover', onPointerOver, { passive: true });
     document.addEventListener('pointerout', onPointerOut, { passive: true });
     return () => {
-      window.cancelAnimationFrame(frame);
       window.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerover', onPointerOver);
       document.removeEventListener('pointerout', onPointerOut);
       document.body.classList.remove('custom-cursor-enabled');
     };
-  }, [finePointer, reducedMotion]);
+  }, [finePointer, isTouch, reducedMotion, x, y]);
 
-  if (!finePointer || reducedMotion) return null;
-  return <div aria-hidden="true" className="cursor-reticle" ref={cursorRef} />;
+  if (!finePointer || isTouch || reducedMotion) return null;
+  return (
+    <m.div
+      aria-hidden="true"
+      animate={{ scale: cursorTarget ? 1.5 : 1 }}
+      className={`cursor-reticle${cursorTarget ? ' cursor-target' : ''}`}
+      initial={false}
+      style={{ x: springX, y: springY }}
+      transition={motionSprings.cursor}
+    />
+  );
 }
