@@ -94,8 +94,8 @@
    the sweep cannot stutter under the click. */
 .btn-hire {
   color: var(--text-on-accent);
-  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-green) 100%);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), var(--glow-cyan-sm);
+  background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-green) 100%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), var(--glow-teal-sm);
 }
 
 .btn-hire::after {
@@ -111,7 +111,7 @@
 
 .btn-hire:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5), var(--glow-cyan-md);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5), var(--glow-teal-md);
 }
 
 .btn-hire:hover::after {
@@ -120,7 +120,7 @@
 }
 
 .btn-hire:active {
-  box-shadow: var(--glow-cyan-sm);
+  box-shadow: var(--glow-teal-sm);
 }
 
 .btn-hire:active::after {
@@ -157,17 +157,17 @@
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: linear-gradient(180deg, var(--accent-cyan-soft), var(--glass-bg-hover));
+  background: linear-gradient(180deg, var(--accent-teal-soft), var(--glass-bg-hover));
   opacity: 0;
   transition: opacity var(--duration-base) var(--ease-out-expo);
 }
 
 .btn-glass:hover {
-  color: var(--accent-cyan);
+  color: var(--accent-teal);
   background: var(--glass-bg-hover);
-  border-color: var(--accent-cyan);
+  border-color: var(--accent-teal);
   transform: translateY(-3px);
-  box-shadow: var(--glow-cyan-sm), var(--shadow-hairline);
+  box-shadow: var(--glow-teal-sm), var(--shadow-hairline);
 }
 
 .btn-glass:hover::before {
@@ -188,9 +188,9 @@
    a sharp pass, not a soft one. */
 .btn-signal {
   color: var(--text-on-accent);
-  background: var(--accent-cyan);
+  background: var(--accent-teal);
   font-weight: var(--fw-bold);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), var(--glow-cyan-sm);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), var(--glow-teal-sm);
 }
 
 .btn-signal::after {
@@ -215,7 +215,7 @@
 }
 
 .btn-signal:active {
-  box-shadow: var(--glow-cyan-sm);
+  box-shadow: var(--glow-teal-sm);
 }
 
 .btn-signal:active::after {
@@ -256,7 +256,7 @@
 
 .btn-ghost:hover,
 .nav-cta:hover {
-  color: var(--accent-cyan);
+  color: var(--accent-teal);
 }
 
 .btn-ghost:hover::after,
@@ -298,10 +298,10 @@
 }
 
 .btn-icon:hover {
-  color: var(--accent-cyan);
-  border-color: var(--accent-cyan);
+  color: var(--accent-teal);
+  border-color: var(--accent-teal);
   background: var(--glass-bg-hover);
-  box-shadow: var(--glow-cyan-sm);
+  box-shadow: var(--glow-teal-sm);
 }
 
 .btn-icon:active {
@@ -313,8 +313,9 @@
    2. INLINE ACCENTS
    ========================================================================== */
 .highlight-span {
-  color: var(--accent-cyan);
+  color: var(--accent-amber);
   font-weight: var(--fw-semibold);
+  text-shadow: 0 0 12px var(--accent-amber-soft);
 }
 
 /* Rare, single-use emphasis — a company name or one accent word,
@@ -322,9 +323,9 @@
    kept for markup compatibility. Never apply this to interactive
    elements. */
 .purple-span {
-  color: var(--accent-blue);
+  color: var(--accent-coral);
   font-weight: var(--fw-semibold);
-  text-shadow: 0 0 10px var(--accent-blue-soft);
+  text-shadow: 0 0 10px var(--accent-coral-soft);
 }
 
 /* ==========================================================================
@@ -453,15 +454,15 @@
 /* Current — the role being worked right now (Innovision). Cyan fill,
    a brighter edge and a small ● in the accent. */
 .status-badge.current {
-  color: var(--text-cyan);
-  background: var(--accent-cyan-soft);
-  border-color: var(--border-cyan-strong);
+  color: var(--text-teal);
+  background: var(--accent-teal-soft);
+  border-color: var(--border-teal-strong);
 }
 
 .status-badge.current::before {
   content: "●";
   content: "●" / "";
-  color: var(--accent-cyan);
+  color: var(--accent-teal);
   font-size: 0.9em;
   line-height: 1;
 }
@@ -526,7 +527,7 @@
 }
 
 .site-badge:hover {
-  border-color: var(--border-cyan);
+  border-color: var(--border-teal);
   color: var(--text-primary);
 }
 
@@ -582,17 +583,17 @@
   right: 0;
   height: 1px;
   pointer-events: none;
-  background: linear-gradient(90deg, transparent 0%, var(--accent-cyan) 50%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, var(--accent-teal) 50%, transparent 100%);
   opacity: 0;
   transition: opacity var(--duration-slow) var(--ease-out-expo);
 }
 
 @media (hover: hover) {
   .glass-card:hover {
-    border-color: var(--border-cyan-strong);
+    border-color: var(--border-teal-strong);
     background: var(--glass-bg-hover);
     transform: translateY(-3px);
-    box-shadow: var(--shadow-hover), inset 0 0 48px rgba(var(--accent-cyan-rgb), 0.04);
+    box-shadow: var(--shadow-hover), inset 0 0 48px rgba(var(--accent-teal-rgb), 0.04);
   }
 
   .glass-card:hover::after {
@@ -632,10 +633,10 @@
   opacity: 0;
   transition: opacity var(--duration-slow) var(--ease-out-expo);
   background-image:
-    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
-    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
-    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan)),
-    linear-gradient(var(--accent-cyan), var(--accent-cyan)), linear-gradient(var(--accent-cyan), var(--accent-cyan));
+    linear-gradient(var(--accent-teal), var(--accent-teal)), linear-gradient(var(--accent-teal), var(--accent-teal)),
+    linear-gradient(var(--accent-teal), var(--accent-teal)), linear-gradient(var(--accent-teal), var(--accent-teal)),
+    linear-gradient(var(--accent-teal), var(--accent-teal)), linear-gradient(var(--accent-teal), var(--accent-teal)),
+    linear-gradient(var(--accent-teal), var(--accent-teal)), linear-gradient(var(--accent-teal), var(--accent-teal));
   background-position: top left, top left, top right, top right, bottom left, bottom left, bottom right, bottom right;
   background-size: 14px 1.5px, 1.5px 14px, 14px 1.5px, 1.5px 14px, 14px 1.5px, 1.5px 14px, 14px 1.5px, 1.5px 14px;
   background-repeat: no-repeat;
@@ -668,8 +669,8 @@
   .glass-card--readout:hover {
     transform: none;
     background: var(--glass-bg-soft);
-    border-bottom-color: var(--border-cyan);
-    box-shadow: 0 10px 24px -14px rgba(var(--accent-cyan-rgb), 0.4);
+    border-bottom-color: var(--border-teal);
+    box-shadow: 0 10px 24px -14px rgba(var(--accent-teal-rgb), 0.4);
   }
 }
 
@@ -804,22 +805,22 @@
 }
 
 .log-status.active {
-  color: var(--accent-cyan);
-  border-color: var(--border-cyan);
-  background: var(--accent-cyan-soft);
+  color: var(--accent-teal);
+  border-color: var(--border-teal);
+  background: var(--accent-teal-soft);
 }
 
 .log-status.current {
-  color: var(--text-cyan);
-  border-color: var(--border-cyan-strong);
-  background: var(--accent-cyan-soft);
-  box-shadow: var(--glow-cyan-sm);
+  color: var(--text-teal);
+  border-color: var(--border-teal-strong);
+  background: var(--accent-teal-soft);
+  box-shadow: var(--glow-teal-sm);
 }
 
 .log-status.current::before {
   content: "●";
   content: "●" / "";
-  color: var(--accent-cyan);
+  color: var(--accent-teal);
   font-size: 0.9em;
   line-height: 1;
 }
@@ -878,7 +879,7 @@
   flex: none;
   width: 1px;
   height: 16px;
-  background: linear-gradient(180deg, transparent, var(--border-cyan), transparent);
+  background: linear-gradient(180deg, transparent, var(--border-teal), transparent);
   opacity: 0.5;
 }
 
@@ -942,11 +943,11 @@
   overscroll-behavior: contain;
   padding: var(--space-xl);
   background: var(--glass-bg-strong);
-  border: 1px solid var(--border-cyan-strong);
+  border: 1px solid var(--border-teal-strong);
   border-radius: var(--radius-xl);
   box-shadow:
     var(--shadow-panel-lg),
-    var(--glow-cyan-sm),
+    var(--glow-teal-sm),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
   transform: scale(0.94) translateY(20px);
   opacity: 0;
@@ -970,7 +971,7 @@
 
 .modal-window::-webkit-scrollbar-thumb {
   background: var(--bg-surface);
-  border: 1px solid var(--border-cyan);
+  border: 1px solid var(--border-teal);
   border-radius: var(--radius-full);
 }
 
@@ -1010,11 +1011,11 @@
 }
 
 .modal-close-btn:hover {
-  background: var(--accent-cyan);
-  border-color: var(--accent-cyan);
+  background: var(--accent-teal);
+  border-color: var(--accent-teal);
   color: var(--text-on-accent);
   transform: rotate(90deg);
-  box-shadow: var(--glow-cyan-sm);
+  box-shadow: var(--glow-teal-sm);
 }
 
 .modal-img {
@@ -1082,7 +1083,7 @@
 
 .modal-gallery > *:hover,
 .modal-gallery > .is-active {
-  border-color: var(--accent-cyan);
+  border-color: var(--accent-teal);
 }
 
 .modal-gallery > *:hover img,
@@ -1179,9 +1180,9 @@
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
-  border-color: var(--accent-cyan);
+  border-color: var(--accent-teal);
   background: var(--bg-surface-hover);
-  box-shadow: var(--glow-cyan-sm);
+  box-shadow: var(--glow-teal-sm);
 }
 
 textarea.form-input,
@@ -1243,7 +1244,7 @@ textarea.form-input,
   font-size: var(--fs-2xs);
   letter-spacing: var(--ls-widest);
   text-transform: uppercase;
-  color: var(--accent-cyan);
+  color: var(--accent-teal);
   background: var(--bg-elevated);
   border-radius: var(--radius-sm);
 }
@@ -1390,7 +1391,7 @@ nav.nav-scrolled {
 }
 
 .brand-logo:hover {
-  color: var(--accent-cyan);
+  color: var(--accent-teal);
 }
 
 .brand-logo .dot-span {
@@ -1433,7 +1434,7 @@ nav.nav-scrolled {
   left: 0;
   width: 100%;
   height: 1px;
-  background: var(--accent-cyan);
+  background: var(--accent-teal);
   transform: scaleX(0);
   transform-origin: center;
   transition: transform var(--duration-base) var(--ease-out-expo);
@@ -1450,7 +1451,7 @@ nav.nav-scrolled {
 /* Current section — cyan text, the underline held open, and a 4px dot
    just before the label. */
 .nav-links a.is-current {
-  color: var(--accent-cyan);
+  color: var(--accent-teal);
 }
 
 .nav-links a.is-current::after {
@@ -1465,7 +1466,7 @@ nav.nav-scrolled {
   width: 4px;
   height: 4px;
   border-radius: var(--radius-full);
-  background: var(--accent-cyan);
+  background: var(--accent-teal);
   transform: translateY(-50%);
 }
 
@@ -1553,7 +1554,7 @@ nav.nav-scrolled {
   overscroll-behavior: contain;
   background: var(--glass-bg-strong);
   border-bottom: 0;
-  border-left: 1px solid var(--border-cyan);
+  border-left: 1px solid var(--border-teal);
   backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
   -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
   transform: translateX(100%);
@@ -1607,7 +1608,7 @@ nav.nav-scrolled {
   font-family: var(--font-mono);
   font-size: var(--fs-xs);
   letter-spacing: var(--ls-wider);
-  color: var(--accent-cyan);
+  color: var(--accent-teal);
 }
 
 .nav-drawer-links a:hover,
@@ -1677,8 +1678,8 @@ body.modal-open {
   z-index: var(--z-toast);
   overflow: hidden;
   pointer-events: none;
-  background: linear-gradient(90deg, var(--accent-cyan) 0%, var(--accent-green) 100%);
-  box-shadow: var(--glow-cyan-sm);
+  background: linear-gradient(90deg, var(--accent-teal) 0%, var(--accent-green) 100%);
+  box-shadow: var(--glow-teal-sm);
   transition: width var(--duration-fast) linear;
   will-change: width;
 }
@@ -1731,7 +1732,7 @@ body.modal-open {
   padding: var(--space-sm) var(--space-md);
   background: var(--glass-bg-strong);
   border: 1px solid var(--border-subtle);
-  border-left: 3px solid var(--accent-cyan);
+  border-left: 3px solid var(--accent-teal);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-panel);
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
@@ -1753,7 +1754,7 @@ body.modal-open {
   font-size: var(--fs-sm);
   font-weight: var(--fw-bold);
   line-height: var(--lh-snug);
-  color: var(--accent-cyan);
+  color: var(--accent-teal);
 }
 
 .toast-icon::before {
@@ -1799,7 +1800,7 @@ body.modal-open {
 }
 
 .toast--info {
-  border-left-color: var(--accent-cyan);
+  border-left-color: var(--accent-teal);
 }
 
 .toast--success {
@@ -1911,7 +1912,7 @@ body.modal-open {
 }
 
 .boot-progress-fill {
-  color: var(--accent-cyan);
+  color: var(--accent-teal);
 }
 
 /* SKIP [ENTER] — ghost-button vocabulary: mono, quiet, cyan on hover. */
@@ -1932,7 +1933,7 @@ body.modal-open {
 }
 
 .boot-skip:hover {
-  color: var(--accent-cyan);
+  color: var(--accent-teal);
 }
 
 /* End of the ritual: the overlay fades on the in-out-quart curve and
@@ -2097,7 +2098,7 @@ body.modal-open {
 }
 
 .btn-signal:focus-visible {
-  box-shadow: var(--focus-ring), var(--glow-cyan-md);
+  box-shadow: var(--focus-ring), var(--glow-teal-md);
 }
 
 .form-input:focus-visible,
@@ -2105,7 +2106,7 @@ body.modal-open {
 .form-textarea:focus-visible {
   outline: 2px solid transparent;
   outline-offset: -2px;
-  box-shadow: var(--focus-ring-inset), var(--glow-cyan-sm);
+  box-shadow: var(--focus-ring-inset), var(--glow-teal-sm);
 }
 
 /* ==========================================================================

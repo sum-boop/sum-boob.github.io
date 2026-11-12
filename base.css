@@ -143,7 +143,7 @@ body {
   position: relative;
   isolation: isolate;
   background-color: var(--bg-base);
-  background-image: var(--bg-radial-cyan), var(--bg-radial-green), var(--bg-radial-teal), var(--bg-radial-amber);
+  background-image: var(--bg-radial-teal), var(--bg-radial-amber), var(--bg-radial-coral), var(--bg-radial-blue), var(--bg-radial-green);
   background-repeat: no-repeat;
   background-attachment: fixed;
   color: var(--text-primary);
@@ -340,7 +340,7 @@ code {
   background: var(--glass-bg);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
-  color: var(--text-cyan);
+  color: var(--text-teal);
 }
 
 pre {
@@ -376,7 +376,7 @@ pre {
   font-weight: var(--fw-medium);
   letter-spacing: var(--ls-widest);
   text-transform: uppercase;
-  color: var(--text-cyan);
+  color: var(--text-teal);
 }
 
 .text-muted {
@@ -384,8 +384,8 @@ pre {
 }
 
 .text-glow {
-  color: var(--accent-cyan);
-  text-shadow: var(--text-glow-cyan);
+  color: var(--accent-teal);
+  text-shadow: var(--text-glow-teal);
 }
 
 /* ================================================================
@@ -424,7 +424,7 @@ pre {
 
 .readout--live .readout__value {
   color: var(--readout-live-color);
-  text-shadow: var(--text-glow-cyan);
+  text-shadow: var(--text-glow-teal);
 }
 
 /* ================================================================
@@ -436,13 +436,13 @@ pre {
    would disappear, so selected text now stays bright.
    ================================================================ */
 ::selection {
-  background: var(--accent-cyan-soft);
+  background: var(--accent-teal-soft);
   color: var(--text-primary);
   text-shadow: none;
 }
 
 ::-moz-selection {
-  background: var(--accent-cyan-soft);
+  background: var(--accent-teal-soft);
   color: var(--text-primary);
   text-shadow: none;
 }
@@ -490,7 +490,7 @@ select:focus-visible,
   select:focus-visible,
   [tabindex]:focus-visible,
   .focus-inset:focus-visible {
-    outline-color: var(--accent-cyan);
+    outline-color: var(--accent-teal);
   }
 }
 
@@ -512,7 +512,7 @@ select:focus-visible,
 @supports not selector(::-webkit-scrollbar) {
   html {
     scrollbar-width: thin;
-    scrollbar-color: var(--accent-cyan) var(--bg-void);
+    scrollbar-color: var(--accent-teal) var(--bg-void);
   }
 
   .scrollbar-live {
@@ -532,20 +532,20 @@ select:focus-visible,
 
 ::-webkit-scrollbar-thumb {
   background: var(--bg-surface);
-  border: 1px solid var(--border-cyan);
+  border: 1px solid var(--border-teal);
   border-radius: var(--radius-full);
   transition: background var(--duration-base) var(--ease-smooth),
               box-shadow var(--duration-base) var(--ease-smooth);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-cyan);
-  border-color: var(--accent-cyan);
-  box-shadow: var(--glow-cyan-md);
+  background: var(--accent-teal);
+  border-color: var(--accent-teal);
+  box-shadow: var(--glow-teal-md);
 }
 
 ::-webkit-scrollbar-thumb:active {
-  box-shadow: var(--glow-cyan-lg);
+  box-shadow: var(--glow-teal-lg);
 }
 
 ::-webkit-scrollbar-corner {
@@ -616,13 +616,13 @@ select:focus-visible,
   background: linear-gradient(
     90deg,
     transparent 0%,
-    var(--accent-cyan-soft) 20%,
-    var(--accent-cyan) 50%,
-    var(--accent-cyan-soft) 80%,
+    var(--accent-teal-soft) 20%,
+    var(--accent-teal) 50%,
+    var(--accent-teal-soft) 80%,
     transparent 100%
   );
   opacity: var(--scanline-opacity);
-  box-shadow: var(--glow-cyan-sm);
+  box-shadow: var(--glow-teal-sm);
   animation: scanMove var(--duration-scan-loop, 9s) linear infinite;
   will-change: top;
 }
@@ -644,8 +644,8 @@ select:focus-visible,
     background: linear-gradient(
       90deg,
       transparent 0%,
-      var(--accent-cyan-soft) 30%,
-      var(--accent-cyan-soft) 70%,
+      var(--accent-teal-soft) 30%,
+      var(--accent-teal-soft) 70%,
       transparent 100%
     );
     opacity: 0;
@@ -674,43 +674,44 @@ select:focus-visible,
 }
 
 .orb-1 {
-  width: 520px;
-  height: 520px;
-  top: -12%;
-  left: -10%;
-  background: var(--accent-blue, #3b82f6);
+  width: 560px;
+  height: 560px;
+  top: -14%;
+  left: -12%;
+  background: var(--accent-coral);
+  opacity: 0.18;
 }
 
 .orb-2 {
-  width: 620px;
-  height: 620px;
-  right: -12%;
-  bottom: 0%;
-  background: var(--accent-cyan);
+  width: 660px;
+  height: 660px;
+  right: -14%;
+  bottom: -5%;
+  background: var(--accent-teal);
+  opacity: 0.20;
   animation-delay: -12s;
 }
 
 .orb-3 {
-  width: 420px;
-  height: 420px;
-  top: 42%;
-  left: 38%;
-  background: var(--accent-teal);
-  opacity: 0.12;
+  width: 480px;
+  height: 480px;
+  top: 38%;
+  left: 35%;
+  background: var(--accent-amber);
+  opacity: 0.14;
   animation-delay: -6s;
 }
 
-/* A surveillance tell: a warm amber ember near the top-right of the
-   hero, hinting that not everything is nominal. Near-invisible at
-   rest — if anyone notices it consciously, it is too strong. */
+/* A surveillance tell: a blue ember near the top-right of the
+   hero, adding a cool counterpoint to the warm orbs. */
 .orb-4 {
-  width: 280px;
-  height: 280px;
-  top: 8%;
-  right: 6%;
-  background: var(--accent-amber);
-  opacity: 0.06;
-  filter: blur(110px);
+  width: 320px;
+  height: 320px;
+  top: 6%;
+  right: 4%;
+  background: var(--accent-blue);
+  opacity: 0.12;
+  filter: blur(120px);
   animation-delay: -18s;
 }
 
@@ -775,7 +776,7 @@ select:focus-visible,
   width: 100%;
   height: 1px;
   border: 0;
-  background: linear-gradient(90deg, transparent, var(--border-cyan), transparent);
+  background: linear-gradient(90deg, transparent, var(--border-teal), transparent);
   opacity: 0.4;
 }
 

@@ -1,5 +1,5 @@
 /* ================================================================
-   CCTV COMMAND CENTER — DESIGN TOKENS
+   CCTV COMMAND CENTER — DESIGN TOKENS v3
    variables.css
 
    Design philosophy:
@@ -9,140 +9,158 @@
      body copy, UI labels, buttons, descriptions.
    → MONO (JetBrains Mono) carries system readouts — tags,
      timestamps, status, coordinates, technical metadata.
-   → NEON IS A SIGNAL, NOT WALLPAPER. Cyan, green, and blue are
-     reserved for the one thing that matters in a given view:
-     live status, active nav, primary CTA. The rest of the interface
-     is quiet obsidian, so color always means something.
+   → COLOUR IS THE INTERFACE. The palette is a full spectrum —
+     teal, amber, coral, blue, green — each hue owning a section
+     so the eye journeys through colour as it scrolls. The dark
+     obsidian base is the canvas; the hues are the paint.
 
-   Aesthetic: "Editorial precision meets control-room technicality."
-   Surveillance Command Center, elevated to award-winning level.
+   Aesthetic: "Editorial precision meets control-room technicality,
+   saturated with cinematic colour."
 
    Map of the file:
    01–16  Foundation — palette, glass, accents, type, space, motion,
           atmosphere, cursor, imagery, layering, focus.
    17–21  Instruments — network topology, readouts, experience rail,
-          boot terminal, career footprint. Every one of them sits
-          silent at rest and speaks only when a state goes active.
+          boot terminal, career footprint.
    ================================================================ */
 
 :root {
 
   /* ==============================================================
-     1. CORE PALETTE — obsidian depth scale
-     Seven steps from near-black upward. Most of the page lives
-     between --bg-base and --bg-elevated; surfaces are used sparingly
-     so that elevation always reads as deliberate.
+     1. CORE PALETTE — obsidian depth scale with warm undertone
+     Seven steps from near-black upward, now with a subtle warm
+     charcoal undertone instead of pure blue-black. The warmth
+     lets amber and coral accents sit naturally on the surface.
      ============================================================== */
-  --bg-void:            #040508;
-  --bg-base:            #080a10;
-  --bg-elevated:        #0d1019;
-  --bg-surface:         #131722;
-  --bg-surface-hover:   #181d2a;
-  --bg-surface-active:  #1e2433;
-  --bg-inset:           #030407;
+  --bg-void:            #060608;
+  --bg-base:            #0b0a0f;
+  --bg-elevated:        #121118;
+  --bg-surface:         #1a1822;
+  --bg-surface-hover:   #232030;
+  --bg-surface-active:  #2c2839;
+  --bg-inset:           #050407;
 
-  /* Atmosphere — used once or twice per page, never tiled.
-     These gradients anchor the eye to a single focal point. */
-  --bg-radial-cyan:   radial-gradient(circle at 50% 0%, rgba(0, 229, 255, 0.07), transparent 62%);
-  --bg-radial-green:  radial-gradient(circle at 50% 100%, rgba(0, 255, 156, 0.05), transparent 62%);
-  --bg-radial-teal:   radial-gradient(circle at 80% 30%, rgba(45, 212, 191, 0.06), transparent 55%);
-  --bg-radial-amber:  radial-gradient(circle at 20% 70%, rgba(251, 191, 36, 0.05), transparent 55%);
-  --bg-vignette:      radial-gradient(ellipse at center, transparent 45%, rgba(0, 0, 0, 0.6) 100%);
+  /* Atmosphere — bolder, multi-hue. These gradients now carry
+     enough saturation to be visible as colour zones, not just
+     subtle glows. Each anchors a different part of the page. */
+  --bg-radial-teal:   radial-gradient(circle at 50% 0%, rgba(45, 212, 191, 0.12), transparent 55%);
+  --bg-radial-amber:  radial-gradient(circle at 85% 20%, rgba(251, 191, 36, 0.10), transparent 50%);
+  --bg-radial-coral:  radial-gradient(circle at 15% 60%, rgba(255, 107, 107, 0.08), transparent 50%);
+  --bg-radial-blue:   radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.09), transparent 50%);
+  --bg-radial-green:  radial-gradient(circle at 50% 100%, rgba(0, 255, 156, 0.07), transparent 55%);
+  --bg-vignette:      radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.55) 100%);
 
   /* ==============================================================
      2. GLASS SURFACES
-     Frosted panels float above the obsidian base. Three weights:
-     soft (ambient cards), default (standard panels), strong
-     (modals, headers, anything that must dominate).
+     Frosted panels now carry a warm purple-tinted charcoal instead
+     of pure blue-black, so they sit harmoniously over the warmer
+     base and let coloured accents pop.
      ============================================================== */
-  --glass-bg:             rgba(13, 16, 25, 0.52);
-  --glass-bg-strong:      rgba(13, 16, 25, 0.80);
-  --glass-bg-soft:        rgba(13, 16, 25, 0.30);
-  --glass-bg-hover:       rgba(24, 29, 42, 0.85);
+  --glass-bg:             rgba(26, 24, 34, 0.55);
+  --glass-bg-strong:      rgba(26, 24, 34, 0.82);
+  --glass-bg-soft:        rgba(26, 24, 34, 0.30);
+  --glass-bg-hover:       rgba(35, 32, 48, 0.88);
 
-  --glass-border:         rgba(190, 205, 235, 0.08);
-  --glass-border-strong:  rgba(190, 205, 235, 0.16);
-  --glass-highlight:      rgba(255, 255, 255, 0.05);
+  --glass-border:         rgba(200, 195, 230, 0.10);
+  --glass-border-strong:  rgba(200, 195, 230, 0.20);
+  --glass-highlight:      rgba(255, 255, 255, 0.06);
 
   --glass-blur-soft:      8px;
   --glass-blur:           16px;
   --glass-blur-strong:    28px;
 
-  --glass-saturate:       130%;
+  --glass-saturate:       140%;
 
   /* ==============================================================
-     3. ACCENT SYSTEM
-     Cyan is the primary signal — reserve it for the single most
-     important element in any given view (live status, active nav,
-     primary CTA, focus ring).
-     Green means "operational / good" — online states, success,
-     a resolved signal.
-     Blue is a rare tertiary — used at most once per page,
-     never for interactive states. It exists to break the
-     cyan/green duality on a single editorial moment.
+     3. ACCENT SYSTEM — full spectrum, section-owned
+     TEAL is the new primary — cooler than cyan but richer, used
+     for live status, active nav, primary CTA, focus ring.
+     AMBER is the energy accent — stats, numbers, highlights,
+     the "data is flowing" signal.
+     CORAL is the alert/live accent — REC badges, live indicators,
+     replacing the old red. Warmer and more cinematic.
+     BLUE is the editorial accent — company names, section variety.
+     GREEN remains operational — online status, success, resolved.
+     CYAN is retained as a legacy signal for the topology and rail.
 
-     The palette is one family (cyan) with two signals (green =
-     operational, red = live/alert) and one rare guest (blue).
-     No further hues are introduced anywhere in this file —
-     sections 17–21 are built entirely from these.
+     Each section of the page owns a dominant hue so the scroll
+     feels like moving through a colour spectrum.
      ============================================================== */
+  --accent-teal:        #2dd4bf;
+  --accent-teal-rgb:    45, 212, 191;
+  --accent-teal-soft:   rgba(45, 212, 191, 0.18);
+  --accent-teal-mid:    rgba(45, 212, 191, 0.42);
+
+  --accent-amber:       #fbbf24;
+  --accent-amber-rgb:   251, 191, 36;
+  --accent-amber-soft:  rgba(251, 191, 36, 0.18);
+  --accent-amber-mid:   rgba(251, 191, 36, 0.42);
+
+  --accent-coral:       #ff6b6b;
+  --accent-coral-rgb:   255, 107, 107;
+  --accent-coral-soft:  rgba(255, 107, 107, 0.18);
+  --accent-coral-mid:   rgba(255, 107, 107, 0.42);
+
+  --accent-blue:        #60a5fa;
+  --accent-blue-rgb:    96, 165, 250;
+  --accent-blue-soft:   rgba(96, 165, 250, 0.18);
+  --accent-blue-mid:    rgba(96, 165, 250, 0.42);
+
+  --accent-green:       #00ff9c;
+  --accent-green-rgb:   0, 255, 156;
+  --accent-green-soft:  rgba(0, 255, 156, 0.18);
+  --accent-green-mid:   rgba(0, 255, 156, 0.42);
+
   --accent-cyan:        #00e5ff;
   --accent-cyan-rgb:    0, 229, 255;
   --accent-cyan-soft:   rgba(0, 229, 255, 0.16);
   --accent-cyan-mid:    rgba(0, 229, 255, 0.38);
 
-  --accent-green:       #00ff9c;
-  --accent-green-rgb:   0, 255, 156;
-  --accent-green-soft:  rgba(0, 255, 156, 0.16);
-  --accent-green-mid:   rgba(0, 255, 156, 0.38);
-
-  --accent-blue:        #3b82f6;
-  --accent-blue-rgb:    59, 130, 246;
-  --accent-blue-soft:   rgba(59, 130, 246, 0.16);
-
-  --accent-teal:        #2dd4bf;
-  --accent-teal-rgb:    45, 212, 191;
-  --accent-teal-soft:   rgba(45, 212, 191, 0.16);
-  --accent-teal-mid:    rgba(45, 212, 191, 0.38);
-
-  --accent-amber:       #fbbf24;
-  --accent-amber-rgb:   251, 191, 36;
-  --accent-amber-soft:  rgba(251, 191, 36, 0.16);
-  --accent-amber-mid:   rgba(251, 191, 36, 0.38);
-
-  /* Legacy aliases — kept so older components.css / animations.css
-     references continue to resolve without edits. */
-  --neon-cyan:   var(--accent-cyan);
+  /* Legacy aliases — kept so older references resolve. */
+  --neon-cyan:   var(--accent-teal);
   --neon-green:  var(--accent-green);
   --neon-blue:   var(--accent-blue);
 
   /* ==============================================================
      4. STATUS COLORS — system states
-     Semantic layer used by badges, dots, and status pills.
-     Never used decoratively — a red dot means something is live
-     or wrong, not "look, red."
+     CORAL replaces red for live/alert — warmer, more cinematic.
+     GREEN stays operational. AMBER is warning. Teal is scanning.
      ============================================================== */
-  --status-live:        #ff3b5c;
-  --status-live-rgb:    255, 59, 92;
+  --status-live:        #ff6b6b;
+  --status-live-rgb:    255, 107, 107;
 
   --status-online:      #00ff9c;
   --status-online-rgb:  0, 255, 156;
 
-  --status-offline:     #4a5468;
-  --status-offline-rgb: 74, 84, 104;
+  --status-offline:     #5a5468;
+  --status-offline-rgb: 90, 84, 104;
 
-  --status-alert:       #ff3b5c;
-  --status-warning:     #ffb703;
-  --status-warning-rgb: 255, 183, 3;
+  --status-alert:       #ff6b6b;
+  --status-warning:     #fbbf24;
+  --status-warning-rgb: 251, 191, 36;
 
-  --status-scanning:    #00e5ff;
+  --status-scanning:    var(--accent-teal);
 
   /* ==============================================================
-     5. GLOW TOKENS — deliberately short list
-     Three weights per color is enough. Use --glow-signal only for
-     the single hero moment on a page (one button, one badge,
-     one live indicator) — never for two elements at once.
+     5. GLOW TOKENS — full spectrum
+     Each hue has sm/md/lg glow weights. --glow-signal remains
+     the single hero moment glow, now teal-based.
      ============================================================== */
+  --glow-teal-sm:   0 0 10px var(--accent-teal-soft);
+  --glow-teal-md:   0 0 24px var(--accent-teal-mid);
+  --glow-teal-lg:   0 0 48px var(--accent-teal-mid), 0 0 90px var(--accent-teal-soft);
+
+  --glow-amber-sm:  0 0 10px var(--accent-amber-soft);
+  --glow-amber-md:  0 0 24px var(--accent-amber-mid);
+  --glow-amber-lg:  0 0 48px var(--accent-amber-mid), 0 0 90px var(--accent-amber-soft);
+
+  --glow-coral-sm:  0 0 10px var(--accent-coral-soft);
+  --glow-coral-md:  0 0 24px var(--accent-coral-mid);
+  --glow-coral-lg:  0 0 48px var(--accent-coral-mid), 0 0 90px var(--accent-coral-soft);
+
+  --glow-blue-sm:   0 0 10px var(--accent-blue-soft);
+  --glow-blue-md:   0 0 24px var(--accent-blue-mid);
+
   --glow-cyan-sm:   0 0 10px var(--accent-cyan-soft);
   --glow-cyan-md:   0 0 24px var(--accent-cyan-mid);
   --glow-cyan-lg:   0 0 48px var(--accent-cyan-mid), 0 0 90px var(--accent-cyan-soft);
@@ -150,109 +168,97 @@
   --glow-green-sm:  0 0 10px var(--accent-green-soft);
   --glow-green-md:  0 0 24px var(--accent-green-mid);
 
-  --glow-teal-sm:   0 0 10px var(--accent-teal-soft);
-  --glow-teal-md:   0 0 24px var(--accent-teal-mid);
-
-  --glow-amber-sm:  0 0 10px var(--accent-amber-soft);
-  --glow-amber-md:  0 0 24px var(--accent-amber-mid);
-
   --glow-alert-md:  0 0 22px rgba(var(--status-live-rgb), 0.5);
 
-  --glow-signal:    0 0 60px var(--accent-cyan-mid), 0 0 140px var(--accent-cyan-soft);
+  --glow-signal:    0 0 60px var(--accent-teal-mid), 0 0 140px var(--accent-teal-soft);
 
+  --text-glow-teal:  0 0 14px var(--accent-teal-mid);
+  --text-glow-amber: 0 0 14px var(--accent-amber-mid);
+  --text-glow-coral: 0 0 14px var(--accent-coral-mid);
   --text-glow-cyan:  0 0 14px var(--accent-cyan-mid);
   --text-glow-green: 0 0 14px var(--accent-green-mid);
 
   /* Panel depth */
   --shadow-panel:     0 8px 30px rgba(0, 0, 0, 0.5);
   --shadow-panel-lg:  0 20px 70px rgba(0, 0, 0, 0.65);
-  --shadow-hairline:  inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-hairline:  inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --shadow-hover:
     0 20px 60px rgba(0, 0, 0, 0.55),
-    0 0 30px var(--accent-cyan-soft),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    0 0 30px var(--accent-teal-soft),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 
   /* ==============================================================
      6. TEXT HIERARCHY
-     Four steps of neutral brightness on obsidian. The first three
-     (primary, secondary, tertiary) meet WCAG AA for normal text
-     against --bg-base and --bg-elevated. --text-muted is the
-     exception by design: it is for disabled states, hairline
-     decoration and inactive glyphs only — never for copy a visitor
-     is expected to read.
-     Accent text variants exist for mono readouts where a value
-     needs to visibly belong to a signal.
+     Four steps of neutral brightness on the warm obsidian base.
+     Accent text variants for each hue — used for mono readouts
+     where a value needs to visibly belong to a signal.
 
-     ACCENT-AS-TEXT AUDIT (contrast vs --bg-base #07080b, rounded;
-     re-verify if --bg-base ever changes):
-       --accent-cyan     ≈ 13 : 1   passes AA (normal text)
+     ACCENT-AS-TEXT AUDIT (contrast vs --bg-base #0b0a0f, rounded):
+       --accent-teal     ≈ 10.5 : 1  passes AA
+       --accent-amber    ≈ 12 : 1   passes AA
+       --accent-coral    ≈ 5.8 : 1  passes AA
+       --accent-blue     ≈ 6.5 : 1  passes AA
        --accent-green    ≈ 15 : 1   passes AA
-       --accent-blue     ≈ 5.5 : 1  passes AA
-       --status-live     ≈ 5.8 : 1  passes AA
-       --status-warning  ≈ 11.5 : 1 passes AA
-       --text-tertiary   ≈ 5.4 : 1  passes AA
-       --status-offline  ≈ 2.6 : 1  FAILS — decoration only
-       --text-muted      ≈ 2.8 : 1  FAILS — decoration only
-     The raw cyan clears the ratio numerically, but a fully saturated
-     #00e5ff at 11–14px on near-black halates and vibrates, so the
-     rule is: RAW ACCENTS (--accent-*) ARE FOR GLOW, FILLS, BORDERS
-     AND LARGE DISPLAY TYPE. Small text (under 18px / 14px bold)
-     that must sit in a signal color uses --text-cyan or --text-green.
+       --text-tertiary   ≈ 5.2 : 1  passes AA
+       --status-offline  ≈ 2.8 : 1  FAILS — decoration only
+       --text-muted      ≈ 2.9 : 1  FAILS — decoration only
      ============================================================== */
-  --text-primary:    #f2f5fa;
-  --text-secondary:  #a6b3c7;
-  --text-tertiary:   #79869c;
-  --text-muted:      #4d5768;
-  --text-on-accent:  #04101a;
-  --text-cyan:       #7fe8ff;
-  --text-green:      #7fffc4;
+  --text-primary:    #f3f0fa;
+  --text-secondary:  #b0abc0;
+  --text-tertiary:   #8278a0;
+  --text-muted:      #524c64;
+  --text-on-accent:  #06120f;
   --text-teal:       #5eead4;
   --text-amber:      #fcd34d;
+  --text-coral:      #fca5a5;
+  --text-blue:       #93c5fd;
+  --text-cyan:       #7fe8ff;
+  --text-green:      #7fffc4;
 
   /* ==============================================================
      7. BORDERS
-     Cool-white hairlines for structure, accent-tinted borders
-     for state. Alpha values are tuned for obsidian backgrounds
-     so a "subtle" border still reads as intentional.
+     Warm-tinted hairlines for structure, accent-tinted borders
+     for state. Each hue has its own border token.
      ============================================================== */
-  --border-subtle:       rgba(190, 205, 235, 0.06);
-  --border-default:      rgba(190, 205, 235, 0.12);
-  --border-strong:       rgba(190, 205, 235, 0.22);
+  --border-subtle:       rgba(200, 195, 230, 0.07);
+  --border-default:      rgba(200, 195, 230, 0.14);
+  --border-strong:       rgba(200, 195, 230, 0.24);
+
+  --border-teal:         rgba(45, 212, 191, 0.28);
+  --border-teal-strong:  rgba(45, 212, 191, 0.55);
+  --border-amber:        rgba(251, 191, 36, 0.28);
+  --border-amber-strong: rgba(251, 191, 36, 0.55);
+  --border-coral:        rgba(255, 107, 107, 0.28);
+  --border-coral-strong: rgba(255, 107, 107, 0.55);
+  --border-blue:         rgba(96, 165, 250, 0.28);
+  --border-blue-strong:  rgba(96, 165, 250, 0.55);
   --border-cyan:         rgba(0, 229, 255, 0.25);
   --border-cyan-strong:  rgba(0, 229, 255, 0.55);
   --border-green:        rgba(0, 255, 156, 0.25);
-  --border-teal:         rgba(45, 212, 191, 0.25);
-  --border-amber:        rgba(251, 191, 36, 0.25);
-  --border-alert:        rgba(255, 59, 92, 0.40);
+  --border-alert:        rgba(255, 107, 107, 0.40);
 
   /* ==============================================================
      8. TYPOGRAPHY — three-tier system
-     Display → editorial serif, large narrative moments only.
-     Body    → clean sans, everything a visitor actually reads.
-     Mono    → system readouts — tags, timestamps, labels, badges.
      ============================================================== */
   --font-display: 'Instrument Serif', 'Georgia', 'Times New Roman', serif;
   --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', 'Fira Code', ui-monospace, 'SFMono-Regular', monospace;
 
-  /* Fluid display sizes — scale smoothly across viewport */
+  /* Fluid display sizes */
   --fs-hero:      clamp(3rem, 5vw + 1.5rem, 7.5rem);
   --fs-display:   clamp(2.25rem, 3vw + 1.25rem, 4.5rem);
   --fs-section:   clamp(1.75rem, 2vw + 1rem, 2.75rem);
   --fs-subtitle:  clamp(1.05rem, 0.6vw + 0.85rem, 1.375rem);
 
-  /* Static scale — UI text, labels, body copy.
-     --fs-3xs is the floor: boot-sequence lines and micro
-     coordinates only. It is never used for anything a visitor
-     must read to understand the page. */
-  --fs-3xs:  0.625rem;   /* 10px — terminal boot lines, micro coordinates */
-  --fs-2xs:  0.6875rem;  /* 11px — mono micro-labels */
-  --fs-xs:   0.75rem;    /* 12px — badges, tags */
-  --fs-sm:   0.875rem;   /* 14px — secondary UI */
-  --fs-base: 1rem;       /* 16px — body */
-  --fs-md:   1.125rem;   /* 18px — lead paragraphs */
-  --fs-lg:   1.375rem;   /* 22px — subheads */
-  --fs-xl:   1.75rem;    /* 28px — inline large */
+  /* Static scale */
+  --fs-3xs:  0.625rem;
+  --fs-2xs:  0.6875rem;
+  --fs-xs:   0.75rem;
+  --fs-sm:   0.875rem;
+  --fs-base: 1rem;
+  --fs-md:   1.125rem;
+  --fs-lg:   1.375rem;
+  --fs-xl:   1.75rem;
 
   --fw-regular:  400;
   --fw-medium:   500;
@@ -266,42 +272,35 @@
 
   --ls-tightest: -0.03em;
   --ls-tight:    -0.01em;
-  --ls-normal:   0;
-  --ls-wide:     0.04em;
-  --ls-wider:    0.1em;
-  --ls-widest:   0.18em;
+  --ls-normal:  0;
+  --ls-wide:    0.04em;
+  --ls-wider:   0.1em;
+  --ls-widest:  0.18em;
 
   /* ==============================================================
-     9. SPACING & LAYOUT — generous, editorial rhythm
-     Section spacing leans large so the page breathes. Gutters
-     and container widths are tuned for a 1280px editorial grid.
-     --space-5xl and --container-wide exist for the two moments
-     that deserve more air: the closing contact section, and the
-     full-bleed hero grid.
+     9. SPACING & LAYOUT
      ============================================================== */
-  --space-3xs: 0.25rem;   /* 4px */
-  --space-2xs: 0.5rem;    /* 8px */
-  --space-xs:  0.75rem;   /* 12px */
-  --space-sm:  1rem;      /* 16px */
-  --space-md:  1.5rem;    /* 24px */
-  --space-lg:  2.25rem;   /* 36px */
-  --space-xl:  3.5rem;    /* 56px */
-  --space-2xl: 5.5rem;    /* 88px */
-  --space-3xl: 8rem;      /* 128px */
-  --space-4xl: 12rem;     /* 192px */
-  --space-5xl: 16rem;     /* 256px — closing / contact breathing room */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs:  0.75rem;
+  --space-sm:  1rem;
+  --space-md:  1.5rem;
+  --space-lg:  2.25rem;
+  --space-xl:  3.5rem;
+  --space-2xl: 5.5rem;
+  --space-3xl: 8rem;
+  --space-4xl: 12rem;
+  --space-5xl: 16rem;
 
   --container-max:    1280px;
-  --container-wide:   1440px;  /* full-bleed hero grid */
+  --container-wide:   1440px;
   --container-narrow: 760px;
   --gutter:           clamp(1.5rem, 5vw, 5rem);
   --header-height:         76px;
-  --header-height-compact: 56px;  /* scrolled state */
+  --header-height-compact: 56px;
 
   /* ==============================================================
      10. RADIUS
-     Small radii dominate — this is a control room, not a
-     soft-cornered consumer app. --radius-full is for pills only.
      ============================================================== */
   --radius-xs:   3px;
   --radius-sm:   6px;
@@ -312,30 +311,13 @@
 
   /* ==============================================================
      11. MOTION
-     Editorial easing is the default — a slow start, a confident
-     settle. Sharp easing is reserved for state changes on
-     interactive controls (buttons, toggles).
-
-     Expo-out is the workhorse: fast off the line, long soft landing.
-     Reach for it directly on reveals. In-out-quart is its opposite
-     number — symmetrical and decisive — reserved for panels that
-     open and close (modals, drawers, the mobile menu).
-
-     Duration ladder, fastest to slowest:
-       micro (90)   hover micro-interactions — must feel instant
-       fast (150)   small state changes
-       base (300)   standard transitions
-       slow (550)   panel-level movement
-       slower (900) large choreography
-       reveal (1200) hero text and section titles — slow on purpose,
-                     this is the editorial beat of the site
      ============================================================== */
   --ease-smooth:       cubic-bezier(0.16, 1, 0.3, 1);
   --ease-editorial:    cubic-bezier(0.22, 1, 0.36, 1);
   --ease-sharp:        cubic-bezier(0.65, 0, 0.35, 1);
   --ease-bounce:       cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-out-expo:     cubic-bezier(0.16, 1, 0.3, 1);   /* identical curve to --ease-smooth, named explicitly */
-  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);  /* panel open / close */
+  --ease-out-expo:     cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
 
   --duration-micro:  90ms;
   --duration-fast:   150ms;
@@ -344,72 +326,52 @@
   --duration-slower: 900ms;
   --duration-reveal: 1200ms;
 
-  /* Long-running loops — scanning sweeps, live pulses */
   --duration-scan:  2400ms;
   --duration-pulse: 1800ms;
 
   /* ==============================================================
-     12. ATMOSPHERE — kept quiet by default
-     These are the "air" of the interface: a faint grid, a whisper
-     of scanlines, film grain, and a spotlight that can follow the
-     cursor. Every value here is deliberately subtle — if you can
-     point at the scanlines, they are too strong. The effect must
-     be felt, not seen.
+     12. ATMOSPHERE
+     The grid and spotlight now carry teal instead of cyan,
+     matching the new primary. Scanlines and grain unchanged.
      ============================================================== */
-  --grid-line-color:  rgba(0, 229, 255, 0.05);
+  --grid-line-color:  rgba(45, 212, 191, 0.06);
   --grid-line-size:   44px;
-  --scanline-opacity: 0.04;   /* ceiling — never raise above 0.04 */
+  --scanline-opacity: 0.04;
   --scanline-size:    3px;
-  --vignette-opacity: 0.55;
+  --vignette-opacity: 0.50;
 
-  /* Fine film-grain texture — an inline feTurbulence SVG applied
-     at very low opacity for depth. No external asset required.
-     Opacity trimmed to 0.028: on OLED panels the previous 0.035
-     lifted the blacks and read as dust rather than film. Overlay
-     blending keeps the grain in the mid-tones, where it belongs. */
   --grain-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'%3E%3C/feTurbulence%3E%3CfeColorMatrix type='saturate' values='0'%3E%3C/feColorMatrix%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'%3E%3C/rect%3E%3C/svg%3E");
   --grain-opacity:    0.028;
   --grain-blend-mode: overlay;
 
-  /* Soft light that can follow the cursor across a dark panel */
   --spotlight-size:   520px;
-  --spotlight-color:  rgba(0, 229, 255, 0.07);
+  --spotlight-color:  rgba(45, 212, 191, 0.09);
 
   /* ==============================================================
      13. CURSOR / RETICLE
-     Custom crosshair cursor. The large ring is the reticle; the
-     dot is the exact aim point. Three states:
-       rest  — cyan, thin ring. The operator is scanning.
-       alt   — green. A secondary acknowledgement.
-       lock  — TARGET ACQUIRED. Used when hovering interactive
-               cards: the ring tightens toward the target, thickens
-               a half-step and shifts to green. It should feel like
-               a camera locking focus.
+     The reticle now uses teal as its primary colour, with amber
+     as the alt/lock state — a warmer "focus locked" feel.
      ============================================================== */
   --cursor-size:        26px;
   --cursor-size-lg:     58px;
   --cursor-dot:         4px;
-  --cursor-color:       var(--accent-cyan);
-  --cursor-color-alt:   var(--accent-green);
+  --cursor-color:       var(--accent-teal);
+  --cursor-color-alt:   var(--accent-amber);
   --cursor-ring-width:  1px;
 
-  --cursor-color-lock:      var(--accent-green);
+  --cursor-color-lock:      var(--accent-amber);
   --cursor-ring-width-lock: 1.5px;
   --cursor-scale-lock:      1.35;
   --cursor-transition:      220ms var(--ease-sharp);
 
   /* ==============================================================
      14. IMAGE TREATMENT
-     Photography stays desaturated at rest and resolves to full
-     color on hover/focus — reads as "footage coming online."
      ============================================================== */
-  --image-filter-rest:  grayscale(0.55) contrast(1.05) brightness(0.92);
-  --image-filter-hover: grayscale(0) contrast(1.02) brightness(1);
+  --image-filter-rest:  grayscale(0.45) contrast(1.08) brightness(0.90) saturate(0.85);
+  --image-filter-hover: grayscale(0) contrast(1.04) brightness(1.02) saturate(1.1);
 
   /* ==============================================================
      15. Z-INDEX SCALE
-     Layered so that overlays never fight each other. Cursor sits
-     above everything — it is the user's presence in the UI.
      ============================================================== */
   --z-base:    1;
   --z-content: 5;
@@ -422,91 +384,53 @@
 
   /* ==============================================================
      16. FOCUS / ACCESSIBILITY
-     Cyan double-ring for keyboard focus. The outer dark ring
-     separates the cyan from any background, ensuring visibility
-     on both obsidian and glass surfaces.
-
-     --focus-ring-inset is for elements that sit flush against the
-     viewport edge (full-bleed nav bars, edge-anchored drawers, the
-     first and last rows of a scroll container) where an outward
-     ring would be clipped by overflow or the window itself. The
-     order is reversed — cyan at the edge, dark separator inside —
-     so the ring stays visible even when it cannot spread outward.
+     Teal double-ring for keyboard focus.
      ============================================================== */
-  --focus-ring:       0 0 0 2px var(--bg-base), 0 0 0 4px var(--accent-cyan);
-  --focus-ring-soft:  0 0 0 3px var(--accent-cyan-soft);
-  --focus-ring-inset: inset 0 0 0 2px var(--accent-cyan), inset 0 0 0 4px var(--bg-base);
+  --focus-ring:       0 0 0 2px var(--bg-base), 0 0 0 4px var(--accent-teal);
+  --focus-ring-soft:  0 0 0 3px var(--accent-teal-soft);
+  --focus-ring-inset: inset 0 0 0 2px var(--accent-teal), inset 0 0 0 4px var(--bg-base);
 
   /* ==============================================================
-     17. NETWORK TOPOLOGY — the live camera-network map
-     A slowly rotating sphere of endpoints: cameras, NVRs, switches,
-     with the operator console at the centre. It is the single
-     hero visualization of the site, recontextualised from a globe
-     into a surveillance network. Every color, glow, size and
-     duration lives here so the whole scene can be styled from
-     variables alone.
-
-     The rule is silence at rest. Idle nodes are barely-there dots;
-     links are hairlines you notice only when you look for them.
-     Cyan brightens only for the node under watch. Green marks a
-     node confirmed online; red marks signal lost — and red is
-     the only thing allowed to be loud.
-
-     The sphere must feel like it is breathing, not spinning:
-     a 90-second rotation and a 2.6-second pulse. If anyone can
-     see it turning, it is too fast.
+     17. NETWORK TOPOLOGY
+     The camera-network map now uses teal as its primary signal,
+     with amber for the active node and coral for alerts.
      ============================================================== */
-  /* Node states */
-  --topo-node-color:          rgba(0, 229, 255, 0.35);   /* idle endpoint — dim cyan */
-  --topo-node-color-active:   var(--accent-cyan);        /* currently monitored */
-  --topo-node-color-alert:    var(--status-live);        /* signal lost / offline */
-  --topo-node-color-online:   var(--accent-green);       /* confirmed online */
-  --topo-node-opacity-far:    0.35;                      /* far side of the sphere recedes */
+  --topo-node-color:          rgba(45, 212, 191, 0.35);
+  --topo-node-color-active:   var(--accent-amber);
+  --topo-node-color-alert:    var(--status-live);
+  --topo-node-color-online:   var(--accent-green);
+  --topo-node-opacity-far:    0.35;
 
-  /* Data-flow links */
-  --topo-link-color:          rgba(0, 229, 255, 0.07);   /* almost invisible */
-  --topo-link-color-active:   rgba(0, 229, 255, 0.45);   /* a feed is flowing */
+  --topo-link-color:          rgba(45, 212, 191, 0.08);
+  --topo-link-color-active:   rgba(45, 212, 191, 0.48);
 
-  /* Operator console — the centre node. White-hot core, cyan halo. */
-  --topo-core-color:          #eafcff;
-  --topo-core-halo:           rgba(0, 229, 255, 0.55);
+  --topo-core-color:          #eafff9;
+  --topo-core-halo:           rgba(45, 212, 191, 0.55);
 
-  /* Sphere body — a rim you infer rather than see */
-  --topo-sphere-rim:          rgba(0, 229, 255, 0.06);
+  --topo-sphere-rim:          rgba(45, 212, 191, 0.07);
 
-  /* Pulse glow weights — sm for idle ripples, md for the active
-     node, lg for the core and for alerts that need to land. */
-  --topo-glow-sm:      0 0 8px var(--accent-cyan-soft);
-  --topo-glow-md:      0 0 18px var(--accent-cyan-mid);
-  --topo-glow-lg:      0 0 32px var(--accent-cyan-mid), 0 0 64px var(--accent-cyan-soft);
+  --topo-glow-sm:      0 0 8px var(--accent-teal-soft);
+  --topo-glow-md:      0 0 18px var(--accent-teal-mid);
+  --topo-glow-lg:      0 0 32px var(--accent-teal-mid), 0 0 64px var(--accent-teal-soft);
   --topo-glow-online:  0 0 14px var(--accent-green-mid);
   --topo-glow-alert:   0 0 16px rgba(var(--status-live-rgb), 0.55);
 
-  /* Sizes */
   --topo-node-size:     4px;
   --topo-node-size-lg:  7px;
   --topo-core-size:     14px;
 
-  /* Timing — calmer than the standard pulse, and glacial rotation */
   --topo-pulse-duration:   2600ms;
   --topo-rotate-duration:  90s;
 
   /* ==============================================================
      18. SPEC-SHEET READOUTS
-     Measurement-first copy, rendered as instrument data:
-     "48 cameras · 12 sites · 99.97% uptime". A stat block must look
-     identical wherever it appears — hero strip, about, footer —
-     so its typography and color are decided once, here.
-
-     Value in mono, primary white. Label in tiny tracked-out
-     tertiary caps beneath it. Only a value that genuinely
-     updates live earns the cyan.
+     Values default to primary white; live values use teal.
      ============================================================== */
   --readout-value-color:     var(--text-primary);
   --readout-value-font:      var(--font-mono);
   --readout-value-size:      var(--fs-xl);
   --readout-value-weight:    var(--fw-medium);
-  --readout-live-color:      var(--accent-cyan);
+  --readout-live-color:      var(--accent-teal);
 
   --readout-label-color:     var(--text-tertiary);
   --readout-label-size:      var(--fs-2xs);
@@ -515,76 +439,49 @@
   --readout-divider-color:   var(--border-subtle);
 
   /* ==============================================================
-     19. EXPERIENCE RAIL — the monitor log
-     The Experience section is a vertical rail of log entries.
-     The line is a hairline; the dots are quiet until their entry
-     scrolls into focus, at which point one dot — and only one —
-     goes cyan, grows, and pulses. The rail should read like
-     scrubbing along a recording timeline.
+     19. EXPERIENCE RAIL
+     The timeline rail now uses teal for its active state.
      ============================================================== */
   --rail-line-width:         1px;
   --rail-line-color:         var(--border-subtle);
-  --rail-line-color-active:  var(--border-cyan);
+  --rail-line-color-active:  var(--border-teal);
 
   --rail-dot-size:           7px;
   --rail-dot-size-active:    11px;
   --rail-dot-color:          var(--text-muted);
-  --rail-dot-color-active:   var(--accent-cyan);
-  --rail-dot-glow-active:    var(--glow-cyan-md);
+  --rail-dot-color-active:   var(--accent-teal);
+  --rail-dot-glow-active:    var(--glow-teal-md);
 
   --rail-pulse-duration:     var(--duration-pulse);
 
   /* ==============================================================
      20. TERMINAL / BOOT SEQUENCE
-     The site opens with a short "initializing surveillance
-     network…" sequence — a ritual, not a roadblock. It must be
-     skippable, brief, and dark: a background deeper than the void,
-     brand-green text, a cyan cursor that blinks once a second, and
-     lines that arrive at a steady 55ms rhythm.
-
-     The boot text is decorative and should be marked aria-hidden
-     or skippable. Because of that, --terminal-text-muted borrows
-     --status-offline, which is intentionally below AA. Any boot
-     line that carries information a visitor needs must use
-     --terminal-text-muted-aa instead.
+     Boot terminal now uses teal text with an amber cursor —
+     a warmer, more cinematic boot ritual.
      ============================================================== */
-  --terminal-bg:                #010101;
-  --terminal-text:              var(--accent-green);
+  --terminal-bg:                #030305;
+  --terminal-text:              var(--accent-teal);
   --terminal-text-muted:        var(--status-offline);
   --terminal-text-muted-aa:     var(--text-tertiary);
-  --terminal-text-shadow:       0 0 10px rgba(var(--accent-green-rgb), 0.28);
+  --terminal-text-shadow:       0 0 10px rgba(var(--accent-teal-rgb), 0.30);
 
-  --terminal-cursor-color:      var(--accent-cyan);
+  --terminal-cursor-color:      var(--accent-amber);
   --terminal-cursor-blink:      1000ms;
   --terminal-line-delay:        55ms;
 
   /* ==============================================================
      21. CAREER FOOTPRINT — coverage intensity ramp
-     A four-stop ramp for the map / globe visualisation of Sumit's
-     sites across regions. It reads as intensity of monitoring
-     coverage: dormant, light, working, hot. All stops stay within
-     the cyan family; the hottest tilts a few degrees toward green
-     to suggest "fully operational" without introducing a new hue.
-
-       0 — no coverage; barely a suggestion of a region
-       1 — occasional presence
-       2 — sustained coverage
-       3 — highest activity; the only stop that should draw the eye
+     The ramp now climbs from teal to amber, reading as
+     "warming up to full operational."
      ============================================================== */
-  --footprint-0:  rgba(0, 229, 255, 0.04);
-  --footprint-1:  rgba(0, 229, 255, 0.22);
-  --footprint-2:  rgba(0, 229, 255, 0.55);
-  --footprint-3:  rgba(20, 244, 226, 0.92);
+  --footprint-0:  rgba(45, 212, 191, 0.05);
+  --footprint-1:  rgba(45, 212, 191, 0.25);
+  --footprint-2:  rgba(251, 191, 36, 0.55);
+  --footprint-3:  rgba(251, 191, 36, 0.92);
 }
 
 /* ==================================================================
    REDUCED MOTION
-   Respects the user's system preference. All duration tokens
-   collapse to 0ms so any transition or animation becomes
-   instantaneous without removing it from the cascade. The
-   topology, rail, terminal and cursor tokens are collapsed
-   explicitly so nothing pulses, rotates, blinks or types
-   for a visitor who has asked for stillness.
    ================================================================== */
 @media (prefers-reduced-motion: reduce) {
   :root {
@@ -611,13 +508,6 @@
 
 /* ==================================================================
    HIGH CONTRAST MODE
-   Raises text brightness, strengthens borders, and makes glass
-   surfaces near-opaque so panels remain readable when the user
-   has requested increased contrast at the OS level. The new
-   instrument layers get the same treatment: idle nodes and links
-   become legible, the rail and footprint ramp gain presence, the
-   muted terminal text steps up, and the decorative grain and
-   scanlines switch off entirely.
    ================================================================== */
 @media (prefers-contrast: more) {
   :root {
@@ -629,32 +519,27 @@
     --border-default:  rgba(214, 223, 236, 0.35);
     --border-strong:   rgba(214, 223, 236, 0.55);
 
-    --glass-bg:        rgba(8, 10, 16, 0.90);
-    --glass-bg-strong: rgba(8, 10, 16, 0.97);
+    --glass-bg:        rgba(11, 10, 15, 0.90);
+    --glass-bg-strong: rgba(11, 10, 15, 0.97);
     --glass-border:    rgba(214, 223, 236, 0.28);
 
-    /* Atmosphere — decoration off */
     --grain-opacity:    0;
     --scanline-opacity: 0;
 
-    /* Network topology */
-    --topo-node-color:        rgba(0, 229, 255, 0.75);
+    --topo-node-color:        rgba(45, 212, 191, 0.75);
     --topo-node-opacity-far:  0.6;
-    --topo-link-color:        rgba(0, 229, 255, 0.25);
-    --topo-link-color-active: rgba(0, 229, 255, 0.85);
-    --topo-sphere-rim:        rgba(0, 229, 255, 0.22);
+    --topo-link-color:        rgba(45, 212, 191, 0.25);
+    --topo-link-color-active: rgba(45, 212, 191, 0.85);
+    --topo-sphere-rim:        rgba(45, 212, 191, 0.22);
 
-    /* Experience rail */
     --rail-line-color:        rgba(214, 223, 236, 0.35);
     --rail-dot-color:         var(--text-tertiary);
 
-    /* Terminal */
     --terminal-text-muted:    var(--text-tertiary);
 
-    /* Career footprint */
-    --footprint-0:  rgba(0, 229, 255, 0.16);
-    --footprint-1:  rgba(0, 229, 255, 0.45);
-    --footprint-2:  rgba(0, 229, 255, 0.80);
-    --footprint-3:  rgb(20, 244, 226);
+    --footprint-0:  rgba(45, 212, 191, 0.16);
+    --footprint-1:  rgba(45, 212, 191, 0.45);
+    --footprint-2:  rgba(251, 191, 36, 0.80);
+    --footprint-3:  rgb(251, 191, 36);
   }
 }

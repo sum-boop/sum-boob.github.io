@@ -131,7 +131,7 @@
   width: var(--cursor-dot);
   height: var(--cursor-dot);
   background: var(--cursor-color);
-  box-shadow: var(--glow-cyan-sm);
+  box-shadow: var(--glow-teal-sm);
   will-change: transform;
   transition: width var(--duration-fast) var(--ease-smooth),
               height var(--duration-fast) var(--ease-smooth),
@@ -163,11 +163,11 @@
 
   width: var(--cursor-size);
   height: var(--cursor-size);
-  border: var(--ring-w) solid var(--border-cyan-strong);
+  border: var(--ring-w) solid var(--border-teal-strong);
   outline: var(--ring-w) solid transparent;
   outline-offset: calc(var(--ring-w) * -1);
   background-color: transparent;
-  box-shadow: var(--glow-cyan-sm);
+  box-shadow: var(--glow-teal-sm);
   will-change: transform, width, height;
 
   /* Returning to idle: green leaves first, then cyan comes back */
@@ -259,8 +259,8 @@
    ================================================================ */
 .cursor-label {
   --label-offset: calc(var(--cursor-size-lg) / 2 + 8px);
-  --label-border: var(--border-cyan);
-  --label-caret: var(--accent-cyan);
+  --label-border: var(--border-teal);
+  --label-caret: var(--accent-teal);
 
   transform: translate(var(--label-offset), var(--label-offset));
   scale: 0.9;
@@ -268,7 +268,7 @@
   background: var(--glass-bg-strong);
   border: 1px solid var(--label-border);
   border-radius: var(--radius-full);
-  color: var(--text-cyan);
+  color: var(--text-teal);
   font-family: var(--font-mono);
   font-size: var(--fs-2xs);
   font-weight: var(--fw-medium);
@@ -427,24 +427,24 @@ body.cursor-lock .cursor-label {
 body.cursor-scanning .cursor-dot {
   width: var(--cursor-dot);
   background: var(--cursor-color);
-  box-shadow: var(--glow-cyan-sm);
+  box-shadow: var(--glow-teal-sm);
   animation: dotPulse var(--topo-pulse-duration, 2600ms) ease-in-out infinite;
 }
 
 body.cursor-scanning .cursor-ring {
   width: calc(var(--cursor-size) * 1.6);
   height: calc(var(--cursor-size) * 1.6);
-  border-color: var(--border-cyan-strong);
+  border-color: var(--border-teal-strong);
   outline-color: transparent;
   background-color: transparent;
-  box-shadow: var(--glow-cyan-sm);
+  box-shadow: var(--glow-teal-sm);
 }
 
 body.cursor-scanning .cursor-ring::before {
   background: conic-gradient(
     from 0deg,
     transparent 0deg 235deg,
-    var(--accent-cyan) 345deg,
+    var(--accent-teal) 345deg,
     transparent 345deg 360deg
   );
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
@@ -467,12 +467,12 @@ body.cursor-scanning .cursor-glow {
 
 body.cursor-scanning .cursor-label {
   --label-offset: calc(var(--cursor-size-lg) / 2 + 8px);
-  --label-border: var(--border-cyan);
-  --label-caret: var(--accent-cyan);
-  color: var(--accent-cyan);
+  --label-border: var(--border-teal);
+  --label-caret: var(--accent-teal);
+  color: var(--accent-teal);
   font-size: var(--fs-2xs);
   font-weight: var(--fw-medium);
-  box-shadow: var(--glow-cyan-sm);
+  box-shadow: var(--glow-teal-sm);
 }
 
 /* ================================================================
@@ -487,7 +487,7 @@ body.cursor-scanning .cursor-label {
 body.cursor-active .cursor-ring {
   width: calc(var(--cursor-size) * 0.7);
   height: calc(var(--cursor-size) * 0.7);
-  box-shadow: var(--glow-cyan-md);
+  box-shadow: var(--glow-teal-md);
   transition: width var(--duration-fast) var(--ease-smooth),
               height var(--duration-fast) var(--ease-smooth),
               border-color var(--duration-fast) var(--ease-smooth),
@@ -528,10 +528,10 @@ body.cursor-text .cursor-ring {
   width: var(--cursor-ring-width);
   height: 30px;
   border-radius: var(--radius-xs);
-  border-color: var(--accent-cyan);
+  border-color: var(--accent-teal);
   outline-color: transparent;
-  background-color: var(--accent-cyan);
-  box-shadow: var(--glow-cyan-sm);
+  background-color: var(--accent-teal);
+  box-shadow: var(--glow-teal-sm);
 }
 
 body.cursor-text .cursor-ring::before {
